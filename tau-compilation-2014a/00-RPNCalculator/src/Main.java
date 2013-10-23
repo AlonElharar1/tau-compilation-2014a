@@ -6,7 +6,6 @@
  */
 
 import RPN.RPNCalculator;
-import RPN.RPNConverter;
 
 public class Main {
 
@@ -15,19 +14,16 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		RPNCalculator calc = new RPNCalculator();
-		RPNConverter converter = new RPNConverter();
-		
 		String exp = "4 + 6 *";
+		
+		RPNCalculator calc = new RPNCalculator(exp);
 		
 		try {
 			
-			
-			
 			System.out.printf("%s : %s = %f" ,
 					exp,
-					converter.toInfix(exp), 
-					calc.evaluate(exp));
+					calc.toInfix(), 
+					calc.evaluate());
 			
 			
 		} catch (Exception e) {
