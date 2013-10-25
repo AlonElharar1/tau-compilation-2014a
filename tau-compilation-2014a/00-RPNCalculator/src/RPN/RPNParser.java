@@ -57,8 +57,8 @@ public class RPNParser {
 		this.expressionRoot = stack.isEmpty() ? null : stack.pop();
 	}
 	
-	public String toInfix() {	
-		return null;
+	public String toInfixString() {	
+		return (this.expressionRoot.toInfixString());
 	}
 	
 	public double evaluate() {

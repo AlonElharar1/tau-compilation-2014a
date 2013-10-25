@@ -25,4 +25,9 @@ public class ExpressionNumber extends ExpressionNode {
 		return (value);
 	}
 
+	@Override
+	public String toInfixString() {
+		return (String.format("%.2f", this.getValue()));
+	}
+
 }

@@ -14,7 +14,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		String exp = "4 + 6 *";
+		String exp = "4.3";
 		
 		RPNParser parser = new RPNParser(exp);
 		
@@ -22,15 +22,17 @@ public class Main {
 		
 			parser.parse();
 			
-			System.out.printf("%s : %s = %f" ,
+			System.out.printf("%s : %s = %.2f" ,
 					exp,
-					parser.toInfix(), 
+					parser.toInfixString(), 
 					parser.evaluate());
 			
 			
 		} catch (Exception e) {
 			
 			System.out.printf("%s : invalid expresion", exp);
+			
+			e.printStackTrace();
 			
 		}
 		

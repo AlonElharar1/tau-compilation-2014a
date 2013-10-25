@@ -10,7 +10,7 @@ package RPN;
 public class ExpressionDiv extends ExpressionAction {
 	
 	public ExpressionDiv(ExpressionNode left, ExpressionNode right) {
-		super(left, right);
+		super(left, right, '/');
 	}
 
 	@Override

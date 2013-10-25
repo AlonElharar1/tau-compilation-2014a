@@ -19,4 +19,6 @@ public abstract class ExpressionNode {
 	
 	public abstract double getValue();
 	
+	public abstract String toInfixString();
+	
 }
