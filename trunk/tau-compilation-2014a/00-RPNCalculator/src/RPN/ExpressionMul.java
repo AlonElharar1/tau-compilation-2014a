@@ -10,7 +10,7 @@ package RPN;
 public class ExpressionMul extends ExpressionAction {
 	
 	public ExpressionMul(ExpressionNode left, ExpressionNode right) {
-		super(left, right);
+		super(left, right, '*');
 	}
 
 	@Override

@@ -10,7 +10,7 @@ package RPN;
 public class ExpressionAdd extends ExpressionAction {
 	
 	public ExpressionAdd(ExpressionNode left, ExpressionNode right) {
-		super(left, right);
+		super(left, right, '+');
 	}
 
 	@Override
