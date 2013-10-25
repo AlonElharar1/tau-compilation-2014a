@@ -5,7 +5,7 @@
  * 3. Nir Malbin
  */
 
-import RPN.RPNCalculator;
+import RPN.RPNParser;
 
 public class Main {
 
@@ -16,14 +16,16 @@ public class Main {
 
 		String exp = "4 + 6 *";
 		
-		RPNCalculator calc = new RPNCalculator(exp);
+		RPNParser parser = new RPNParser(exp);
 		
 		try {
+		
+			parser.parse();
 			
 			System.out.printf("%s : %s = %f" ,
 					exp,
-					calc.toInfix(), 
-					calc.evaluate());
+					parser.toInfix(), 
+					parser.evaluate());
 			
 			
 		} catch (Exception e) {
