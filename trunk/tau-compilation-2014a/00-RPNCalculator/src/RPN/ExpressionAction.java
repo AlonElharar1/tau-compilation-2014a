@@ -19,7 +19,7 @@ public abstract class ExpressionAction extends ExpressionNode {
 	
 	@Override
 	public String toInfixString() {
-		return (String.format("( %s %c %s )", 
+		return (String.format("(%s%c%s)", 
 					left.toInfixString(),
 					this.actionChar, 
 					right.toInfixString()));

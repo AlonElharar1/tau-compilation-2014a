@@ -30,31 +30,47 @@ public class RPNParser {
 				stack.push(new ExpressionNumber(token));
 			}
 			else if (token.equals("+")) {
+				ExpressionNode right = stack.pop();
 				stack.push(new ExpressionAdd(
-						stack.pop(), stack.pop()));
+						stack.pop(), right));
 			}
 			else if (token.equals("-")) {
+				ExpressionNode right = stack.pop();
 				stack.push(new ExpressionSub(
-						stack.pop(), stack.pop()));
+						stack.pop(), right));
 			}
 			else if (token.equals("*")) {
+				ExpressionNode right = stack.pop();
 				stack.push(new ExpressionMul(
-						stack.pop(), stack.pop()));
+						stack.pop(), right));
 			}
 			else if (token.equals("/")) {
+				ExpressionNode right = stack.pop();
 				stack.push(new ExpressionDiv(
-						stack.pop(), stack.pop()));
+						stack.pop(), right));
 			}
 			else if (token.equals("^")) {
+				ExpressionNode right = stack.pop();
 				stack.push(new ExpressionPow(
-						stack.pop(), stack.pop()));
+						stack.pop(), right));
 			}
 			else {
 				throw new Exception("Unkown token!");
 			}
 		}
-	
-		this.expressionRoot = stack.isEmpty() ? null : stack.pop();
+		
+		if(stack.isEmpty())
+		{
+			this.expressionRoot = null;
+		}
+		else
+		{
+			//At this point, only one token should be left at the stack.
+			ExpressionNode finalToken = stack.pop();
+			this.expressionRoot = stack.isEmpty() ? finalToken : null;
+		}
+		
+		
 	}
 	
 	public String toInfixString() {	
