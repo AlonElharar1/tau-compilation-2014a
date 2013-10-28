@@ -5,36 +5,56 @@
  * 3. Nir Malbin
  */
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import RPN.RPNParser;
 
 public class Main {
-
+	
+	public static void readAndWrite(BufferedReader input) throws IOException
+	{
+		String exp;
+		
+		while((exp = input.readLine()) != null)
+		{
+			try {
+				RPNParser parser = new RPNParser(exp);	
+				parser.parse();
+				
+				System.out.printf("%s : %s = %.1f\n",
+						exp,
+						parser.toInfixString(), 
+						parser.evaluate()
+						);
+				
+				
+			} catch (Exception e) {
+				
+				System.out.printf("%s : invalid expresion\n", exp);
+				
+			}
+		}
+		
+	}
+	
 	/**
 	 * @param args
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) {
-
-		String exp = "4.3";
-		
-		RPNParser parser = new RPNParser(exp);
+	public static void main(String[] args) throws FileNotFoundException {
 		
 		try {
-		
-			parser.parse();
+			BufferedReader input = new BufferedReader(new FileReader(args[0]));
+			readAndWrite(input);
+			input.close();
 			
-			System.out.printf("%s : %s = %.2f" ,
-					exp,
-					parser.toInfixString(), 
-					parser.evaluate());
-			
-			
-		} catch (Exception e) {
-			
-			System.out.printf("%s : invalid expresion", exp);
-			
-			e.printStackTrace();
-			
+		} catch (IOException e) {
+			System.out.println(e);
 		}
+		
 		
 	}
 

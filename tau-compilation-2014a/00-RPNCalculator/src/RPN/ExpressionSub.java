@@ -15,6 +15,6 @@ public class ExpressionSub extends ExpressionAction {
 
 	@Override
 	public double getValue() {
-		return (this.right.getValue() - this.left.getValue());
+		return (this.left.getValue() - this.right.getValue());
 	}
 }

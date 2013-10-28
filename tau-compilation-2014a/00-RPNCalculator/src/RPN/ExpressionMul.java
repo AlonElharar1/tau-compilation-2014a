@@ -15,6 +15,6 @@ public class ExpressionMul extends ExpressionAction {
 
 	@Override
 	public double getValue() {
-		return (this.left.getValue() * this.right.getValue());
+		return (this.right.getValue() * this.left.getValue());
 	}
 }
