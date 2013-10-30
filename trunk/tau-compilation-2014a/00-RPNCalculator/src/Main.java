@@ -44,7 +44,7 @@ public class Main {
 				} catch (Exception e) {
 					
 					// If the expression parse didn't work, them it's an invalid expression
-					System.out.printf("%s : invalid expresion\n", exp);
+					System.out.printf("%s : invalid expression\n", exp);
 					
 				}
 			}
