@@ -10,6 +10,7 @@ package RPN;
 public abstract class ExpressionAction extends ExpressionNode {
 	
 	private char actionChar;
+	private boolean isRoot = false;
 	
 	public ExpressionAction(ExpressionNode left, ExpressionNode right, 
 			char actionChar) {
@@ -19,9 +20,32 @@ public abstract class ExpressionAction extends ExpressionNode {
 	
 	@Override
 	public String toInfixString() {
-		return (String.format("(%s%c%s)", 
+		String output;
+		
+		if(isRoot())
+		{
+			output =  (String.format("%s%c%s", 
 					left.toInfixString(),
 					this.actionChar, 
 					right.toInfixString()));
+		}
+		else
+		{
+			output = (String.format("(%s%c%s)", 
+					left.toInfixString(),
+					this.actionChar, 
+					right.toInfixString()));
+		}
+		
+		return output;
 	}
+	
+	public boolean isRoot() {
+		return this.isRoot;
+	}
+	
+	public void setRoot() {
+		this.isRoot = true; 
+	}
+	
 }

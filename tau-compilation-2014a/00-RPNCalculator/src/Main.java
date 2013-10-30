@@ -33,11 +33,10 @@ public class Main {
 				
 			} catch (Exception e) {
 				
-				System.out.printf("%s : invalid expresion\n", exp);
+				System.out.printf("%s : invalid expression\n", exp);
 				
 			}
 		}
-		
 	}
 	
 	/**
