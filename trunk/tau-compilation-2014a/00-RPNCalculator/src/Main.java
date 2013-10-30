@@ -14,31 +14,6 @@ import RPN.RPNParser;
 
 public class Main {
 	
-	public static void readAndWrite(BufferedReader input) throws IOException
-	{
-		String exp;
-		
-		while((exp = input.readLine()) != null)
-		{
-			try {
-				RPNParser parser = new RPNParser(exp);	
-				parser.parse();
-				
-				System.out.printf("%s : %s = %.1f\n",
-						exp,
-						parser.toInfixString(), 
-						parser.evaluate()
-						);
-				
-				
-			} catch (Exception e) {
-				
-				System.out.printf("%s : invalid expression\n", exp);
-				
-			}
-		}
-	}
-	
 	/**
 	 * @param args
 	 * @throws FileNotFoundException 
@@ -46,15 +21,39 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		try {
+			
+			// Read all expression in the file and parse them
 			BufferedReader input = new BufferedReader(new FileReader(args[0]));
-			readAndWrite(input);
+			String exp;
+			
+			while((exp = input.readLine()) != null)
+			{
+				try {
+					
+					// Parse the current expression
+					RPNParser parser = new RPNParser(exp);	
+					parser.parse();
+					
+					System.out.printf("%s : %s = %.1f\n",
+							exp,
+							parser.toInfixString(), 
+							parser.evaluate()
+							);
+					
+					
+				} catch (Exception e) {
+					
+					// If the expression parse didn't work, them it's an invalid expression
+					System.out.printf("%s : invalid expresion\n", exp);
+					
+				}
+			}
+			
 			input.close();
 			
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		
-		
 	}
-
+	
 }

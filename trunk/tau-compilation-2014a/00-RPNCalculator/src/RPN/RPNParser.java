@@ -9,20 +9,33 @@ package RPN;
 
 import java.util.Stack;
 
+/**
+ * Represents a Reverse Polish notation parser 
+ */
 public class RPNParser {
 
 	private String expression;
 	private ExpressionNode expressionRoot;
 	
+	/**
+	 * Creates a new parser
+	 * @param expression The expression to associate with this parser
+	 */
 	public RPNParser(String expression) {
 		this.expression = expression;
 	}
 
+	/**
+	 * Parse the expression
+	 */
 	public void parse() throws Exception {
 	
+		this.expressionRoot = null;
+		
 		Stack<ExpressionNode> stack = new Stack<ExpressionNode>();
 		stack.empty();
 		
+		// Create a tree of the tokens
 		for (String token : expression.split("\\s+")) {
 			
 			if ((token.charAt(0) >= '0') &&
@@ -59,38 +72,35 @@ public class RPNParser {
 			}
 		}
 		
-		if(stack.isEmpty())
-		{
-			this.expressionRoot = null;
+		// At this point, only one token should be left at the stack if the expression is valid
+		if (stack.size() > 1) {
+			throw new Exception("Expression is invalid. Stack has more then one items.");
 		}
-		else
-		{
-			//At this point, only one token should be left at the stack.
-			ExpressionNode finalToken = stack.pop();
-			if(finalToken instanceof ExpressionAction)
-			{
-				((ExpressionAction) finalToken).setRoot();
-			}
-			else
-			{
-				throw new Exception("Final token must be an expression!");
-			}
-			this.expressionRoot = stack.isEmpty() ? finalToken : null;
+		else if	(!stack.isEmpty()) {
+			this.expressionRoot = stack.pop();
 		}
-		
-		
 	}
 	
+	/**
+	 * Gets the expression infix string representation
+	 * @return
+	 */
 	public String toInfixString() {
-		if(this.expressionRoot != null)
-			return (this.expressionRoot.toInfixString());
 		
-		return "";
+		if(this.expressionRoot == null)
+			return ("");
+		
+		return (this.expressionRoot.toInfixString());
 	}
 	
-	public double evaluate() throws Exception {
+	/**
+	 * Gets the expression value
+	 * @return
+	 */
+	public double evaluate() {
+		
 		if (this.expressionRoot == null)
-			throw new Exception("The root is null!");
+			return (0);
 		
 		return (this.expressionRoot.getValue());
 	}
