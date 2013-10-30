@@ -7,6 +7,9 @@
 
 package RPN;
 
+/**
+ * Represents an expression leaf of a number
+ */
 public class ExpressionNumber extends ExpressionNode {
 
 	public double value;
@@ -27,7 +30,7 @@ public class ExpressionNumber extends ExpressionNode {
 
 	@Override
 	public String toInfixString() {
-		return Double.toString(this.getValue());
+		return (Double.toString(this.getValue()));
 	}
 
 }

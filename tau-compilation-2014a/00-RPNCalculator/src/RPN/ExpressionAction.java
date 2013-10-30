@@ -7,10 +7,12 @@
 
 package RPN;
 
+/**
+ * Represents an expression node for an action
+ */
 public abstract class ExpressionAction extends ExpressionNode {
 	
 	private char actionChar;
-	private boolean isRoot = false;
 	
 	public ExpressionAction(ExpressionNode left, ExpressionNode right, 
 			char actionChar) {
@@ -20,32 +22,16 @@ public abstract class ExpressionAction extends ExpressionNode {
 	
 	@Override
 	public String toInfixString() {
-		String output;
 		
-		if(isRoot())
-		{
-			output =  (String.format("%s%c%s", 
+		// Concatenate both children with the action char
+		String format = 
+				(this.left.isLeaf() ? "%s" : "(%s)") + 
+				this.actionChar +
+				(this.right.isLeaf() ? "%s" : "(%s)"); 
+				
+		return (String.format(format, 
 					left.toInfixString(),
-					this.actionChar, 
 					right.toInfixString()));
-		}
-		else
-		{
-			output = (String.format("(%s%c%s)", 
-					left.toInfixString(),
-					this.actionChar, 
-					right.toInfixString()));
-		}
-		
-		return output;
-	}
-	
-	public boolean isRoot() {
-		return this.isRoot;
-	}
-	
-	public void setRoot() {
-		this.isRoot = true; 
 	}
 	
 }
