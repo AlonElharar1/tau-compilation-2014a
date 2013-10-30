@@ -67,19 +67,30 @@ public class RPNParser {
 		{
 			//At this point, only one token should be left at the stack.
 			ExpressionNode finalToken = stack.pop();
+			if(finalToken instanceof ExpressionAction)
+			{
+				((ExpressionAction) finalToken).setRoot();
+			}
+			else
+			{
+				throw new Exception("Final token must be an expression!");
+			}
 			this.expressionRoot = stack.isEmpty() ? finalToken : null;
 		}
 		
 		
 	}
 	
-	public String toInfixString() {	
-		return (this.expressionRoot.toInfixString());
+	public String toInfixString() {
+		if(this.expressionRoot != null)
+			return (this.expressionRoot.toInfixString());
+		
+		return "";
 	}
 	
-	public double evaluate() {
+	public double evaluate() throws Exception {
 		if (this.expressionRoot == null)
-			return (Double.NaN);
+			throw new Exception("The root is null!");
 		
 		return (this.expressionRoot.getValue());
 	}
