@@ -9,10 +9,12 @@ package Lexer;
 
 public class Token
 {
-	public String tag;
-	public int line;
-	public int column;
-	public String text;
+	private final String ERROR = "error";
+	
+	private String tag;
+	private int line;
+	private int column;
+	private String text;
 	
 	public Token(String tag, int line, int column, String text)
 	{
@@ -24,8 +26,13 @@ public class Token
 
 	public String toString()
 	{
-		return String.format("%-13s%-13s%2d%8d",
-				this.text, this.tag, this.line, this.column);
+		if(this.tag != ERROR)
+		{
+			return String.format("%-13s%-13s%2d%8d",
+					this.text, this.tag, this.line, this.column);
+		}
 		
+		return String.format("%d:%d : %s",
+				this.line, this.column, this.text);
 	}
 }
