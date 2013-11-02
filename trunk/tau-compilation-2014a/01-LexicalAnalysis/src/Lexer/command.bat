@@ -1,1 +1,1 @@
-jflex --bak rules.lex
+jflex --nobak rules.lex
