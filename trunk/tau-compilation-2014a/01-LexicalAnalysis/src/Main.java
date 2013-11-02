@@ -6,8 +6,6 @@
  */
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Scanner;
 
@@ -31,7 +29,7 @@ public class Main
 			
 			//Print header
 			System.out.println(String.format(
-					"%s\t%s\t%s\t%s",
+					"%-13s%-13s%s : %s",
 					"token","tag","line","column"));
 			scanner.close();
 

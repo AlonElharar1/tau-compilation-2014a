@@ -10,27 +10,22 @@ package Lexer;
 public class Token
 {
 	public String tag;
-	public int start;
-	public int end;
+	public int line;
+	public int column;
 	public String text;
 	
-	public Token(String tag, int start, int end, String text)
+	public Token(String tag, int line, int column, String text)
 	{
 		this.tag = tag;
-		this.start = start;
-		this.end = end;
+		this.line = line;
+		this.column = column;
 		this.text = text;
 	}
-	
-	public Token(String tag, int start, String text)
-	{
-		this(tag, start, start + text.length(), text);
-	}	
-	
+
 	public String toString()
 	{
-		return String.format("%s\t%s\t%d\t%d",
-				this.text, this.tag, this.start, this.end);
+		return String.format("%-13s%-13s%2d%8d",
+				this.text, this.tag, this.line, this.column);
 		
 	}
 }
