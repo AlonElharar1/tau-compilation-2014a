@@ -5,10 +5,46 @@
  * 3. Nir Malbin
  */
 
-public class Main {
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Scanner;
 
-	public static void main(String[] args) {
+import Lexer.*;
 
+public class Main 
+{
+
+	public static void main(String[] args) throws Exception 
+	{	
+		try 
+		{
+			//Read entire file to a single String.
+			File inputFile = new File(args[0]);
+			Scanner scanner = new Scanner(inputFile);
+			String input = scanner.useDelimiter("\\Z").next();
+
+			//Process the String.
+			Lexer lexer = new Lexer();
+			Collection<Token> tokens = lexer.processString(input);
+			
+			//Print header
+			System.out.println(String.format(
+					"%s\t%s\t%s\t%s",
+					"token","tag","line","column"));
+			scanner.close();
+
+			//Print tokens
+			for(Token token : tokens)
+			{
+				System.out.println(token);
+			}
+		}
+		catch (Exception e) 
+		{
+			System.out.println(e);
+		}	
 	}
 
 }
