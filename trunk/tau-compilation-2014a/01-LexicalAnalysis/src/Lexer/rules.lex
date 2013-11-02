@@ -39,10 +39,11 @@ Integer = 0 | [1-9][0-9]*
 OP = [+-/*\^]
 ID = [a-z][a-z0-9]*
 DQUOTE = "\""
-String = {DQUOTE} ~([^\\]?{DQUOTE})
+String = {DQUOTE}(.|{NewLine})* [^\\] {DQUOTE}
 Comment = \/\*(.|{NewLine})*\*\/
-LineComment = \/\/
+LineComment = \/\/.*
 NewLine = \n|\r|\r\n
+WhiteSpace = {NewLine} | [ \t\f]
 
 
 %%
@@ -71,7 +72,6 @@ NewLine = \n|\r|\r\n
 {String}		{ return getToken("String"); }
 {ID}			{ return getToken("ID"); }
 
-{NewLine}		|
 {Comment}		|
 {LineComment}	|
-[ \t]				{ /* nothing; skip */ }
+{WhiteSpace}				{ /* nothing; skip */ }
