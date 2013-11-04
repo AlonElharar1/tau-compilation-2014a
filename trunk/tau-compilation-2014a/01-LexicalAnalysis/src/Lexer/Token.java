@@ -23,6 +23,7 @@ public class Token
 		this.column = column;
 		this.text = text;
 	}
+	
 
 	public String toString()
 	{
