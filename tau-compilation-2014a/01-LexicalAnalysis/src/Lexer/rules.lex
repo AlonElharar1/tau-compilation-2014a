@@ -55,7 +55,7 @@ STRUCTURE = [{};,]
 ID_LETTERS = [A-Za-z0-9_]
 ID = [a-z]{ID_LETTERS}*
 CLASS_ID = [A-Z]{ID_LETTERS}*
-BAD_START_ID = [0-9_]{ID_LETTERS}*
+BAD_START_ID = [_]{ID_LETTERS}*
 
 DQUOTE = "\""
 STRING_LETTERS = ([\x20-\x21\x23-\x5B\x5D-\x7E] | "\\\"" | "\\\\" | "\\t" | "\\n")
