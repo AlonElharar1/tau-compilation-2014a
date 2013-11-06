@@ -1,4 +1,0 @@
-2c2
-< "tab is not allowed"STRING        1       1
----
-> "tab is not allowed" STRING        1       1

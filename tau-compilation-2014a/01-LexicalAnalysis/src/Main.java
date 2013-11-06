@@ -30,7 +30,7 @@ public class Main
 			
 			//Print header
 			System.out.println(String.format(
-					"%-13s%-13s%s : %s",
+					"%s\t%s\t%s : %s",
 					"token","tag","line","column"));
 			
 			// Process the given file using jflex

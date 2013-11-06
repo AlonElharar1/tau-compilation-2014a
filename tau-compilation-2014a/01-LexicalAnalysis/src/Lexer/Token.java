@@ -25,7 +25,7 @@ public class Token
 
 	public String toString()
 	{
-		return (String.format("%-13s%-13s%2d%8d",
+		return (String.format("%s\t%s\t%2d%8d",
 				this.text, this.tag, this.line, this.column));
 	}
 }
