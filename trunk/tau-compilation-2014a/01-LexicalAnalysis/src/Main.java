@@ -5,13 +5,8 @@
  * 3. Nir Malbin
  */
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.Collection;
-import java.util.Scanner;
 
 import Lexer.*;
 
