@@ -1,23 +1,30 @@
+/**
+ * @team Happy Tree Friends
+ * 1. Sagi Katorza
+ * 2. Assaf Krintza
+ * 3. Nir Malbin
+ */
+
 package Lexer;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.LinkedList;
 
 public class Lexer {
 	
-	public Collection<Token> processString(String input) throws Exception
-	{
-		Collection<Token> tokens = new LinkedList<Token>();
-		JflexScanner scanner = new JflexScanner(new StringReader(input));
-		
-		
-		Token token = scanner.yylex();
-		while (token != null) {
-			tokens.add(token);
-            token = scanner.yylex();
-        }
-		return tokens;
+	private InputStream stream;
+	private JflexScanner jflexScanner;
+	
+	public Lexer(InputStream stream) {
+		this.stream = stream;
+		jflexScanner = new JflexScanner(this.stream);
+	}
+
+	public Token nextToken() throws IOException {
+		return (this.jflexScanner.yylex());
 	}
 	
 }
