@@ -1,4 +1,4 @@
-token        tag          line : column
--            -             1       1
-42           INTEGER       1       2
+token	tag	line : column
+-	-	 1       1
+42	INTEGER	 1       2
 3:1 : lexical error; numbers should not have leading zeros
