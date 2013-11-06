@@ -43,7 +43,7 @@ Keyword = 	{Class}|{Extends}|{Static}|{Void}|{Int}|{Boolean}|{StringKW}|{Return}
 			{Continue}|{This}|{New}|{Length}|{True}|{False}|{Null}	
 
 NewLine = (\n|\r|\r\n)
-WhiteSpace = {NewLine} | [ \t\f]
+WhiteSpace = {NewLine} | [ \t]
 
 Integer = 0 | [1-9][0-9]*
 ZLEADING_INTENGER = 0[0-9]?

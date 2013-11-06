@@ -19,23 +19,24 @@ public class Main
 {
 	public static void main(String[] args) throws Exception 
 	{	
-		FileInputStream fileStream = null;
-		
+		// Validate arguments
 		if (args.length < 1)
 		{
 			System.out.println("Not cool man... i need a file!");
 			return;
 		}
 		
-		//Print header
-		System.out.println(String.format(
-				"%-13s%-13s%s : %s",
-				"token","tag","line","column"));
-			
+		FileInputStream fileStream = null;
+		
 		try 
 		{
 			// Open the file
 			fileStream = new FileInputStream(args[0]);
+			
+			//Print header
+			System.out.println(String.format(
+					"%-13s%-13s%s : %s",
+					"token","tag","line","column"));
 			
 			// Process the given file using jflex
 			Lexer lexer = new Lexer(fileStream);
@@ -48,8 +49,11 @@ public class Main
 				token = lexer.nextToken();
 			}
 		}
-		catch (IOException e)	{
+		catch (LexicalException e)	{
 			System.out.println(e.getMessage());
+		}
+		catch (IOException e) {
+			System.out.println("Error reading file...");
 		}
 		finally {
 			if (fileStream != null) 
