@@ -1,0 +1,12 @@
+128c128
+< "Primes less than "STRING       44      19
+---
+> "Primes less than " STRING       44      19
+240c240
+< "Unspecified number."STRING       65      23
+---
+> "Unspecified number." STRING       65      23
+278c278
+< "Invalid array length"STRING       72      23
+---
+> "Invalid array length" STRING       72      23
