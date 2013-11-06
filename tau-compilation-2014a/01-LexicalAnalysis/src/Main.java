@@ -22,7 +22,7 @@ public class Main
 		// Validate arguments
 		if (args.length < 1)
 		{
-			System.out.println("Not cool man... i need a file!");
+			System.out.println("Not cool man... I need a file!");
 			return;
 		}
 		
