@@ -1,0 +1,1 @@
+3:3 : syntax error; expected '!' or '(' or '-' or 'CLASS_ID' or 'ID' or 'Literal' or 'boolean' or 'break' or 'continue' or 'false' or 'for' or 'if' or 'int' or 'new' or 'null' or 'return' or 'string' or 'true' or 'while' or '{' or '}', but found 'this'
