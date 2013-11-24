@@ -1,0 +1,15 @@
+Practical
+=========
+
+Writing CFG String for IC - Assaf
+Use earley to generate ast with the CFG + Error Handling - Nir
+Print the ast - Sagi
+
+Theoritical
+===========
+a - Assaf
+b - Assaf
+c - Nir
+d - Sagi
+
+
