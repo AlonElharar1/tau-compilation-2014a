@@ -9,6 +9,7 @@ import fun.grammar.Grammar;
 import fun.parser.Tree;
 import fun.parser.earley.EarleyParser;
 import fun.parser.earley.EarleyState;
+import ic.ast.AbstractSyntaxTree;
 import ic.ast.PrettyPrint;
 import ic.lexer.*;
 
@@ -64,11 +65,12 @@ public class Main {
 				for (EarleyState earleyState : completedParses) {
 					Tree currTree = earleyState.parseTree();
 					
-					// TODO Convert the parsing tree into an AST
+					// Convert the parsing tree into an AST
+					AbstractSyntaxTree ast = new AbstractSyntaxTree(currTree);
+					
+					// TODO Print the AST
 				}
 			}
-			
-			// TODO Print the AST
 		}
 	}
 
