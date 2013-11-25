@@ -11,7 +11,8 @@ public class ExpressionBlock extends Expression {
 	private Expression expression;
 
 	public Object accept(Visitor visitor) {
-		return visitor.visit(this);
+		return null;
+		//return visitor.visit(this);
 	}
 
 	/**
