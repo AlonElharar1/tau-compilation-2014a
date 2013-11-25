@@ -560,8 +560,9 @@ void throwLexicalException(String msg) throws LexicalException {
    *
    * @return      the next token
    * @exception   java.io.IOException  if any I/O-Error occurs
+   * @throws LexicalException 
    */
-  public Token yylex() throws java.io.IOException {
+  public Token yylex() throws java.io.IOException, LexicalException {
     int zzInput;
     int zzAction;
 
