@@ -7,10 +7,10 @@
 
 package ic.lexer;
 
-import java.io.IOException;
+import ic.IceCoffeException;
 
-public class LexicalException extends IOException {
-	private static final long serialVersionUID = 2585248004446983615L;
+@SuppressWarnings("serial")
+public class LexicalException extends IceCoffeException {
 	
 	public LexicalException(int line, int column, String message) {
 		super(String.format("%d:%d : lexical error; %s", line, column, message));
