@@ -27,6 +27,13 @@ public class Main {
 			// Open the file and extract tokens
 			fileStream = new FileInputStream(args[0]);
 			List<Token> tokens = new Lexer(fileStream).getAllTokens();
+			
+			// Parse the tokens into an parse tree using early algorithm
+			
+			// Convert the parsing tree into an AST
+			
+			// Print the AST
+			
 
 		} catch (LexicalException e) {
 			System.out.println(e.getMessage());
