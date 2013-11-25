@@ -30,12 +30,25 @@ public class Main {
 		}
 
 		FileInputStream fileStream = null;
-
+		List<Token> tokens = null;
+		
+		// Open the file and extract tokens
 		try {
 			
-			// Open the file and extract tokens
 			fileStream = new FileInputStream(args[0]);
-			List<Token> tokens = new Lexer(fileStream).getAllTokens();
+			tokens = new Lexer(fileStream).getAllTokens();
+			fileStream.close();
+
+		} catch (LexicalException e) {
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println("Error reading file...");
+		} finally {
+			if (fileStream != null)
+				fileStream.close();
+		}
+		
+		if (tokens != null) {
 			
 			// Parse the tokens into an parse tree using early algorithm
 			Grammar icGrammer = new Grammar(new File(ICE_COFFE_CFG_FILE));
@@ -56,15 +69,6 @@ public class Main {
 			}
 			
 			// TODO Print the AST
-			
-
-		} catch (LexicalException e) {
-			System.out.println(e.getMessage());
-		} catch (IOException e) {
-			System.out.println("Error reading file...");
-		} finally {
-			if (fileStream != null)
-				fileStream.close();
 		}
 	}
 
