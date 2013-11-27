@@ -13,7 +13,7 @@ import ic.IceCoffeException;
 public class LexicalException extends IceCoffeException {
 	
 	public LexicalException(int line, int column, String message) {
-		super(String.format("%d:%d : lexical error; %s", line, column, message));
+		super(line, column, "lexical", message);
 	}
 
 }

@@ -52,6 +52,16 @@ public class PrimitiveType extends Type {
 		{
 			return description;
 		}
+		
+		public static DataType find(String description) {
+			for (DataType dataType : DataType.values()) {
+				if (dataType.description.equals(description)) {
+					return (dataType);
+				}
+			}
+			
+			throw new Error("internal error; primitive type not found: " + description);
+		}
 	}
 
 }

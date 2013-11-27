@@ -29,6 +29,10 @@ public abstract class Type extends Node {
 	public int getArrayDimension() {
 		return dimension;
 	}
+	
+	public void setArrayDimension(int dimension) {
+		this.dimension = dimension;
+	}
 
 	public void incrementDimension() {
 		++dimension;
