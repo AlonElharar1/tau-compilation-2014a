@@ -11,9 +11,9 @@ import fun.grammar.Word;
 
 public class Token extends Word {
 	
-	private int line;
-	private int column;
-	private String text;
+	public int line;
+	public int column;
+	public String text;
 	
 	public Token(String tag, int line, int column, String text)	{
 		super(tag);

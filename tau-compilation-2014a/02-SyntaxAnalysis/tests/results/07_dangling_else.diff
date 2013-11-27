@@ -1,0 +1,8 @@
+7c7
+<   [4]         +-- If statement, with else branch
+---
+>   [4]         +-- If statement
+12c12
+<   [5]             +-- If statement
+---
+>   [5]             +-- If statement, with else branch

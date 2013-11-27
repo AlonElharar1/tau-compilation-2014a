@@ -1,0 +1,23 @@
+9c9,12
+<   [6]             +-- Binary operation: multiply (*)null
+---
+>   [6]             +-- Binary operation: multiply (*)
+>   [6]                 +-- Binary operation: add (+)
+>   [6]                     +-- int: 5
+>   [6]                     +-- int: 8
+13d15
+<   [7]             +-- Binary operation: multiply (*)
+15a18
+>   [7]                 +-- Binary operation: multiply (*)
+27,28c30
+<   [9]             +-- Unary operation: negate (-)
+<   [9]                 +-- int: 143
+---
+>   [9]             +-- int: -143
+34,35d35
+<  [11]                 +-- Binary operation: multiply (*)
+<  [11]                     +-- Binary operation: less than (<)
+39a40
+>  [11]                     +-- Binary operation: less than (<)
+40a42
+>  [11]                         +-- Binary operation: multiply (*)

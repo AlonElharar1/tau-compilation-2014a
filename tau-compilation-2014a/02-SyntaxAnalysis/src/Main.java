@@ -1,4 +1,4 @@
-System.out.println(yourAst.accept(new PrettyPrint()));/**
+/**
  * @team Happy Tree Friends
  * 1. Sagi Katorza
  * 2. Assaf Krintza
@@ -9,19 +9,21 @@ import fun.grammar.Grammar;
 import fun.parser.Tree;
 import fun.parser.earley.EarleyParser;
 import fun.parser.earley.EarleyState;
-import ic.ast.AbstractSyntaxTree;
+import ic.IceCoffeException;
+import ic.IceCoffeGrammers;
 import ic.ast.PrettyPrint;
-import ic.lexer.*;
+import ic.ast.SyntaxException;
+import ic.ast.builders.ASTBuilder;
+import ic.ast.decl.Program;
+import ic.lexer.Lexer;
+import ic.lexer.Token;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
 public class Main {
 
-	public static final String ICE_COFFE_CFG_FILE = "ICCFG.cfg";
-	
 	public static void main(String[] args) throws IOException {
 
 		// Validate arguments
@@ -30,48 +32,71 @@ public class Main {
 			return;
 		}
 
-		FileInputStream fileStream = null;
-		List<Token> tokens = null;
+		boolean isLibrary = false;
 		
-		// Open the file and extract tokens
 		try {
 			
-			fileStream = new FileInputStream(args[0]);
-			tokens = new Lexer(fileStream).getAllTokens();
-			fileStream.close();
-
-		} catch (LexicalException e) {
+			// Parse all files
+			for (String argStr : args) {
+				
+				// Check if from here there are library files
+				if (argStr.equals("-L")) {
+					isLibrary = true;
+				}
+				else {
+					// Parse the file into an AST and print it
+					Program programAST = parseFile(argStr, isLibrary);
+					
+					System.out.println(new PrettyPrint().visit(programAST));
+				}
+			}
+			
+		} catch (IceCoffeException e) {
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			System.out.println("Error reading file...");
+		}
+	}
+	
+	private static Program parseFile(String file, boolean isLibrary) throws IceCoffeException, IOException {
+		
+		// Open the file and extract tokens
+		FileInputStream fileStream = null;
+		List<Token> tokens = null;
+		
+		try {
+			fileStream = new FileInputStream(file);
+			tokens = new Lexer(fileStream).getAllTokens();
+			fileStream.close();
 		} finally {
 			if (fileStream != null)
 				fileStream.close();
 		}
 		
 		if (tokens != null) {
-			
 			// Parse the tokens into an parse tree using early algorithm
-			Grammar icGrammer = new Grammar(new File(ICE_COFFE_CFG_FILE));
+			Grammar icGrammer = new Grammar(isLibrary ? 
+					IceCoffeGrammers.IC_LIB_CFG : IceCoffeGrammers.IC_CFG);
 			EarleyParser icParser = new EarleyParser(tokens, icGrammer);
 			
 			List<EarleyState> completedParses = icParser.getCompletedParses();
 			
 			if (completedParses.isEmpty()) {
-				// TODO Error handling
+				throw new SyntaxException(icParser.diagnoseError());
 			}
 			else {
 				
-				for (EarleyState earleyState : completedParses) {
-					Tree currTree = earleyState.parseTree();
-					
-					// Convert the parsing tree into an AST
-					AbstractSyntaxTree ast = new AbstractSyntaxTree(currTree);
-					//print the AST in human-readable representation format using PrettyPrint Visitor
-					System.out.println(yourAst.accept(new PrettyPrint()));				
-        }
+				Tree parseTree = completedParses.get(0).parseTree();
+				
+				// Build an AST from the parse tree
+				Program programAST = ASTBuilder.getBuilder().build(
+						parseTree.subtrees.get(0),
+						Program.class);
+				
+				return (programAST);
 			}
 		}
+		
+		return (null);
 	}
-
 }

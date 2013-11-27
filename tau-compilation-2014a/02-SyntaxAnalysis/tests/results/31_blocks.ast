@@ -1,0 +1,1 @@
+5:9 : syntax error; expected '!' or '(' or '-' or 'CLASS_ID' or 'ID' or 'INTEGER' or 'STRING' or 'boolean' or 'break' or 'continue' or 'false' or 'if' or 'int' or 'new' or 'null' or 'return' or 'string' or 'this' or 'true' or 'void' or 'while' or '{', but found '}'

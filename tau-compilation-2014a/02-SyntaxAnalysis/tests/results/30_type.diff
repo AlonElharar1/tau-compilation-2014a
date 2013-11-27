@@ -1,0 +1,18 @@
+1,15c1
+< 
+<   [1] +-- Declaration of class: L
+<   [2]     +-- Declaration of static method: main
+<   [2]         +-- Primitive data type: void
+<   [2]         +-- Parameter: args
+<   [2]             +-- Primitive data type: 1-dimensional array of string
+<   [4]         +-- Assignment statement
+<   [4]             +-- Reference to variable: a
+<   [4]             +-- Reference to array
+<   [4]                 +-- Reference to array
+<   [4]                     +-- Array allocation
+<   [4]                         +-- Primitive data type: int
+<   [4]                         +-- int: 1
+<   [4]                     +-- int: 2
+<   [4]                 +-- int: 2
+---
+> 4:17 : syntax error; expected '!=' or '%' or '&&' or '*' or '+' or '-' or '.' or '/' or ';' or '<' or '<=' or '==' or '>' or '>=' or '||', but found '['
