@@ -1,4 +1,4 @@
-/**
+System.out.println(yourAst.accept(new PrettyPrint()));/**
  * @team Happy Tree Friends
  * 1. Sagi Katorza
  * 2. Assaf Krintza
@@ -67,9 +67,9 @@ public class Main {
 					
 					// Convert the parsing tree into an AST
 					AbstractSyntaxTree ast = new AbstractSyntaxTree(currTree);
-					
-					// TODO Print the AST
-				}
+					//print the AST in human-readable representation format using PrettyPrint Visitor
+					System.out.println(yourAst.accept(new PrettyPrint()));				
+        }
 			}
 		}
 	}
