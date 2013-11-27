@@ -25,6 +25,7 @@ import ic.ast.builders.expr.BinaryOpBuilder;
 import ic.ast.builders.expr.CallBuilder;
 import ic.ast.builders.expr.ExpressionBlockBuilder;
 import ic.ast.builders.expr.ExpressionBuilder;
+import ic.ast.builders.expr.ExpressionCloseBuilder;
 import ic.ast.builders.expr.LengthBuilder;
 import ic.ast.builders.expr.LiteralBuilder;
 import ic.ast.builders.expr.NewArrayBuilder;
@@ -84,6 +85,7 @@ public class ASTBuilder {
 		this.registerBuilder(new CallBuilder());
 		this.registerBuilder(new ExpressionBlockBuilder());
 		this.registerBuilder(new ExpressionBuilder());
+		this.registerBuilder(new ExpressionCloseBuilder());
 		this.registerBuilder(new LengthBuilder());
 		this.registerBuilder(new LiteralBuilder());
 		this.registerBuilder(new NewArrayBuilder());

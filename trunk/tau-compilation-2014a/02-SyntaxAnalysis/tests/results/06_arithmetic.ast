@@ -6,22 +6,25 @@
   [5]             +-- Primitive data type: int
   [6]         +-- Assignment statement
   [6]             +-- Reference to variable: a
-  [6]             +-- Binary operation: multiply (*)null
+  [6]             +-- Binary operation: multiply (*)
+  [6]                 +-- Binary operation: add (+)
+  [6]                     +-- int: 5
+  [6]                     +-- int: 8
   [6]                 +-- int: 11
   [7]         +-- Assignment statement
   [7]             +-- Reference to variable: a
-  [7]             +-- Binary operation: multiply (*)
-  [7]                 +-- Binary operation: add (+)
-  [7]                     +-- int: 5
+  [7]             +-- Binary operation: add (+)
+  [7]                 +-- int: 5
+  [7]                 +-- Binary operation: multiply (*)
   [7]                     +-- int: 8
-  [7]                 +-- int: 11
+  [7]                     +-- int: 11
   [8]         +-- Assignment statement
   [8]             +-- Reference to variable: a
   [8]             +-- Binary operation: subtract (-)
+  [8]                 +-- int: 5
   [8]                 +-- Binary operation: subtract (-)
-  [8]                     +-- int: 5
   [8]                     +-- int: 8
-  [8]                 +-- int: 11
+  [8]                     +-- int: 11
   [9]         +-- Assignment statement
   [9]             +-- Reference to variable: a
   [9]             +-- Unary operation: negate (-)
@@ -30,15 +33,15 @@
  [10]             +-- Primitive data type: boolean
  [11]         +-- Assignment statement
  [11]             +-- Reference to variable: b
- [11]             +-- Binary operation: logical or (||)
- [11]                 +-- Binary operation: multiply (*)
+ [11]             +-- Binary operation: equals (==)
+ [11]                 +-- Reference to variable: a
+ [11]                 +-- Binary operation: logical or (||)
+ [11]                     +-- int: 143
  [11]                     +-- Binary operation: less than (<)
- [11]                         +-- Binary operation: logical or (||)
- [11]                             +-- Binary operation: equals (==)
- [11]                                 +-- Reference to variable: a
- [11]                                 +-- int: 143
- [11]                             +-- Reference to variable: a
- [11]                         +-- int: 0
- [11]                     +-- Reference to variable: max
- [11]                 +-- Unary operation: logical not (!)
- [11]                     +-- boolean: true
+ [11]                         +-- Reference to variable: a
+ [11]                         +-- Binary operation: multiply (*)
+ [11]                             +-- int: 0
+ [11]                             +-- Binary operation: logical or (||)
+ [11]                                 +-- Reference to variable: max
+ [11]                                 +-- Unary operation: logical not (!)
+ [11]                                     +-- boolean: true

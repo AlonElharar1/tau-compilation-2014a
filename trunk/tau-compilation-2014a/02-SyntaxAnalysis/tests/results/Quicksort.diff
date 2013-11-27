@@ -1,11 +1,3 @@
-115d114
-<  [50]             +-- Reference to array length
-117a117
->  [50]                 +-- Reference to array length
-143d142
-<  [60]             +-- Reference to array length
-145a145
->  [60]                 +-- Reference to array length
 163c163
 <  [65]                 +-- string: ''\\n''
 ---

@@ -17,7 +17,6 @@ import ic.ast.Visitor;
  * Class multi-field AST node.
  * 
  */
-// TODO needed??
 public class DecMultilField extends Node {
 
 	private Type type;

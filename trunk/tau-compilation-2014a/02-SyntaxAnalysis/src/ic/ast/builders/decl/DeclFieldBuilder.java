@@ -21,7 +21,6 @@ public class DeclFieldBuilder implements ASTNodeBuilder {
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
 		
-		// TODO support fields with multiple id's
 		return (new DeclField(
 				buildHelper.build(parseTree.subtrees.get(0), Type.class), 
 				((Token)parseTree.subtrees.get(1).root).text));

@@ -1,4 +1,4 @@
 1c1
-< 6:27 : syntax error; expected '!' or '(' or '-' or 'CLASS_ID' or 'ID' or 'INTEGER' or 'STRING' or 'false' or 'new' or 'null' or 'this' or 'true', but found ']'
+< 6:26 : syntax error; expected ';', but found '['
 ---
 > 6:26 : syntax error; expected '!=' or '%' or '&&' or '*' or '+' or '-' or '.' or '/' or ';' or '<' or '<=' or '==' or '>' or '>=' or '||', but found '['
