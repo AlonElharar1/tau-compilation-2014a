@@ -1,4 +1,0 @@
-1c1
-< 9:12 : syntax error; expected '!=' or '%' or '&&' or '*' or '+' or '-' or '.' or '/' or ';' or '<' or '<=' or '==' or '>' or '>=' or '[' or '||', but found '='
----
-> 9:12 : syntax error; expected '.' or ';' or '[', but found '='

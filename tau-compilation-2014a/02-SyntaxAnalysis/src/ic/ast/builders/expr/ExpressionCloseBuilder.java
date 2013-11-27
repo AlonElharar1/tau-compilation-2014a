@@ -12,15 +12,17 @@ import ic.ast.SyntaxException;
 import ic.ast.builders.ASTBuilder;
 import ic.ast.builders.ASTNodeBuilder;
 
-public class ExpressionBlockBuilder implements ASTNodeBuilder {
+public class ExpressionCloseBuilder implements ASTNodeBuilder {
 
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
-		return (buildHelper.build(parseTree.subtrees.get(1)));
+		
+		return (buildHelper.build(parseTree.subtrees.get(0)));
+		
 	}
-	
+
 	@Override
 	public String getParseTreeTag() {
-		return ("EXPRBLOCK");
+		return ("EXPRCLOSE");
 	}
 }

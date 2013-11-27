@@ -13,10 +13,10 @@
  [12]     +-- Declaration of virtual method: eval
  [12]         +-- Primitive data type: int
  [12]         +-- Return statement, with return value
- [12]             +-- Call to virtual method: eval, on object
- [12]                 +-- Binary operation: add (+)
- [12]                     +-- Call to virtual method: eval, on object
- [12]                         +-- Reference to variable: leftOperand
+ [12]             +-- Binary operation: add (+)
+ [12]                 +-- Call to virtual method: eval, on object
+ [12]                     +-- Reference to variable: leftOperand
+ [12]                 +-- Call to virtual method: eval, on object
  [12]                     +-- Reference to variable: rightOperand
  [15] +-- Declaration of class: UnOp, subclass of Expr
  [16]     +-- Declaration of field: operand
@@ -25,8 +25,8 @@
  [20]     +-- Declaration of virtual method: eval
  [20]         +-- Primitive data type: int
  [20]         +-- Return statement, with return value
- [20]             +-- Call to virtual method: eval, on object
- [20]                 +-- Unary operation: negate (-)
+ [20]             +-- Unary operation: negate (-)
+ [20]                 +-- Call to virtual method: eval, on object
  [20]                     +-- Reference to variable: operand
  [23] +-- Declaration of class: NonZero, subclass of UnOp
  [24]     +-- Declaration of virtual method: eval

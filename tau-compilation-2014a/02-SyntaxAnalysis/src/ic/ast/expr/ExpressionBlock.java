@@ -12,7 +12,7 @@ public class ExpressionBlock extends Expression {
 
 	public Object accept(Visitor visitor) {
 		return null;
-		//return visitor.visit(this);
+		//return visitor.visit(this.expression);
 	}
 
 	/**

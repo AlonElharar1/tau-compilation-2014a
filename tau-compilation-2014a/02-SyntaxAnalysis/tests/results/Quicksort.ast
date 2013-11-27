@@ -112,9 +112,9 @@
  [49]                 +-- Primitive data type: int
  [49]                 +-- int: 0
  [50]         +-- While statement
- [50]             +-- Reference to array length
- [50]                 +-- Binary operation: less than (<)
- [50]                     +-- Reference to variable: i
+ [50]             +-- Binary operation: less than (<)
+ [50]                 +-- Reference to variable: i
+ [50]                 +-- Reference to array length
  [50]                     +-- Reference to variable: a
  [50]             +-- Block of statements
  [51]                 +-- Assignment statement
@@ -140,9 +140,9 @@
  [59]             +-- Call to static method: print, in class Library
  [59]                 +-- string: ''Array elements: ''
  [60]         +-- While statement
- [60]             +-- Reference to array length
- [60]                 +-- Binary operation: less than (<)
- [60]                     +-- Reference to variable: i
+ [60]             +-- Binary operation: less than (<)
+ [60]                 +-- Reference to variable: i
+ [60]                 +-- Reference to array length
  [60]                     +-- Reference to variable: a
  [60]             +-- Block of statements
  [61]                 +-- Method call statement

@@ -9,10 +9,8 @@ package ic.lexer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class Lexer {
 

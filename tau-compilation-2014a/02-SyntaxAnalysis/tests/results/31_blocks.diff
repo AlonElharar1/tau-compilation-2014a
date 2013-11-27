@@ -1,4 +1,4 @@
 1c1
-< 5:9 : syntax error; expected '!' or '(' or '-' or 'CLASS_ID' or 'ID' or 'INTEGER' or 'STRING' or 'boolean' or 'break' or 'continue' or 'false' or 'if' or 'int' or 'new' or 'null' or 'return' or 'string' or 'this' or 'true' or 'void' or 'while' or '{', but found '}'
+< 5:9 : syntax error; expected '(' or 'CLASS_ID' or 'ID' or 'INTEGER' or 'STRING' or 'boolean' or 'break' or 'continue' or 'false' or 'if' or 'int' or 'null' or 'return' or 'string' or 'this' or 'true' or 'void' or 'while' or '{', but found '}'
 ---
 > 9:2 : syntax error; expected 'CLASS_ID' or 'boolean' or 'int' or 'static' or 'string' or 'void' or '}', but found '{'
