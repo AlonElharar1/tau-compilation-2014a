@@ -94,6 +94,7 @@ public interface Visitor {
 	public Object visit(Literal literal);
 
 	public Object visit(UnaryOp unaryOp);
+	
 	public Object visit(BinaryOp binaryOp);
 
 }
