@@ -1,5 +1,7 @@
 package ic.ast;
 
+import ic.semantics.scopes.IceCoffeScope;
+
 
 /**
  * Abstract AST node base class.
@@ -7,6 +9,7 @@ package ic.ast;
 public abstract class Node {
 
 	private int line;
+	private IceCoffeScope scope = null;
 
 	/**
 	 * Double dispatch method, to allow a visitor to visit a specific subclass.
@@ -31,5 +34,12 @@ public abstract class Node {
 	public int getLine() {
 		return line;
 	}
+	
+	public IceCoffeScope getScope() {
+		return (this.scope);
+	}
 
+	public void setScope(IceCoffeScope scope) {
+		this.scope = scope;
+	}
 }
