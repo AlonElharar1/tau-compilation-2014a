@@ -9,10 +9,6 @@ package ic.interpreter;
 
 import ic.IceCoffeException;
 
-/**
- * @author Nir
- *
- */
 @SuppressWarnings("serial")
 public class InterpreterRunTimeException extends IceCoffeException {
 
@@ -22,9 +18,8 @@ public class InterpreterRunTimeException extends IceCoffeException {
 	 * @param type
 	 * @param message
 	 */
-	public InterpreterRunTimeException(int line, int column, String type,
-			String message) {
-		super(line, column, type, message);
+	public InterpreterRunTimeException(int line, int column, String message) {
+		super(line, column, "run time", message);
 		// TODO Auto-generated constructor stub
 	}
 
