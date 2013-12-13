@@ -9,11 +9,11 @@ package ic.ast.builders.decl;
 
 import fun.parser.Tree;
 import ic.ast.Node;
-import ic.ast.SyntaxException;
 import ic.ast.builders.ASTBuilder;
 import ic.ast.builders.ASTNodeBuilder;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.Program;
+import ic.syntax.SyntaxException;
 
 public class ProgramBuilder implements ASTNodeBuilder {
 

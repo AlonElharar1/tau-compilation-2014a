@@ -8,12 +8,12 @@ package ic.ast.builders.expr;
 
 import fun.parser.Tree;
 import ic.ast.Node;
-import ic.ast.SyntaxException;
 import ic.ast.builders.ASTBuilder;
 import ic.ast.builders.ASTNodeBuilder;
 import ic.ast.decl.PrimitiveType;
 import ic.ast.expr.Literal;
 import ic.lexer.Token;
+import ic.syntax.SyntaxException;
 
 public class LiteralBuilder implements ASTNodeBuilder {
 

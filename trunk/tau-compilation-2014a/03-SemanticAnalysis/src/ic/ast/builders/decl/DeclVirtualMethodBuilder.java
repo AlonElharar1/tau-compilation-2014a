@@ -8,7 +8,6 @@ package ic.ast.builders.decl;
 
 import fun.parser.Tree;
 import ic.ast.Node;
-import ic.ast.SyntaxException;
 import ic.ast.builders.ASTBuilder;
 import ic.ast.builders.ASTNodeBuilder;
 import ic.ast.decl.DeclVirtualMethod;
@@ -16,6 +15,7 @@ import ic.ast.decl.Parameter;
 import ic.ast.decl.Type;
 import ic.ast.stmt.Statement;
 import ic.lexer.Token;
+import ic.syntax.SyntaxException;
 
 import java.util.List;
 
