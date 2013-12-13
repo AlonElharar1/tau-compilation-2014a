@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.Type;
 
 /**
  * Variable reference AST node.
@@ -38,6 +39,15 @@ public class RefField extends Ref {
 
 	public String getField() {
 		return fieldName;
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getType()
+	 */
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

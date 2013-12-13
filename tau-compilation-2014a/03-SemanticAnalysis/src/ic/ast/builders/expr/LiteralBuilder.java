@@ -25,7 +25,7 @@ public class LiteralBuilder implements ASTNodeBuilder {
 		try {
 			
 			if (literalToken.tag.equals("INTEGER")) {
-				return (new Literal(literalToken.line, 
+				return (new Literal(literalToken.line,
 						PrimitiveType.DataType.INT, 
 						Integer.parseInt(literalToken.text)));
 			}
