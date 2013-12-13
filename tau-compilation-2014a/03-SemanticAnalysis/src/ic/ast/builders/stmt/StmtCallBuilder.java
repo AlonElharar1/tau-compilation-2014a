@@ -8,11 +8,11 @@ package ic.ast.builders.stmt;
 
 import fun.parser.Tree;
 import ic.ast.Node;
-import ic.ast.SyntaxException;
 import ic.ast.builders.ASTBuilder;
 import ic.ast.builders.ASTNodeBuilder;
 import ic.ast.expr.Call;
 import ic.ast.stmt.StmtCall;
+import ic.syntax.SyntaxException;
 
 public class StmtCallBuilder implements ASTNodeBuilder {
 

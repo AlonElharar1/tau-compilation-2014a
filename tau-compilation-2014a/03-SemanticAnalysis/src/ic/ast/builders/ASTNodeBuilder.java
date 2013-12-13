@@ -9,7 +9,7 @@ package ic.ast.builders;
 
 import fun.parser.Tree;
 import ic.ast.Node;
-import ic.ast.SyntaxException;
+import ic.syntax.SyntaxException;
 
 public interface ASTNodeBuilder {
 

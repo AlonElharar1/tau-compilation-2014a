@@ -9,7 +9,6 @@ package ic.ast.builders;
 
 import fun.parser.Tree;
 import ic.ast.Node;
-import ic.ast.SyntaxException;
 import ic.ast.builders.decl.ClassTypeBuilder;
 import ic.ast.builders.decl.DeclClassBuilder;
 import ic.ast.builders.decl.DeclFieldBuilder;
@@ -49,6 +48,7 @@ import ic.ast.builders.stmt.StmtContinueBuilder;
 import ic.ast.builders.stmt.StmtIfBuilder;
 import ic.ast.builders.stmt.StmtReturnBuilder;
 import ic.ast.builders.stmt.StmtWhileBuilder;
+import ic.syntax.SyntaxException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -12,11 +12,13 @@ import fun.parser.earley.EarleyState;
 import ic.IceCoffeException;
 import ic.IceCoffeGrammers;
 import ic.ast.PrettyPrint;
-import ic.ast.SyntaxException;
 import ic.ast.builders.ASTBuilder;
+import ic.ast.decl.Parameter;
 import ic.ast.decl.Program;
+import ic.interpreter.IceCoffeInterpreter;
 import ic.lexer.Lexer;
 import ic.lexer.Token;
+import ic.syntax.SyntaxException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,14 +30,56 @@ public class Main {
 
 		// Validate arguments
 		if (args.length < 1) {
-			System.out.println("Not cool man... I need a file!");
+			System.out.println("Usage: program [-Llib] [method] [parameter1] ... ");
 			return;
 		}
 
+		int argIndex = 0;
+		
+		// Extract the program file name
+		String programFile = args[argIndex++];
+		
+		// Extract library file if given
+		String libraryFile = ((args.length > 1) && (args[1].startsWith("-L"))) ? 
+				args[argIndex++].substring(2) : null;
+				
+		// TODO parse the program
+		Program prog = null;
+				
+		// Check if the interpreter module is requested
+		if (args.length > argIndex) {
+			
+			// Extract the interpreter data
+			String interperterMethod = null;
+			String[] params = null;
+			
+			interperterMethod = args[argIndex++];
+			
+			params = new String[args.length - argIndex - 1];
+			
+			for (int i = 0; i < params.length; i++) {
+				params[i] = args[argIndex++];
+			}
+			
+			// Run the interpreter and print the result
+			Object result = 
+					new IceCoffeInterpreter(prog).executeMethod(interperterMethod, params);
+			System.out.println(result);
+		}
+		else {
+
+			// TODO print the symbol table
+			
+		}
+		
+				
 		boolean isLibrary = false;
 		
 		try {
 			
+
+					
+					
 			// Parse all files
 			for (String argStr : args) {
 				
