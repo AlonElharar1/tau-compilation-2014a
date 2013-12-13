@@ -46,7 +46,7 @@ public class IceCoffeInterpreter implements Visitor {
 	public IceCoffeInterpreter(Program program) {
 	}
 
-	public Object executeMethod(String method, Object[] parameters) {
+	public Object executeMethod(String method, String[] parameters) {
 		return null;
 	}
 	
