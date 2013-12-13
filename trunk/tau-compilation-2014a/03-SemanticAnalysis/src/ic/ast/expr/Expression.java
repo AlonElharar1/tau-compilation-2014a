@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Node;
+import ic.ast.decl.Type;
 
 /**
  * Abstract base class for expression AST nodes.
@@ -17,4 +18,6 @@ public abstract class Expression extends Node {
 	protected Expression(int line) {
 		super(line);
 	}
+	
+	public abstract Type getType();
 }

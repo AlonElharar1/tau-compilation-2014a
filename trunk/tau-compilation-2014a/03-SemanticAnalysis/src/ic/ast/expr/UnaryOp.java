@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.Type;
 
 
 /**
@@ -67,6 +68,15 @@ public class UnaryOp extends Expression {
 			}
 			throw new Error("internal error; unary operator not found: " + op);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getType()
+	 */
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

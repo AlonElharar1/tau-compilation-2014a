@@ -2,6 +2,7 @@ package ic.ast.expr;
 
 import ic.ast.Visitor;
 import ic.ast.decl.PrimitiveType;
+import ic.ast.decl.Type;
 
 /**
  * Literal value AST node.
@@ -9,7 +10,7 @@ import ic.ast.decl.PrimitiveType;
  */
 public class Literal extends Expression {
 
-	private PrimitiveType.DataType type;
+	private PrimitiveType type;
 
 	private Object value;
 
@@ -29,12 +30,16 @@ public class Literal extends Expression {
 	 */
 	public Literal(int line, PrimitiveType.DataType type, Object value) {
 		super(line);
-		this.type = type;
+		this.type = new PrimitiveType(line, type);
 		this.value = value;
 	}
 
-	public PrimitiveType.DataType getType() {
-		return type;
+	public PrimitiveType.DataType getDataType() {
+		return (type.getDataType());
+	}
+	
+	public Type getType() {
+		return (type);
 	}
 
 	public Object getValue() {

@@ -410,8 +410,8 @@ public class PrettyPrint implements Visitor {
 
 		Object value = literal.getValue();
 		indent(output, literal);
-		output.append(literal.getType() + ": "
-				+ (literal.getType() == PrimitiveType.DataType.STRING ? 
+		output.append(literal.getDataType() + ": " + 
+				(literal.getDataType() == PrimitiveType.DataType.STRING ? 
 						stringRepr((String)value) : value));
 		return output.toString();
 	}
