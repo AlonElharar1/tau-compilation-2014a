@@ -41,7 +41,6 @@ import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
 
-import java.util.Iterator;
 import java.util.Stack;
 
 public class ScopesBuilder implements Visitor {
