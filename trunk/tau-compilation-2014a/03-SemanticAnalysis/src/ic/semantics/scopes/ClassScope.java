@@ -8,27 +8,59 @@
 package ic.semantics.scopes;
 
 import ic.ast.Node;
+import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclMethod;
-import ic.ast.decl.DeclStaticMethod;
-import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.expr.Ref;
+import ic.ast.expr.RefField;
 
 import java.util.HashMap;
 
 public class ClassScope extends IceCoffeScope {
 
-	public HashMap<String, DeclStaticMethod> staticMethods = new HashMap<String, DeclStaticMethod>();
-	public HashMap<String, DeclVirtualMethod> virtualMethods = new HashMap<String, DeclVirtualMethod>();
-	public HashMap<String, DeclField> instanceFields = new HashMap<String, DeclField>();
+	private DeclClass scopeClass;
+	
+	public HashMap<String, DeclMethod> methods = new HashMap<String, DeclMethod>();
+	public HashMap<String, DeclField> fields = new HashMap<String, DeclField>();
+	
+	/**
+	 * @param parentScope
+	 */
+	public ClassScope(IceCoffeScope parentScope, DeclClass classNode) {
+		super(parentScope);
+		
+		this.scopeClass = classNode;
+		
+		for (DeclMethod method : this.scopeClass.getMethods()) {
+			this.methods.put(
+					String.format("%s.%s", this.scopeClass.getName(), method.getName()),
+					method);
+		}
+		
+		for (DeclField field : this.scopeClass.getFields()) {
+			this.fields.put(
+					String.format("%s.%s", this.scopeClass.getName(), field.getName()), 
+					field);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#currentClass()
+	 */
+	@Override
+	public DeclClass currentClass() {
+		return (this.scopeClass);
+	}
 	
 	/* (non-Javadoc)
 	 * @see ic.semantics.scopes.IceCoffeScope#findMethod(java.lang.String)
 	 */
 	@Override
-	public DeclMethod findMethod(String methodName) {
-		// TODO Auto-generated method stub
-		return super.findMethod(methodName);
+	public DeclMethod findMethod(String methodId) {
+		if (!this.methods.containsKey(methodId))
+			return (super.findMethod(methodId));
+		
+		return (this.methods.get(methodId));
 	}
 	
 	/* (non-Javadoc)
@@ -36,8 +68,10 @@ public class ClassScope extends IceCoffeScope {
 	 */
 	@Override
 	public Node findRef(Ref location) {
-		// TODO Auto-generated method stub
-		return super.findRef(location);
-	}
-	
+		if (!(location instanceof RefField) ||
+			(!this.fields.containsKey(((RefField)location).getField())))
+			return (super.findRef(location));
+		
+		return (this.fields.get(((RefField)location).getField()));
+	}	
 }
