@@ -7,17 +7,36 @@
 
 package ic.semantics.scopes;
 
-import java.util.HashMap;
-
 import ic.ast.Node;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclMethod;
-import ic.ast.decl.Type;
 import ic.ast.expr.Ref;
 
 public abstract class IceCoffeScope {
 
 	protected IceCoffeScope parentScope = null;
+	
+	public IceCoffeScope(IceCoffeScope parentScope) {
+		this.parentScope = parentScope;
+	}
+
+	/**
+	 * Returns the current class scope
+	 * @return
+	 */
+	public DeclClass currentClass() {
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.currentClass());
+	}
+	
+	public DeclMethod currentMethod() {
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.currentMethod());
+	}
 	
 	/**
 	 * Search a class in this scope or in his parents
@@ -25,7 +44,10 @@ public abstract class IceCoffeScope {
 	 * @return
 	 */
 	public DeclClass findClass(String className) {
-		return null;
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.findClass(className));
 	}
 	
 	/**
@@ -33,8 +55,11 @@ public abstract class IceCoffeScope {
 	 * @param methodName
 	 * @return
 	 */
-	public DeclMethod findMethod(String methodName) {
-		return null;
+	public DeclMethod findMethod(String methodId) {
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.findMethod(methodId));
 	}
 	
 	/**
@@ -43,7 +68,10 @@ public abstract class IceCoffeScope {
 	 * @return
 	 */
 	public Node findRef(Ref location) {
-		return null;
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.findRef(location));
 	}
 
 }

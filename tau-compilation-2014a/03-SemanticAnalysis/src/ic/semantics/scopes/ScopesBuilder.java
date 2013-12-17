@@ -12,6 +12,7 @@ import ic.ast.decl.ClassType;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclLibraryMethod;
+import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
 import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.decl.Parameter;
@@ -30,6 +31,7 @@ import ic.ast.expr.This;
 import ic.ast.expr.UnaryOp;
 import ic.ast.expr.VirtualCall;
 import ic.ast.stmt.LocalVariable;
+import ic.ast.stmt.Statement;
 import ic.ast.stmt.StmtAssignment;
 import ic.ast.stmt.StmtBlock;
 import ic.ast.stmt.StmtBreak;
@@ -39,19 +41,27 @@ import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
 
+import java.util.Iterator;
+import java.util.Stack;
+
 public class ScopesBuilder implements Visitor {
 
-	public void buildScopes(Program program) {
-		// TODO set each node scope
-	}
+	Stack<IceCoffeScope> scopesStack = new Stack<IceCoffeScope>();
 	
 	/* (non-Javadoc)
 	 * @see ic.ast.Visitor#visit(ic.ast.decl.Program)
 	 */
 	@Override
 	public Object visit(Program program) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		program.setScope(new GlobalScope(program));
+		this.scopesStack.push(program.getScope());
+		
+		for (DeclClass classNode : program.getClasses()) {
+			classNode.accept(this);
+		}
+		
+		return (this.scopesStack.pop());
 	}
 
 	/* (non-Javadoc)
@@ -59,8 +69,19 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclClass icClass) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		icClass.setScope(new ClassScope(this.scopesStack.peek(), icClass));
+		this.scopesStack.push(icClass.getScope());
+		
+		for (DeclMethod	method : icClass.getMethods()) {
+			method.accept(this);
+		}
+		
+		for (DeclField field : icClass.getFields()) {
+			field.accept(this);
+		}
+
+		return (this.scopesStack.pop());
 	}
 
 	/* (non-Javadoc)
@@ -68,17 +89,32 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclField field) {
-		// TODO Auto-generated method stub
-		return null;
+		field.setScope(this.scopesStack.peek());
+		return (field.getScope());
 	}
 
+	private Object visitMethod(DeclMethod method) {
+
+		method.setScope(new MethodScope(this.scopesStack.peek(), method));
+		this.scopesStack.push(method.getScope());
+		
+		for (Parameter param : method.getFormals()) {
+			param.accept(this);
+		}
+		
+		for (Statement stmt : method.getStatements()) {
+			stmt.accept(this);
+		}
+		
+		return (this.scopesStack.pop());
+	}
+	
 	/* (non-Javadoc)
 	 * @see ic.ast.Visitor#visit(ic.ast.decl.DeclVirtualMethod)
 	 */
 	@Override
 	public Object visit(DeclVirtualMethod method) {
-		// TODO Auto-generated method stub
-		return null;
+		return (this.visitMethod(method));
 	}
 
 	/* (non-Javadoc)
@@ -86,8 +122,7 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclStaticMethod method) {
-		// TODO Auto-generated method stub
-		return null;
+		return (this.visitMethod(method));
 	}
 
 	/* (non-Javadoc)
@@ -95,8 +130,7 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclLibraryMethod method) {
-		// TODO Auto-generated method stub
-		return null;
+		return (this.visitMethod(method));
 	}
 
 	/* (non-Javadoc)
@@ -104,8 +138,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(Parameter formal) {
-		// TODO Auto-generated method stub
-		return null;
+		formal.setScope(this.scopesStack.peek());
+		return (formal.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -113,8 +147,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(PrimitiveType type) {
-		// TODO Auto-generated method stub
-		return null;
+		type.setScope(this.scopesStack.peek());
+		return (type.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -122,8 +156,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(ClassType type) {
-		// TODO Auto-generated method stub
-		return null;
+		type.setScope(this.scopesStack.peek());
+		return (type.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -131,8 +165,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtAssignment assignment) {
-		// TODO Auto-generated method stub
-		return null;
+		assignment.setScope(this.scopesStack.peek());
+		return (assignment.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -140,8 +174,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtCall callStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		callStatement.setScope(this.scopesStack.peek());
+		return (callStatement.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -149,8 +183,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtReturn returnStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		returnStatement.setScope(this.scopesStack.peek());
+		return (returnStatement.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -158,8 +192,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtIf ifStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		ifStatement.setScope(this.scopesStack.peek());
+		return (ifStatement.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -167,8 +201,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtWhile whileStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		whileStatement.setScope(this.scopesStack.peek());
+		return (whileStatement.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -176,8 +210,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtBreak breakStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		breakStatement.setScope(this.scopesStack.peek());
+		return (breakStatement.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -185,8 +219,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtContinue continueStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		continueStatement.setScope(this.scopesStack.peek());
+		return (continueStatement.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -194,8 +228,16 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtBlock statementsBlock) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		statementsBlock.setScope(
+				new StatementBlockScope(this.scopesStack.peek(), statementsBlock));
+		this.scopesStack.push(statementsBlock.getScope());
+		
+		for (Statement stmt : statementsBlock.getStatements()) {
+			stmt.accept(this);
+		}
+		
+		return (this.scopesStack.pop());
 	}
 
 	/* (non-Javadoc)
@@ -203,8 +245,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(LocalVariable localVariable) {
-		// TODO Auto-generated method stub
-		return null;
+		localVariable.setScope(this.scopesStack.peek());
+		return (localVariable.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -212,8 +254,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(RefVariable location) {
-		// TODO Auto-generated method stub
-		return null;
+		location.setScope(this.scopesStack.peek());
+		return (location.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -221,8 +263,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(RefField location) {
-		// TODO Auto-generated method stub
-		return null;
+		location.setScope(this.scopesStack.peek());
+		return (location.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -230,8 +272,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(RefArrayElement location) {
-		// TODO Auto-generated method stub
-		return null;
+		location.setScope(this.scopesStack.peek());
+		return (location.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -239,8 +281,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(StaticCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		call.setScope(this.scopesStack.peek());
+		return (call.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -248,8 +290,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(VirtualCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		call.setScope(this.scopesStack.peek());
+		return (call.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -257,8 +299,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(This thisExpression) {
-		// TODO Auto-generated method stub
-		return null;
+		thisExpression.setScope(this.scopesStack.peek());
+		return (thisExpression.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -266,8 +308,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(NewInstance newClass) {
-		// TODO Auto-generated method stub
-		return null;
+		newClass.setScope(this.scopesStack.peek());
+		return (newClass.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -275,8 +317,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(NewArray newArray) {
-		// TODO Auto-generated method stub
-		return null;
+		newArray.setScope(this.scopesStack.peek());
+		return (newArray.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -284,8 +326,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(Length length) {
-		// TODO Auto-generated method stub
-		return null;
+		length.setScope(this.scopesStack.peek());
+		return (length.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -293,8 +335,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(Literal literal) {
-		// TODO Auto-generated method stub
-		return null;
+		literal.setScope(this.scopesStack.peek());
+		return (literal.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -302,8 +344,8 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(UnaryOp unaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		unaryOp.setScope(this.scopesStack.peek());
+		return (unaryOp.getScope());
 	}
 
 	/* (non-Javadoc)
@@ -311,7 +353,7 @@ public class ScopesBuilder implements Visitor {
 	 */
 	@Override
 	public Object visit(BinaryOp binaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		binaryOp.setScope(this.scopesStack.peek());
+		return (binaryOp.getScope());
 	}
 }
