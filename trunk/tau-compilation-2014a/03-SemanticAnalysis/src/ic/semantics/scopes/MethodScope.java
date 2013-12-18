@@ -14,12 +14,13 @@ import ic.ast.expr.Ref;
 import ic.ast.expr.RefVariable;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class MethodScope extends StatementBlockScope {
 
 	private DeclMethod scopeMethod;
 	
-	private HashMap<String, Parameter> parameters = new HashMap<String, Parameter>();
+	private HashMap<String, Parameter> parameters = new LinkedHashMap<String, Parameter>();
 
 	/**
 	 * @param parentScope

@@ -8,13 +8,14 @@
 package ic.semantics.scopes;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.Program;
 
 public class GlobalScope extends IceCoffeScope {
 	
-	private HashMap<String, DeclClass> classes = new HashMap<String, DeclClass>();
+	private HashMap<String, DeclClass> classes = new LinkedHashMap<String, DeclClass>();
 	
 	public GlobalScope(Program program) {
 		super(null);

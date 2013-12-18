@@ -18,13 +18,14 @@ import ic.ast.expr.Ref;
 import ic.ast.expr.RefField;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ClassScope extends IceCoffeScope {
 
 	private DeclClass scopeClass;
 	
-	public HashMap<String, DeclMethod> methods = new HashMap<String, DeclMethod>();
-	public HashMap<String, DeclField> fields = new HashMap<String, DeclField>();
+	public HashMap<String, DeclMethod> methods = new LinkedHashMap<String, DeclMethod>();
+	public HashMap<String, DeclField> fields = new LinkedHashMap<String, DeclField>();
 	
 	/**
 	 * @param parentScope
