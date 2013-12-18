@@ -76,7 +76,7 @@ public class StatementBlockScope extends IceCoffeScope {
 	@Override
 	protected void internalPrint() {
 		for (String localId : this.localVariables.keySet()) {
-			System.out.printf("\tLocal variable:\t%s : %s", 
+			System.out.printf("\tLocal variable:\t%s : %s\n", 
 					this.localVariables.get(localId).getName(),
 					this.localVariables.get(localId).getType());
 		}

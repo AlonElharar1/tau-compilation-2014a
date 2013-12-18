@@ -101,7 +101,7 @@ public class ClassScope extends IceCoffeScope {
 	protected void internalPrint() {
 		
 		for (String fieldId : this.fields.keySet()) {
-			System.out.printf("\tField:\t%s : %s",
+			System.out.printf("\tField:\t%s : %s\n",
 					this.fields.get(fieldId).getName(),
 					this.fields.get(fieldId).getType());
 		}

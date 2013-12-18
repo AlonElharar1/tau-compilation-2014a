@@ -22,7 +22,8 @@ public abstract class IceCoffeScope {
 	
 	public IceCoffeScope(IceCoffeScope parentScope) {
 		this.parentScope = parentScope;
-		this.parentScope.childrenScopes.add(this);
+		if (parentScope != null)
+			this.parentScope.childrenScopes.add(this);
 	}
 
 	/**
@@ -99,12 +100,14 @@ public abstract class IceCoffeScope {
 		if (this.getScopeName() != null)
 			title += String.format(": %s", this.getScopeName());
 		
-		if (this.parentScope != null)
+		if ((this.parentScope != null) && (this.parentScope.getScopeName() != null))
 			title += String.format(" (parent = %s)", this.parentScope.getScopeName());
 		
 		System.out.println(title);
 		
 		this.internalPrint();
+
+		System.out.println();
 		
 		for (IceCoffeScope scope : this.childrenScopes) {
 			scope.print();
