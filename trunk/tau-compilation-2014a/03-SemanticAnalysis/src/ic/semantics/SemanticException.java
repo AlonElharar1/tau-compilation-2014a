@@ -18,8 +18,8 @@ public class SemanticException extends IceCoffeException {
 	 * @param type
 	 * @param message
 	 */
-	public SemanticException(int line, int column, String message) {
-		super(line, column, "semantic", message);
+	public SemanticException(int line, String message) {
+		super(line, 0, "semantic", message);
 	}
 
 }
