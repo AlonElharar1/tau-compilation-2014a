@@ -69,7 +69,12 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(DeclClass icClass) {
 		
-		icClass.setScope(new ClassScope(this.scopesStack.peek(), icClass));
+		IceCoffeScope parentScope = this.scopesStack.peek();
+		
+		if (icClass.hasSuperClass())
+			parentScope = parentScope.findClass(icClass.getSuperClassName()).getScope();
+		
+		icClass.setScope(new ClassScope(parentScope, icClass));
 		this.scopesStack.push(icClass.getScope());
 		
 		for (DeclMethod	method : icClass.getMethods()) {
