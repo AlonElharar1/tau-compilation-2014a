@@ -10,6 +10,7 @@ import ic.ast.decl.ClassType;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclLibraryMethod;
+import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
 import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.decl.Parameter;
@@ -36,6 +37,7 @@ import ic.ast.stmt.StmtContinue;
 import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
+import ic.semantics.SemanticException;
 
 public class LibraryCheck extends SemanticCheck {
 
@@ -44,7 +46,11 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Program program) {
-		// TODO Auto-generated method stub
+		
+		for (DeclClass icClass : program.getClasses())
+			if (!(icClass.getName().equals("Library")))
+				icClass.accept(this);
+	
 		return null;
 	}
 
@@ -53,7 +59,10 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclClass icClass) {
-		// TODO Auto-generated method stub
+		
+		for (DeclMethod method : icClass.getMethods())
+			method.accept(this);
+		
 		return null;
 	}
 
@@ -62,7 +71,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclField field) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -71,7 +80,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclVirtualMethod method) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -80,7 +89,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclStaticMethod method) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -89,8 +98,9 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclLibraryMethod method) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		throw new SemanticException(method.getLine(),"Library methods can only be defined in the library class, which is named 'Library'");
+		
 	}
 
 	/* (non-Javadoc)
@@ -98,7 +108,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Parameter formal) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -107,7 +117,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(PrimitiveType type) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -116,7 +126,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(ClassType type) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -125,7 +135,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtAssignment assignment) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -134,7 +144,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtCall callStatement) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -143,7 +153,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtReturn returnStatement) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -152,7 +162,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtIf ifStatement) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -161,7 +171,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtWhile whileStatement) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -170,7 +180,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtBreak breakStatement) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -179,7 +189,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtContinue continueStatement) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -188,7 +198,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtBlock statementsBlock) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -197,7 +207,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(LocalVariable localVariable) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -206,7 +216,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(RefVariable location) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -215,7 +225,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(RefField location) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -224,7 +234,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(RefArrayElement location) {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 
@@ -233,7 +243,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StaticCall call) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -242,7 +252,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(VirtualCall call) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -251,7 +261,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(This thisExpression) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -260,7 +270,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(NewInstance newClass) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -269,7 +279,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(NewArray newArray) {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 
@@ -278,7 +288,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Length length) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -287,7 +297,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Literal literal) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -296,7 +306,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(UnaryOp unaryOp) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -305,7 +315,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(BinaryOp binaryOp) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -314,7 +324,7 @@ public class LibraryCheck extends SemanticCheck {
 	 */
 	@Override
 	public void runCheck(Program program) {
-		// TODO Auto-generated method stub
+		program.accept(this);
 
 	}
 

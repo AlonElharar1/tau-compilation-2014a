@@ -19,10 +19,14 @@ public class SemanticChecker {
 	
 	public void addCheck(SemanticCheck check) {
 		
+		checks.add(check);
 	}
 	
 	public void runAllChecks(Program program) throws SemanticException {
-		
+	
+		for (SemanticCheck check : checks){
+			check.runCheck(program);
+		}
 	}
 	
 }
