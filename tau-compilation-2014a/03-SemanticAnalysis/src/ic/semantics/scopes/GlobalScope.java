@@ -35,4 +35,29 @@ public class GlobalScope extends IceCoffeScope {
 		return (this.classes.get(className));
 	}
 	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#getScopeName()
+	 */
+	@Override
+	public String getScopeName() {
+		return (null);
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#getScopeType()
+	 */
+	@Override
+	public String getScopeType() {
+		return ("Global");
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#internalPrint()
+	 */
+	@Override
+	protected void internalPrint() {
+		for (String classStr : this.classes.keySet()) {
+			System.out.printf("\tClass:\t%s\n", classStr);
+		}
+	}
 }

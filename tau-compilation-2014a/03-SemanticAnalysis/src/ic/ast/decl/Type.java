@@ -1,5 +1,7 @@
 package ic.ast.decl;
 
+import java.util.Arrays;
+
 import ic.ast.Node;
 
 /**
@@ -36,5 +38,20 @@ public abstract class Type extends Node {
 
 	public void incrementDimension() {
 		++dimension;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		
+		String typeStr = this.getDisplayName();
+		
+		for (int i = 0; i < this.dimension; i++) {
+			typeStr += "[]";
+		}
+		
+		return (typeStr);
 	}
 }

@@ -55,4 +55,20 @@ public abstract class DeclMethod extends Node {
 	public List<Statement> getStatements() {
 		return statements;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		
+		String paramsStr = "";
+		
+		for (Parameter param : this.formals) {
+			paramsStr += param.getType().toString() + " ";
+		}
+		
+		return (String.format("%s : %s-> %s", 
+				this.getName(), paramsStr, this.type));
+	}
 }

@@ -67,9 +67,8 @@ public class Main {
 			System.out.println(result);
 		}
 		else {
-
-			// TODO print the symbol table
-			
+			// Print the symbol table
+			prog.getScope().print();
 		}
 		
 				

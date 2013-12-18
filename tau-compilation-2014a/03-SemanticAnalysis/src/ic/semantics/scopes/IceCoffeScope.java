@@ -7,6 +7,9 @@
 
 package ic.semantics.scopes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ic.ast.Node;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclMethod;
@@ -15,9 +18,11 @@ import ic.ast.expr.Ref;
 public abstract class IceCoffeScope {
 
 	protected IceCoffeScope parentScope = null;
+	protected List<IceCoffeScope> childrenScopes = new ArrayList<IceCoffeScope>();
 	
 	public IceCoffeScope(IceCoffeScope parentScope) {
 		this.parentScope = parentScope;
+		this.parentScope.childrenScopes.add(this);
 	}
 
 	/**
@@ -74,4 +79,36 @@ public abstract class IceCoffeScope {
 		return (this.parentScope.findRef(location));
 	}
 
+	/**
+	 * Gets this scope name
+	 * @return
+	 */
+	public abstract String getScopeName();
+	
+	public abstract String getScopeType();
+	
+	protected abstract void internalPrint();
+	
+	/**
+	 * Prints this scope data
+	 */
+	public void print() {
+		
+		String title = String.format("%s Symbol Table", this.getScopeType());
+		
+		if (this.getScopeName() != null)
+			title += String.format(": %s", this.getScopeName());
+		
+		if (this.parentScope != null)
+			title += String.format(" (parent = %s)", this.parentScope.getScopeName());
+		
+		System.out.println(title);
+		
+		this.internalPrint();
+		
+		for (IceCoffeScope scope : this.childrenScopes) {
+			scope.print();
+		}
+	}
+	
 }
