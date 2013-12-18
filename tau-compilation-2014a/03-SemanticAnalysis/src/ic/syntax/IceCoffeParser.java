@@ -68,7 +68,7 @@ public class IceCoffeParser {
 		
 		// If library exist combine it into the program
 		if (lib != null)
-			prog.getClasses().addAll(lib.getClasses());
+			prog.getClasses().addAll(0, lib.getClasses());
 		
 		return (prog);
 	}

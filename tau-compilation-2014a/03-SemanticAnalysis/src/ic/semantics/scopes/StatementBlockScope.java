@@ -15,11 +15,12 @@ import ic.ast.stmt.Statement;
 import ic.ast.stmt.StmtBlock;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class StatementBlockScope extends IceCoffeScope {
 
-	protected HashMap<String, LocalVariable> localVariables = new HashMap<String, LocalVariable>();
+	protected HashMap<String, LocalVariable> localVariables = new LinkedHashMap<String, LocalVariable>();
 	
 	/**
 	 * @param parentScope
