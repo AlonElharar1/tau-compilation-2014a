@@ -78,7 +78,7 @@ public class MethodScope extends StatementBlockScope {
 	protected void internalPrint() {
 		
 		for (String paramId : this.parameters.keySet()) {
-			System.out.printf("\tParameter:\t%s : %s", 
+			System.out.printf("\tParameter:\t%s : %s\n", 
 					this.parameters.get(paramId).getName(),
 					this.parameters.get(paramId).getType());
 		}
