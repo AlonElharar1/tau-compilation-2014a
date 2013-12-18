@@ -19,7 +19,7 @@ import java.util.List;
 
 public class StatementBlockScope extends IceCoffeScope {
 
-	private HashMap<String, LocalVariable> localVariables = new HashMap<String, LocalVariable>();
+	protected HashMap<String, LocalVariable> localVariables = new HashMap<String, LocalVariable>();
 	
 	/**
 	 * @param parentScope
@@ -54,4 +54,31 @@ public class StatementBlockScope extends IceCoffeScope {
 		return (this.localVariables.get(((RefVariable)location).getName()));
 	}
 	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#getScopeName()
+	 */
+	@Override
+	public String getScopeName() {
+		return ("@" + this.currentMethod().getName());
+	}
+	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#getScopeType()
+	 */
+	@Override
+	public String getScopeType() {
+		return ("Statement Block");
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#internalPrint()
+	 */
+	@Override
+	protected void internalPrint() {
+		for (String localId : this.localVariables.keySet()) {
+			System.out.printf("\tLocal variable:\t%s : %s", 
+					this.localVariables.get(localId).getName(),
+					this.localVariables.get(localId).getType());
+		}
+	}
 }

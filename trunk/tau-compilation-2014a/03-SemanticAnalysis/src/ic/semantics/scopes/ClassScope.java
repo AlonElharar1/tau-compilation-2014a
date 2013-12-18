@@ -10,7 +10,10 @@ package ic.semantics.scopes;
 import ic.ast.Node;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
+import ic.ast.decl.DeclLibraryMethod;
 import ic.ast.decl.DeclMethod;
+import ic.ast.decl.DeclStaticMethod;
+import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.expr.Ref;
 import ic.ast.expr.RefField;
 
@@ -74,4 +77,48 @@ public class ClassScope extends IceCoffeScope {
 		
 		return (this.fields.get(((RefField)location).getField()));
 	}	
+	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#getScopeName()
+	 */
+	@Override
+	public String getScopeName() {
+		return (this.scopeClass.getName());
+	}
+	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#getScopeType()
+	 */
+	@Override
+	public String getScopeType() {
+		return ("Class");
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#internalPrint()
+	 */
+	@Override
+	protected void internalPrint() {
+		
+		for (String fieldId : this.fields.keySet()) {
+			System.out.printf("\tField:\t%s : %s",
+					this.fields.get(fieldId).getName(),
+					this.fields.get(fieldId).getType());
+		}
+		
+		for (String methodId : this.methods.keySet()) {
+			
+			DeclMethod method = this.methods.get(methodId);
+			
+			if (method instanceof DeclVirtualMethod) {
+				System.out.printf("\tVirtual Mehod: %s\n", method);
+			}
+			else if (method instanceof DeclStaticMethod) {
+				System.out.printf("\tStatic Mehod: %s\n", method);
+			}
+			else if (method instanceof DeclLibraryMethod) {
+				System.out.printf("\tLibrary Mehod: %s\n", method);
+			}
+		}
+	}
 }

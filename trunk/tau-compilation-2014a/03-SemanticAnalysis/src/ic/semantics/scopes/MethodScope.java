@@ -55,4 +55,34 @@ public class MethodScope extends StatementBlockScope {
 		return (this.parameters.get(((RefVariable)location).getName()));
 	}
 	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#getScopeName()
+	 */
+	@Override
+	public String getScopeName() {
+		return (this.scopeMethod.getName());
+	}
+	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.StatementBlockScope#getScopeType()
+	 */
+	@Override
+	public String getScopeType() {
+		return ("Method");
+	}
+	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.StatementBlockScope#internalPrint()
+	 */
+	@Override
+	protected void internalPrint() {
+		
+		for (String paramId : this.parameters.keySet()) {
+			System.out.printf("\tParameter:\t%s : %s", 
+					this.parameters.get(paramId).getName(),
+					this.parameters.get(paramId).getType());
+		}
+		
+		super.internalPrint();
+	}
 }
