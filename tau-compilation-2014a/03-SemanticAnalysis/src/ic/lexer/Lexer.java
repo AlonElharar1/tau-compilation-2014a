@@ -7,6 +7,7 @@
 
 package ic.lexer;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -35,6 +36,27 @@ public class Lexer {
 		while (token != null) {
 			tokens.add(token);
 			token = this.nextToken();
+		}
+		
+		return (tokens);
+	}
+	
+	public static List<Token> getFileTokens(String file) throws LexicalException, IOException {
+		
+		if (file == null)
+			return (null);
+		
+		// Open the file and extract tokens
+		FileInputStream fileStream = null;
+		List<Token> tokens = null;
+		
+		try {
+			fileStream = new FileInputStream(file);
+			tokens = new Lexer(fileStream).getAllTokens();
+			fileStream.close();
+		} finally {
+			if (fileStream != null)
+				fileStream.close();
 		}
 		
 		return (tokens);
