@@ -1,7 +1,5 @@
 package ic.ast.decl;
 
-import java.util.Arrays;
-
 import ic.ast.Node;
 
 /**
