@@ -4,7 +4,7 @@
  * 2. Assaf Krintza
  * 3. Nir Malbin
  */
-package ic;
+package ic.syntax;
 
 public class IceCoffeGrammers {
 
