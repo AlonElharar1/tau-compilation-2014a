@@ -16,14 +16,33 @@ import ic.ast.decl.Type;
 import ic.ast.stmt.LocalVariable;
 import ic.ast.stmt.Statement;
 import ic.ast.stmt.StmtAssignment;
+import ic.ast.stmt.StmtBlock;
+import ic.ast.stmt.StmtBreak;
+import ic.ast.stmt.StmtContinue;
+import ic.ast.stmt.StmtIf;
+import ic.ast.stmt.StmtReturn;
+import ic.ast.stmt.StmtWhile;
 
 import java.util.HashMap;
-import java.util.Stack;
 
 public class IntraProceduralInterperter extends IceCoffeInterpreter {
 	
 	private HashMap<Node, Object> data = new HashMap<Node, Object>();
-	private Object returnValue;
+	
+	@SuppressWarnings("serial")
+	private class BreakException extends Error {};
+	
+	@SuppressWarnings("serial")
+	private class ContinueException extends Error {};
+	
+	@SuppressWarnings("serial")
+	private class ReturnException extends Error { 
+		public Object value;
+
+		public ReturnException(Object value) {
+			this.value = value;
+		} 
+	};
 	
 	public IntraProceduralInterperter(Program program) {
 		super(program);
@@ -58,12 +77,16 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 	
 	@Override
 	public Object visit(DeclStaticMethod method) {
-		
-		for (Statement stmt : method.getStatements()) {
-			stmt.accept(this);
+		try {
+			for (Statement stmt : method.getStatements()) {
+				stmt.accept(this);
+			}
+		}
+		catch (ReturnException ret) {
+			return (ret.value);
 		}
 		
-		return (this.returnValue);
+		return (null);
 	}
 	
 	@Override
@@ -82,5 +105,62 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 		this.data.put(location, assignment.getAssignment().accept(this));
 		
 		return (this.data.get(location));
+	}
+	
+	@Override
+	public Object visit(StmtBlock statementsBlock) {
+		
+		for (Statement stmt : statementsBlock.getStatements()) {
+			stmt.accept(this);
+		}
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(StmtBreak breakStatement) {
+		throw new BreakException();
+	}
+	
+	@Override
+	public Object visit(StmtContinue continueStatement) {
+		throw new ContinueException();
+	}
+	
+	@Override
+	public Object visit(StmtIf ifStatement) {
+		
+		if ((Boolean)ifStatement.getCondition().accept(this)) {
+			ifStatement.getOperation().accept(this);
+		}
+		else {
+			ifStatement.getOperation().accept(this);
+		}
+			
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(StmtReturn returnStatement) {
+		throw new ReturnException(returnStatement.getValue().accept(this));
+	}
+	
+	@Override
+	public Object visit(StmtWhile whileStatement) {
+		
+		while ((Boolean)whileStatement.getCondition().accept(this)) {
+			try {
+				whileStatement.getOperation().accept(this);
+			}
+			catch (ContinueException e) {
+				continue;
+			}
+			catch (BreakException e) {
+				break;
+			}
+		}
+		
+		return (null);
 	}
 }
