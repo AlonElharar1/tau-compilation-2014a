@@ -37,16 +37,20 @@ public class PrimitiveType extends Type {
 
 	public static Object parse(DataType type, String objStr) {
 		
-		if (type.equals(DataType.INT)) {
-			return (Integer.parseInt(objStr));
+		switch (type) {
+			case BOOLEAN: {
+				return (Boolean.parseBoolean(objStr));
+			}
+			case INT: {
+				return (Integer.parseInt(objStr));
+			}
+			case STRING: {
+				return (objStr);
+			}
+			default:
+				break;
 		}
-		else if (type.equals(DataType.BOOLEAN)) {
-			return (Boolean.parseBoolean(objStr));
-		}
-		else if (type.equals(DataType.STRING)) {
-			return (objStr);
-		}
-			
+		
 		return (null);
 	}
 	
