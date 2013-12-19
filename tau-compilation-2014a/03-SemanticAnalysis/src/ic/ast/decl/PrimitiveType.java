@@ -59,21 +59,27 @@ public class PrimitiveType extends Type {
 	 */
 	public enum DataType {
 
-		INT("int"), 
-		BOOLEAN("boolean"), 
-		STRING("string"), 
-		VOID("void");
+		INT("int", Integer.class), 
+		BOOLEAN("boolean", Boolean.class), 
+		STRING("string", String.class), 
+		VOID("void", Void.class);
 		
 		private String description;
+		private Class<?> javaType;
 
-		private DataType(String description) {
+		private DataType(String description, Class<?> javaType) {
 			this.description = description;
+			this.javaType = javaType;
 		}
 
 		@Override
 		public String toString()
 		{
 			return description;
+		}
+		
+		public Class<?> getJavaType() {
+			return (this.javaType);
 		}
 		
 		public static DataType find(String description) {
