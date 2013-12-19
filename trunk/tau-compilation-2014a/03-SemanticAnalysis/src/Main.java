@@ -7,10 +7,11 @@
 
 import ic.IceCoffeException;
 import ic.ast.decl.Program;
-import ic.interpreter.IceCoffeInterpreter;
+import ic.interpreter.IntraProceduralInterperter;
 import ic.semantics.checks.SemanticChecker;
 import ic.semantics.scopes.ScopesBuilder;
 import ic.syntax.IceCoffeParser;
+
 import java.io.IOException;
 
 public class Main {
@@ -61,7 +62,7 @@ public class Main {
 				}
 
 				// Run the interpreter and print the result
-				Object result = new IceCoffeInterpreter(prog).executeMethod(
+				Object result = new IntraProceduralInterperter(prog).executeMethod(
 						interperterMethod, params);
 				System.out.println(result);
 			}

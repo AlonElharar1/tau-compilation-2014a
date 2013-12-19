@@ -18,9 +18,8 @@ public class InterpreterRunTimeException extends IceCoffeException {
 	 * @param type
 	 * @param message
 	 */
-	public InterpreterRunTimeException(int line, int column, String message) {
-		super(line, column, "run time", message);
-		// TODO Auto-generated constructor stub
+	public InterpreterRunTimeException(int line, String message) {
+		super(line, 0, "run time", message);
 	}
 
 }

@@ -39,15 +39,12 @@ import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
 
-public class IceCoffeInterpreter implements Visitor {
+public abstract class IceCoffeInterpreter implements Visitor {
 
-	private Program program;
+	protected Program program;
 	
 	public IceCoffeInterpreter(Program program) {
-	}
-
-	public Object executeMethod(String method, String[] parameters) {
-		return null;
+		this.program = program;
 	}
 	
 	/* (non-Javadoc)
@@ -55,8 +52,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(Program program) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(program.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -64,8 +61,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclClass icClass) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(icClass.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -73,8 +70,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclField field) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(field.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -82,8 +79,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclVirtualMethod method) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(method.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -91,8 +88,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclStaticMethod method) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(method.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -100,8 +97,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(DeclLibraryMethod method) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(method.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -109,8 +106,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(Parameter formal) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(formal.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -118,8 +115,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(PrimitiveType type) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(type.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -127,8 +124,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(ClassType type) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(type.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -136,8 +133,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtAssignment assignment) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(assignment.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -145,8 +142,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtCall callStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(callStatement.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -154,8 +151,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtReturn returnStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(returnStatement.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -163,8 +160,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtIf ifStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(ifStatement.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -172,8 +169,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtWhile whileStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(whileStatement.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -181,8 +178,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtBreak breakStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(breakStatement.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -190,8 +187,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtContinue continueStatement) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(continueStatement.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -199,8 +196,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StmtBlock statementsBlock) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(statementsBlock.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -208,8 +205,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(LocalVariable localVariable) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(localVariable.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -217,8 +214,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(RefVariable location) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(location.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -226,8 +223,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(RefField location) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(location.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -235,8 +232,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(RefArrayElement location) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(location.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -244,8 +241,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(StaticCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(call.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -253,8 +250,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(VirtualCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(call.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -262,8 +259,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(This thisExpression) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(thisExpression.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -271,8 +268,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(NewInstance newClass) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(newClass.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -280,8 +277,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(NewArray newArray) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(newArray.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -289,8 +286,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(Length length) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(length.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -298,8 +295,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(Literal literal) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(literal.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -307,8 +304,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(UnaryOp unaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(unaryOp.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 	/* (non-Javadoc)
@@ -316,8 +313,8 @@ public class IceCoffeInterpreter implements Visitor {
 	 */
 	@Override
 	public Object visit(BinaryOp binaryOp) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InterpreterRunTimeException(binaryOp.getLine(), 
+				"action is not supported by this interpreter");
 	}
 
 }
