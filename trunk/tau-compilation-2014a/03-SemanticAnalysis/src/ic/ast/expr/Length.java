@@ -1,7 +1,6 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
-import ic.ast.decl.Type;
 
 /**
  * Array length expression AST node.
@@ -28,15 +27,6 @@ public class Length extends Expression {
 
 	public Expression getArray() {
 		return array;
-	}
-
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getType()
-	 */
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
