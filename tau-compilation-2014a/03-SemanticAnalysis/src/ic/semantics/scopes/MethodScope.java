@@ -12,6 +12,7 @@ import ic.ast.decl.DeclMethod;
 import ic.ast.decl.Parameter;
 import ic.ast.expr.Ref;
 import ic.ast.expr.RefVariable;
+import ic.semantics.SemanticException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,6 +33,15 @@ public class MethodScope extends StatementBlockScope {
 		this.scopeMethod = method;
 		
 		for (Parameter param : this.scopeMethod.getFormals()) {
+			
+			if (this.parameters.containsKey(param.getName()))
+				throw new SemanticException(param.getLine(), 
+						"a parameter with the same name already exists");
+			
+			if (this.localVariables.containsKey(param.getName()))
+				throw new SemanticException(this.localVariables.get(param.getName()).getLine(), 
+						"a parameter with the same name already exists");
+			
 			this.parameters.put(param.getName(), param);
 		}
 	}
