@@ -14,6 +14,7 @@ import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.expr.Ref;
 import ic.ast.expr.RefField;
+import ic.semantics.SemanticException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,13 +33,6 @@ public class ClassInstanceScope extends ClassScope {
 	
 	@Override
 	protected void extractSymbols() {
-		for (DeclMethod method : this.scopeClass.getMethods()) {
-			if (method instanceof DeclVirtualMethod) {
-				this.methods.put(
-						String.format("%s.%s", this.scopeClass.getName(), method.getName()),
-						method);
-			}
-		}
 		
 		this.fields = new LinkedHashMap<String, DeclField>();
 		
@@ -46,6 +40,26 @@ public class ClassInstanceScope extends ClassScope {
 			this.fields.put(
 					String.format("%s.%s", this.scopeClass.getName(), field.getName()), 
 					field);
+		}
+		
+		for (DeclMethod method : this.scopeClass.getMethods()) {
+			if (method instanceof DeclVirtualMethod) {
+				
+				String methodId = 
+						String.format("%s.%s", 
+								this.scopeClass.getName(), 
+								method.getName());
+				
+				if (this.methods.containsKey(methodId))
+					throw new SemanticException(method.getLine(), 
+							"a method with the same name already exists");
+				
+				if (this.fields.containsKey(method.getName()))
+					throw new SemanticException(method.getLine(), 
+							"a field with the same name already exists");
+				
+				this.methods.put(methodId, method);
+			}
 		}
 	}
 

@@ -7,12 +7,13 @@
 
 package ic.semantics.scopes;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.Program;
+import ic.semantics.SemanticException;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class GlobalScope extends IceCoffeScope {
 	
@@ -22,6 +23,10 @@ public class GlobalScope extends IceCoffeScope {
 		super(null);
 		
 		for (DeclClass classNode : program.getClasses()) {
+			if (this.classes.containsKey(classNode.getName()))
+				throw new SemanticException(classNode.getLine(), 
+						"a class with the same name already exists");
+			
 			this.classes.put(classNode.getName(), classNode);
 ;		}
 	}

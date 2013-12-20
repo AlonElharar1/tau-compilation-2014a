@@ -31,7 +31,6 @@ public abstract class ClassScope extends IceCoffeScope {
 		this.scopeClass = classNode;
 		
 		this.extractSymbols();
-
 	}
 	
 	protected abstract void extractSymbols();

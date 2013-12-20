@@ -11,6 +11,7 @@ import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclLibraryMethod;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
+import ic.semantics.SemanticException;
 
 public class ClassStaticScope extends ClassScope {
 	
@@ -26,9 +27,17 @@ public class ClassStaticScope extends ClassScope {
 		for (DeclMethod method : this.scopeClass.getMethods()) {
 			if ((method instanceof DeclStaticMethod) ||
 				(method instanceof DeclLibraryMethod)) {
-				this.methods.put(
-						String.format("%s.%s", this.scopeClass.getName(), method.getName()),
-						method);
+				
+				String methodId = 
+						String.format("%s.%s", 
+								this.scopeClass.getName(), 
+								method.getName());
+				
+				if (this.methods.containsKey(methodId))
+					throw new SemanticException(method.getLine(), 
+							"a method with the same name already exists");
+				
+				this.methods.put(methodId, method);
 			}
 		}
 	}

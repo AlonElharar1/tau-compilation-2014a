@@ -8,11 +8,11 @@
 package ic.semantics.scopes;
 
 import ic.ast.Node;
-import ic.ast.expr.Ref;
 import ic.ast.expr.*;
 import ic.ast.stmt.LocalVariable;
 import ic.ast.stmt.Statement;
 import ic.ast.stmt.StmtBlock;
+import ic.semantics.SemanticException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -38,6 +38,11 @@ public class StatementBlockScope extends IceCoffeScope {
 		for (Statement stmt : statments) {
 			if (stmt instanceof LocalVariable) {
 				LocalVariable localVar = (LocalVariable)stmt;
+				
+				if (this.localVariables.containsKey(localVar.getName()))
+					throw new SemanticException(localVar.getLine(), 
+							"a local variable with the same name already exists");
+				
 				this.localVariables.put(localVar.getName(), localVar);
 			}
 		}
