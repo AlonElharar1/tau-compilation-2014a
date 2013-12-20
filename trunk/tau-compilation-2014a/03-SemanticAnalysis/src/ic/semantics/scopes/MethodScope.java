@@ -49,11 +49,13 @@ public class MethodScope extends StatementBlockScope {
 	 */
 	@Override
 	public Node findRef(Ref location) {
+		
 		if (!(location instanceof RefVariable) ||
 			(!this.parameters.containsKey(((RefVariable)location).getName())))
 			return (super.findRef(location));
 				
 		return (this.parameters.get(((RefVariable)location).getName()));
+		
 	}
 	
 	/* (non-Javadoc)

@@ -101,7 +101,8 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 	public Object visit(LocalVariable localVariable) {
 
 		this.data.put(localVariable, 
-				localVariable.getInitialValue().accept(this));
+				localVariable.getInitialValue() != null ?
+				localVariable.getInitialValue().accept(this) : null);
 		
 		return (this.data.get(localVariable));
 	}
@@ -109,8 +110,16 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 	@Override
 	public Object visit(StmtAssignment assignment) {
 		
-		Node location = assignment.getScope().findRef(assignment.getVariable()); 
-		this.data.put(location, assignment.getAssignment().accept(this));
+		Node location = assignment.getScope().findRef(assignment.getVariable());
+		Object value =  assignment.getAssignment().accept(this);
+		
+		if (assignment.getVariable() instanceof RefArrayElement) {
+			Integer index = (Integer)((RefArrayElement)assignment.getVariable()).getIndex().accept(this);
+			Array.set(this.data.get(location), index , value);
+		}
+		else {
+			this.data.put(location, value);
+		}
 		
 		return (this.data.get(location));
 	}
@@ -177,8 +186,18 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 		
 		switch (binaryOp.getOperator()) {
 		case PLUS:
-			return ((Integer)binaryOp.getFirstOperand().accept(this) +
-					(Integer)binaryOp.getSecondOperand().accept(this));
+			Object firstOperandVal = binaryOp.getFirstOperand().accept(this);
+			Object secondOperandVal = binaryOp.getSecondOperand().accept(this);
+			
+			if (firstOperandVal instanceof String)
+				return ((String)firstOperandVal + secondOperandVal);
+			else if (secondOperandVal instanceof String)
+				return (firstOperandVal + (String)secondOperandVal);
+			else if (firstOperandVal instanceof Integer)
+				return ((Integer)firstOperandVal + (Integer)secondOperandVal);
+			
+			break;
+			
 		case MINUS:
 			return ((Integer)binaryOp.getFirstOperand().accept(this) -
 					(Integer)binaryOp.getSecondOperand().accept(this));
@@ -192,11 +211,11 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 			return ((Integer)binaryOp.getFirstOperand().accept(this) %
 					(Integer)binaryOp.getSecondOperand().accept(this));
 		case EQUAL:
-			return ((Integer)binaryOp.getFirstOperand().accept(this) ==
-					(Integer)binaryOp.getSecondOperand().accept(this));
+			return (binaryOp.getFirstOperand().accept(this).equals(
+					binaryOp.getSecondOperand().accept(this)));
 		case NEQUAL:
-			return ((Integer)binaryOp.getFirstOperand().accept(this) !=
-					(Integer)binaryOp.getSecondOperand().accept(this));
+			return (!binaryOp.getFirstOperand().accept(this).equals(
+					 binaryOp.getSecondOperand().accept(this)));
 		case GT:
 			return ((Integer)binaryOp.getFirstOperand().accept(this) >
 					(Integer)binaryOp.getSecondOperand().accept(this));
@@ -238,9 +257,10 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 			throw new InterpreterRunTimeException(newArray.getLine(), 
 					"allocation of non primitive types is not supported");
 		
-		return (Array.newInstance(
-				((PrimitiveType)newArray.getType()).getDataType().getJavaType(), 
-				(Integer)newArray.getSize().accept(this)));
+		Class<?> type = ((PrimitiveType)newArray.getType()).getDataType().getJavaType();
+		Integer size = (Integer)newArray.getSize().accept(this);
+		
+		return (Array.newInstance(type, size));
 	}
 
 	@Override
