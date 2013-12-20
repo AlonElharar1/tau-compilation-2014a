@@ -7,25 +7,20 @@
 
 package ic.semantics.scopes;
 
-import ic.ast.Node;
 import ic.ast.decl.DeclClass;
-import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclLibraryMethod;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
 import ic.ast.decl.DeclVirtualMethod;
-import ic.ast.expr.Ref;
-import ic.ast.expr.RefField;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class ClassScope extends IceCoffeScope {
+public abstract class ClassScope extends IceCoffeScope {
 
-	private DeclClass scopeClass;
+	protected DeclClass scopeClass;
 	
 	public HashMap<String, DeclMethod> methods = new LinkedHashMap<String, DeclMethod>();
-	public HashMap<String, DeclField> fields = new LinkedHashMap<String, DeclField>();
 	
 	/**
 	 * @param parentScope
@@ -35,30 +30,17 @@ public class ClassScope extends IceCoffeScope {
 		
 		this.scopeClass = classNode;
 		
-		for (DeclMethod method : this.scopeClass.getMethods()) {
-			this.methods.put(
-					String.format("%s.%s", this.scopeClass.getName(), method.getName()),
-					method);
-		}
-		
-		for (DeclField field : this.scopeClass.getFields()) {
-			this.fields.put(
-					String.format("%s.%s", this.scopeClass.getName(), field.getName()), 
-					field);
-		}
+		this.extractSymbols();
+
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#currentClass()
-	 */
+	protected abstract void extractSymbols();
+	
 	@Override
 	public DeclClass currentClass() {
 		return (this.scopeClass);
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#findMethod(java.lang.String)
-	 */
 	@Override
 	public DeclMethod findMethod(String methodId) {
 		if (!this.methods.containsKey(methodId))
@@ -67,45 +49,18 @@ public class ClassScope extends IceCoffeScope {
 		return (this.methods.get(methodId));
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#findRef(ic.ast.expr.Ref)
-	 */
-	@Override
-	public Node findRef(Ref location) {
-		if (!(location instanceof RefField) ||
-			(!this.fields.containsKey(((RefField)location).getField())))
-			return (super.findRef(location));
-		
-		return (this.fields.get(((RefField)location).getField()));
-	}	
-	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#getScopeName()
-	 */
 	@Override
 	public String getScopeName() {
 		return (this.scopeClass.getName());
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#getScopeType()
-	 */
 	@Override
 	public String getScopeType() {
 		return ("Class");
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#internalPrint()
-	 */
 	@Override
 	protected void internalPrint() {
-		
-		for (String fieldId : this.fields.keySet()) {
-			System.out.printf("\tField:\t%s : %s\n",
-					this.fields.get(fieldId).getName(),
-					this.fields.get(fieldId).getType());
-		}
 		
 		for (String methodId : this.methods.keySet()) {
 			

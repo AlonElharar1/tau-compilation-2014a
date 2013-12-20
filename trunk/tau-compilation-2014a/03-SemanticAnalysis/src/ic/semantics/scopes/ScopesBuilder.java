@@ -75,17 +75,30 @@ public class ScopesBuilder implements Visitor {
 		if (icClass.hasSuperClass())
 			parentScope = parentScope.findClass(icClass.getSuperClassName()).getScope();
 		
-		icClass.setScope(new ClassScope(parentScope, icClass));
+		icClass.setScope(new ClassStaticScope(parentScope, icClass));
 		this.scopesStack.push(icClass.getScope());
 		
 		for (DeclMethod	method : icClass.getMethods()) {
-			method.accept(this);
+			if ((method instanceof DeclStaticMethod) ||
+				(method instanceof DeclLibraryMethod)) {
+				method.accept(this);
+			}
+		}
+		
+		this.scopesStack.push(new ClassInstanceScope(icClass.getScope(), icClass));
+		
+		for (DeclMethod	method : icClass.getMethods()) {
+			if (method instanceof DeclVirtualMethod) {
+				method.accept(this);
+			}
 		}
 		
 		for (DeclField field : icClass.getFields()) {
 			field.accept(this);
 		}
 
+		this.scopesStack.pop();
+		
 		return (this.scopesStack.pop());
 	}
 
