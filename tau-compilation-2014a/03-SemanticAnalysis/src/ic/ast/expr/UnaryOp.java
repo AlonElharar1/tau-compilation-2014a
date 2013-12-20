@@ -1,7 +1,6 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
-import ic.ast.decl.Type;
 
 
 /**
@@ -70,13 +69,4 @@ public class UnaryOp extends Expression {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getType()
-	 */
-	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }
