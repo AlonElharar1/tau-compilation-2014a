@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 
 public class ClassInstanceScope extends ClassScope {
 
-	public HashMap<String, DeclField> fields = new LinkedHashMap<String, DeclField>();
+	public HashMap<String, DeclField> fields;
 	
 	/**
 	 * @param parentScope
@@ -39,6 +39,8 @@ public class ClassInstanceScope extends ClassScope {
 						method);
 			}
 		}
+		
+		this.fields = new LinkedHashMap<String, DeclField>();
 		
 		for (DeclField field : this.scopeClass.getFields()) {
 			this.fields.put(

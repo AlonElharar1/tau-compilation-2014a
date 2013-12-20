@@ -224,7 +224,9 @@ public class ScopesBuilder implements Visitor {
 		
 		ifStatement.getCondition().accept(this);
 		ifStatement.getOperation().accept(this);
-		ifStatement.getElseOperation().accept(this);
+		
+		if (ifStatement.getElseOperation() != null)
+			ifStatement.getElseOperation().accept(this);
 		
 		return (ifStatement.getScope());
 	}
@@ -370,8 +372,6 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(NewInstance newClass) {
 		newClass.setScope(this.scopesStack.peek());
-		
-		newClass.getType().accept(this);
 		
 		return (newClass.getScope());
 	}
