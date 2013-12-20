@@ -13,6 +13,8 @@ import ic.semantics.scopes.ScopesBuilder;
 import ic.syntax.IceCoffeParser;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class Main {
 
@@ -55,7 +57,7 @@ public class Main {
 				
 				// Extract the interpreter data
 				String interperterMethod = args[argIndex++];
-				String[] params = new String[args.length - argIndex - 1];
+				String[] params = new String[args.length - argIndex];
 
 				for (int i = 0; i < params.length; i++) {
 					params[i] = args[argIndex++];
@@ -64,7 +66,16 @@ public class Main {
 				// Run the interpreter and print the result
 				Object result = new IntraProceduralInterperter(prog).executeMethod(
 						interperterMethod, params);
-				System.out.println(result);
+				
+				if (!result.getClass().isArray()) {
+					System.out.println(result);
+				}
+				else {
+					for (int i = 0; i < Array.getLength(result); i++) {
+						System.out.println(Array.get(result, i));
+					}
+				}
+					
 			}
 
 		} catch (IceCoffeException e) {

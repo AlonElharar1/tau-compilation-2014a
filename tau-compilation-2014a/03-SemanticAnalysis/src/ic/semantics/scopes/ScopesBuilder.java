@@ -271,7 +271,8 @@ public class ScopesBuilder implements Visitor {
 	public Object visit(LocalVariable localVariable) {
 		localVariable.setScope(this.scopesStack.peek());
 		
-		localVariable.getInitialValue().accept(this);
+		if (localVariable.getInitialValue() != null)
+			localVariable.getInitialValue().accept(this);
 		
 		return (localVariable.getScope());
 	}

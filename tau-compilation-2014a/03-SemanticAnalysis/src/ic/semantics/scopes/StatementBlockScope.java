@@ -9,7 +9,7 @@ package ic.semantics.scopes;
 
 import ic.ast.Node;
 import ic.ast.expr.Ref;
-import ic.ast.expr.RefVariable;
+import ic.ast.expr.*;
 import ic.ast.stmt.LocalVariable;
 import ic.ast.stmt.Statement;
 import ic.ast.stmt.StmtBlock;
@@ -48,11 +48,17 @@ public class StatementBlockScope extends IceCoffeScope {
 	 */
 	@Override
 	public Node findRef(Ref location) {
-		if (!(location instanceof RefVariable) ||
-			(!this.localVariables.containsKey(((RefVariable)location).getName())))
-			return (super.findRef(location));
-			
-		return (this.localVariables.get(((RefVariable)location).getName()));
+		if (location instanceof RefArrayElement) {
+			RefArrayElement refArray = (RefArrayElement)location;
+			if (refArray.getArray() instanceof Ref)
+				return (this.findRef((Ref)refArray.getArray()));
+		}
+		else if (location instanceof RefVariable) {
+			if (this.localVariables.containsKey(((RefVariable)location).getName()))
+				return (this.localVariables.get(((RefVariable)location).getName()));
+		}
+		
+		return (super.findRef(location));
 	}
 	
 	/* (non-Javadoc)
