@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import ic.ast.decl.DeclClass;
+import ic.ast.decl.DeclMethod;
 import ic.ast.decl.Program;
 
 public class GlobalScope extends IceCoffeScope {
@@ -34,6 +35,22 @@ public class GlobalScope extends IceCoffeScope {
 			return (super.findClass(className));
 		
 		return (this.classes.get(className));
+	}
+	
+	/* (non-Javadoc)
+	 * @see ic.semantics.scopes.IceCoffeScope#findMethod(java.lang.String)
+	 */
+	@Override
+	public DeclMethod findMethod(String methodId) {
+
+		for (DeclClass classNode : this.classes.values()) {
+			DeclMethod method = classNode.getScope().findMethod(methodId);
+			
+			if (method != null)
+				return (method);
+		}
+		
+		return (super.findMethod(methodId));
 	}
 	
 	/* (non-Javadoc)

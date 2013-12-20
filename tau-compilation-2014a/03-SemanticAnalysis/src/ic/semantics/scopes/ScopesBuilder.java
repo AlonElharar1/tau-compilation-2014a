@@ -19,6 +19,7 @@ import ic.ast.decl.Parameter;
 import ic.ast.decl.PrimitiveType;
 import ic.ast.decl.Program;
 import ic.ast.expr.BinaryOp;
+import ic.ast.expr.Expression;
 import ic.ast.expr.Length;
 import ic.ast.expr.Literal;
 import ic.ast.expr.NewArray;
@@ -170,6 +171,10 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(StmtAssignment assignment) {
 		assignment.setScope(this.scopesStack.peek());
+		
+		assignment.getVariable().accept(this);
+		assignment.getAssignment().accept(this);
+		
 		return (assignment.getScope());
 	}
 
@@ -179,6 +184,9 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(StmtCall callStatement) {
 		callStatement.setScope(this.scopesStack.peek());
+		
+		callStatement.getCall().accept(this);
+		
 		return (callStatement.getScope());
 	}
 
@@ -188,6 +196,9 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(StmtReturn returnStatement) {
 		returnStatement.setScope(this.scopesStack.peek());
+		
+		returnStatement.getValue().accept(this);
+		
 		return (returnStatement.getScope());
 	}
 
@@ -197,6 +208,11 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(StmtIf ifStatement) {
 		ifStatement.setScope(this.scopesStack.peek());
+		
+		ifStatement.getCondition().accept(this);
+		ifStatement.getOperation().accept(this);
+		ifStatement.getElseOperation().accept(this);
+		
 		return (ifStatement.getScope());
 	}
 
@@ -206,6 +222,10 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(StmtWhile whileStatement) {
 		whileStatement.setScope(this.scopesStack.peek());
+		
+		whileStatement.getCondition().accept(this);
+		whileStatement.getOperation().accept(this);
+		
 		return (whileStatement.getScope());
 	}
 
@@ -250,6 +270,9 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(LocalVariable localVariable) {
 		localVariable.setScope(this.scopesStack.peek());
+		
+		localVariable.getInitialValue().accept(this);
+		
 		return (localVariable.getScope());
 	}
 
@@ -259,6 +282,7 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(RefVariable location) {
 		location.setScope(this.scopesStack.peek());
+		
 		return (location.getScope());
 	}
 
@@ -268,6 +292,9 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(RefField location) {
 		location.setScope(this.scopesStack.peek());
+		
+		location.getObject().accept(this);
+		
 		return (location.getScope());
 	}
 
@@ -277,6 +304,10 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(RefArrayElement location) {
 		location.setScope(this.scopesStack.peek());
+		
+		location.getArray().accept(this);
+		location.getIndex().accept(this);
+		
 		return (location.getScope());
 	}
 
@@ -286,6 +317,11 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(StaticCall call) {
 		call.setScope(this.scopesStack.peek());
+		
+		for (Expression expr : call.getArguments()) {
+			expr.accept(this);
+		}
+		
 		return (call.getScope());
 	}
 
@@ -295,6 +331,13 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(VirtualCall call) {
 		call.setScope(this.scopesStack.peek());
+		
+		call.getObject().accept(this);
+		
+		for (Expression expr : call.getArguments()) {
+			expr.accept(this);
+		}
+		
 		return (call.getScope());
 	}
 
@@ -313,6 +356,9 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(NewInstance newClass) {
 		newClass.setScope(this.scopesStack.peek());
+		
+		newClass.getType().accept(this);
+		
 		return (newClass.getScope());
 	}
 
@@ -322,6 +368,10 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(NewArray newArray) {
 		newArray.setScope(this.scopesStack.peek());
+		
+		newArray.getType().accept(this);
+		newArray.getSize().accept(this);
+		
 		return (newArray.getScope());
 	}
 
@@ -331,6 +381,9 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(Length length) {
 		length.setScope(this.scopesStack.peek());
+		
+		length.getArray().accept(this);
+		
 		return (length.getScope());
 	}
 
@@ -349,6 +402,9 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(UnaryOp unaryOp) {
 		unaryOp.setScope(this.scopesStack.peek());
+		
+		unaryOp.getOperand().accept(this);
+		
 		return (unaryOp.getScope());
 	}
 
@@ -358,6 +414,10 @@ public class ScopesBuilder implements Visitor {
 	@Override
 	public Object visit(BinaryOp binaryOp) {
 		binaryOp.setScope(this.scopesStack.peek());
+		
+		binaryOp.getFirstOperand().accept(this);
+		binaryOp.getSecondOperand().accept(this);
+		
 		return (binaryOp.getScope());
 	}
 }
