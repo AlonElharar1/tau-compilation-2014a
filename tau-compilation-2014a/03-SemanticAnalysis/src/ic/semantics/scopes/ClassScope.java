@@ -69,12 +69,34 @@ public abstract class ClassScope extends IceCoffeScope {
 			if (method instanceof DeclVirtualMethod) {
 				System.out.printf("\tVirtual Mehod: %s\n", method);
 			}
-			else if (method instanceof DeclStaticMethod) {
+			else if ((method instanceof DeclStaticMethod) ||
+					 (method instanceof DeclLibraryMethod)) {
 				System.out.printf("\tStatic Mehod: %s\n", method);
 			}
-			else if (method instanceof DeclLibraryMethod) {
-				System.out.printf("\tLibrary Mehod: %s\n", method);
-			}
 		}
+		
 	}
+	
+	@Override
+	public void print() {
+		
+		String title = String.format("%s Symbol Table", this.getScopeType());
+		
+		if (this.getScopeName() != null)
+			title += String.format(": %s", this.getScopeName());
+		
+		if ((this.parentScope != null) && (this.parentScope.getScopeName() != null))
+			title += String.format(" (parent = %s)", this.parentScope.getScopeName());
+		
+		System.out.println(title);
+		
+		for (IceCoffeScope scope : this.childrenScopes) {
+			scope.internalPrint();
+		}
+		
+		this.internalPrint();
+		
+		System.out.println();
+	}
+	
 }
