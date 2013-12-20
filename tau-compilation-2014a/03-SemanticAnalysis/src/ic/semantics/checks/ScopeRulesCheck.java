@@ -10,12 +10,16 @@ import ic.ast.decl.ClassType;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclLibraryMethod;
+import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
 import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.decl.Parameter;
 import ic.ast.decl.PrimitiveType;
 import ic.ast.decl.Program;
+import ic.ast.decl.Type;
 import ic.ast.expr.BinaryOp;
+import ic.ast.expr.Expression;
+import ic.ast.expr.ExpressionBlock;
 import ic.ast.expr.Length;
 import ic.ast.expr.Literal;
 import ic.ast.expr.NewArray;
@@ -28,6 +32,7 @@ import ic.ast.expr.This;
 import ic.ast.expr.UnaryOp;
 import ic.ast.expr.VirtualCall;
 import ic.ast.stmt.LocalVariable;
+import ic.ast.stmt.Statement;
 import ic.ast.stmt.StmtAssignment;
 import ic.ast.stmt.StmtBlock;
 import ic.ast.stmt.StmtBreak;
@@ -36,6 +41,7 @@ import ic.ast.stmt.StmtContinue;
 import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
+import ic.semantics.SemanticException;
 
 public class ScopeRulesCheck extends SemanticCheck {
 
@@ -44,7 +50,10 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Program program) {
-		// TODO Auto-generated method stub
+		
+		for (DeclClass icClass : program.getClasses())
+			icClass.accept(this);
+		
 		return null;
 	}
 
@@ -53,7 +62,10 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclClass icClass) {
-		// TODO Auto-generated method stub
+		
+		for (DeclMethod method : icClass.getMethods())
+			method.accept(this);
+		
 		return null;
 	}
 
@@ -62,7 +74,7 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclField field) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -71,7 +83,10 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclVirtualMethod method) {
-		// TODO Auto-generated method stub
+		
+		for (Statement statement : method.getStatements())
+			statement.accept(this);
+		
 		return null;
 	}
 
@@ -80,7 +95,10 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclStaticMethod method) {
-		// TODO Auto-generated method stub
+		
+		for (Statement statement : method.getStatements())
+			statement.accept(this);
+		
 		return null;
 	}
 
@@ -89,7 +107,7 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclLibraryMethod method) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -98,7 +116,7 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Parameter formal) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -107,7 +125,7 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(PrimitiveType type) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -116,7 +134,15 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(ClassType type) {
-		// TODO Auto-generated method stub
+	
+		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see ic.ast.Visitor#visit(ic.ast.decl.ClassType)
+	 */
+	@Override
+	public Object visit(Literal literal){
 		return null;
 	}
 
@@ -125,7 +151,11 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtAssignment assignment) {
-		// TODO Auto-generated method stub
+		
+		assignment.getVariable().accept(this);
+		assignment.getAssignment().accept(this);
+		
+		
 		return null;
 	}
 
@@ -134,7 +164,10 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtCall callStatement) {
-		// TODO Auto-generated method stub
+		
+		callStatement.getCall().accept(this);
+
+		
 		return null;
 	}
 
@@ -143,7 +176,9 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtReturn returnStatement) {
-		// TODO Auto-generated method stub
+		
+		returnStatement.getValue().accept(this);
+		
 		return null;
 	}
 
@@ -152,7 +187,11 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtIf ifStatement) {
-		// TODO Auto-generated method stub
+
+		ifStatement.getCondition().accept(this);
+		ifStatement.getOperation().accept(this);
+		ifStatement.getElseOperation().accept(this);
+		
 		return null;
 	}
 
@@ -161,7 +200,10 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtWhile whileStatement) {
-		// TODO Auto-generated method stub
+		
+		whileStatement.getCondition().accept(this);
+		whileStatement.getOperation().accept(this);
+		
 		return null;
 	}
 
@@ -170,7 +212,7 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtBreak breakStatement) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -179,7 +221,7 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtContinue continueStatement) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -188,7 +230,10 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtBlock statementsBlock) {
-		// TODO Auto-generated method stub
+		
+		for (Statement statement : statementsBlock.getStatements())
+			statement.accept(this);
+		
 		return null;
 	}
 
@@ -197,26 +242,41 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(LocalVariable localVariable) {
-		// TODO Auto-generated method stub
+
+		localVariable.getInitialValue().accept(this);
+		
 		return null;
 	}
 
+
 	/* (non-Javadoc)
-	 * @see ic.ast.Visitor#visit(ic.ast.expr.RefVariable)
+	 * @see ic.ast.Visitor#visit(ic.ast.expr.RefField)
 	 */
 	@Override
 	public Object visit(RefVariable location) {
-		// TODO Auto-generated method stub
+		
+		if ((location.getScope().findRef(location) == null) ||
+		    (location.getScope().findRef(location).getLine() > location.getLine()))
+				throw new SemanticException(location.getLine(),"'" + location.getName() + "' is not declared before used");
+		
 		return null;
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see ic.ast.Visitor#visit(ic.ast.expr.RefField)
 	 */
 	@Override
 	public Object visit(RefField location) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		DeclClass objectClass = (DeclClass)location.getObject().accept(this);
+		
+		for (DeclField field : objectClass.getFields())
+			if (field.getName().equals(location.getField()))
+				return field.getScope().currentClass();
+	
+		throw new SemanticException(location.getLine(),"'" + objectClass.getName() + "' does not have field: '" + location.getField() + "'");
 	}
 
 	/* (non-Javadoc)
@@ -224,8 +284,11 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(RefArrayElement location) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		location.getIndex().accept(this);
+		
+		return location.getArray().accept(this);
 	}
 
 	/* (non-Javadoc)
@@ -233,8 +296,21 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StaticCall call) {
-		// TODO Auto-generated method stub
+			
+		boolean isMethodExist = false;
+		
+		for (DeclMethod method : call.getScope().findClass(call.getClassName()).getMethods())
+			if ((method instanceof DeclStaticMethod) && (method.getName().equals(call.getMethod())))
+				isMethodExist = true;
+		
+		if (!isMethodExist)
+			throw new SemanticException(call.getLine(),"'" + call.getClassName() + "' does not have static method: '" + call.getMethod() + "'");
+		
+		for (Expression expression : call.getArguments())
+			expression.accept(this);
+		
 		return null;
+		
 	}
 
 	/* (non-Javadoc)
@@ -242,8 +318,23 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(VirtualCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		boolean isMethodExist = false;
+		
+		DeclClass objectClass = (DeclClass)call.getObject().accept(this);
+		
+		for (DeclMethod method : objectClass.getMethods())
+			if ((method instanceof DeclStaticMethod) && (method.getName().equals(call.getMethod())))
+					isMethodExist = true;	
+				
+		if (!isMethodExist)
+			throw new SemanticException(call.getLine(),"'" + objectClass.getName() + "' does not have virtual method: '" + call.getMethod() + "'");
+		
+		for (Expression expression : call.getArguments())
+			expression.accept(this);
+	
+		
+		return objectClass;
 	}
 
 	/* (non-Javadoc)
@@ -251,26 +342,34 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(This thisExpression) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see ic.ast.Visitor#visit(ic.ast.expr.NewInstance)
-	 */
-	@Override
-	public Object visit(NewInstance newClass) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return thisExpression.getScope().currentClass();
+		
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see ic.ast.Visitor#visit(ic.ast.expr.NewArray)
 	 */
 	@Override
+	public Object visit(NewInstance newClass) {
+		
+		return newClass.getScope().findClass(newClass.getName());
+		
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see ic.ast.Visitor#visit(ic.ast.expr.NewArray)
+	 */
+	@Override
 	public Object visit(NewArray newArray) {
-		// TODO Auto-generated method stub
+		
+		newArray.getSize().accept(this);
+		
+		//return newArray.getScope().findClass(newArray.getType().getDisplayName());
 		return null;
+		
 	}
 
 	/* (non-Javadoc)
@@ -278,25 +377,21 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Length length) {
-		// TODO Auto-generated method stub
+		
+		length.getArray().accept(this);
+		
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.Visitor#visit(ic.ast.expr.Literal)
-	 */
-	@Override
-	public Object visit(Literal literal) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/* (non-Javadoc)
 	 * @see ic.ast.Visitor#visit(ic.ast.expr.UnaryOp)
 	 */
 	@Override
 	public Object visit(UnaryOp unaryOp) {
-		// TODO Auto-generated method stub
+
+		unaryOp.getOperand().accept(this);
+		
 		return null;
 	}
 
@@ -305,7 +400,17 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(BinaryOp binaryOp) {
-		// TODO Auto-generated method stub
+		
+		binaryOp.getFirstOperand().accept(this);
+		binaryOp.getSecondOperand().accept(this);
+		
+		return null;
+	}
+	
+	public Object visit(ExpressionBlock expressionBlock){
+		
+		expressionBlock.getExpression().accept(this);
+		
 		return null;
 	}
 
@@ -314,8 +419,8 @@ public class ScopeRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public void runCheck(Program program) {
-		// TODO Auto-generated method stub
-
+		
+		program.accept(this);	
 	}
 
 }
