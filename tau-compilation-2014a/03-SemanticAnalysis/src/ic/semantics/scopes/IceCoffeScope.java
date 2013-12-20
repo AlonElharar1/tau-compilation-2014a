@@ -56,6 +56,10 @@ public abstract class IceCoffeScope {
 		return (this.parentScope.findClass(className));
 	}
 	
+	public DeclMethod findMethod(String className, String methodName) {
+		return (this.findMethod(String.format("%s.%s", className, methodName)));
+	}
+	
 	/**
 	 * Search a method in this scope or in his parents
 	 * @param methodName
