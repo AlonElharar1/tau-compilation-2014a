@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.Type;
 
 import java.util.List;
 
@@ -54,6 +55,15 @@ public class VirtualCall extends Call {
 
 	public Expression getObject() {
 		return object;
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getExpresstionType()
+	 */
+	@Override
+	public Type getExpresstionType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

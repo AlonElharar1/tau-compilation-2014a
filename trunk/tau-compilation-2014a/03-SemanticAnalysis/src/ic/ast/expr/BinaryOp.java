@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.Type;
 
 /**
  * Abstract base class for binary operation AST nodes.
@@ -86,5 +87,14 @@ public class BinaryOp extends Expression {
 			}
 			throw new Error("internal error; binary operator not found: " + op);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getExpresstionType()
+	 */
+	@Override
+	public Type getExpresstionType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

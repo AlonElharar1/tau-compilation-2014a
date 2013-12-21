@@ -46,4 +46,13 @@ public class Literal extends Expression {
 		return value;
 	}
 
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getExpresstionType()
+	 */
+	@Override
+	public Type getExpresstionType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
