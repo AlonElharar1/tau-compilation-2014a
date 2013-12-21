@@ -30,13 +30,9 @@ public class ExpressionBlock extends Expression {
 		return expression;
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return (this.expression.getExpresstionType());
 	}
 
 }

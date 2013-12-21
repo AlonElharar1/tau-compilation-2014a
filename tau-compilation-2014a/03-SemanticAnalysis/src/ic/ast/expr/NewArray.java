@@ -39,13 +39,9 @@ public class NewArray extends New {
 		return size;
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return (this.getType());
 	}
 
 }

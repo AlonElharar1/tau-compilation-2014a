@@ -44,8 +44,7 @@ public class StaticCall extends Call {
 	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return (this.getScope().findMethod(this.getClassName(), this.getMethod()).getType());
 	}
 
 }

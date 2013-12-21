@@ -62,13 +62,15 @@ public abstract class DeclMethod extends Node {
 	@Override
 	public String toString() {
 		
-		String paramsStr = "";
+		StringBuilder builder = new StringBuilder();
 		
 		for (Parameter param : this.formals) {
-			paramsStr += param.getType().toString() + " ";
+			builder.append(param.getType().toString() + ", ");
 		}
 		
-		return (String.format("%s : %s-> %s", 
-				this.getName(), paramsStr, this.type));
+		builder.delete(builder.length() - 2, builder.length());
+		
+		return (String.format("%s : %s -> %s", 
+				this.getName(), builder.toString(), this.type));
 	}
 }
