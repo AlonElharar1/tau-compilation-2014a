@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.Type;
 
 /**
  * 'This' expression AST node.
@@ -20,6 +21,15 @@ public class This extends Expression {
 	 */
 	public This(int line) {
 		super(line);
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getExpresstionType()
+	 */
+	@Override
+	public Type getExpresstionType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

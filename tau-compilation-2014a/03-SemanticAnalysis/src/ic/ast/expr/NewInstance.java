@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.Type;
 
 /**
  * Class instance creation AST node.
@@ -29,6 +30,15 @@ public class NewInstance extends New {
 
 	public String getName() {
 		return name;
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getExpresstionType()
+	 */
+	@Override
+	public Type getExpresstionType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.Type;
 
 /**
  * Array reference AST node.
@@ -36,6 +37,15 @@ public class RefArrayElement extends Ref {
 
 	public Expression getIndex() {
 		return index;
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getExpresstionType()
+	 */
+	@Override
+	public Type getExpresstionType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

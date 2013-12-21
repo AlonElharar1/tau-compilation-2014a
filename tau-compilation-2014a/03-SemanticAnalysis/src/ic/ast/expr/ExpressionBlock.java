@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.Type;
 
 /**
  * AST node for expression in parentheses.
@@ -27,6 +28,15 @@ public class ExpressionBlock extends Expression {
 
 	public Expression getExpression() {
 		return expression;
+	}
+
+	/* (non-Javadoc)
+	 * @see ic.ast.expr.Expression#getExpresstionType()
+	 */
+	@Override
+	public Type getExpresstionType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
