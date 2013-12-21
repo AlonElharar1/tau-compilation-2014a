@@ -189,7 +189,8 @@ public class ScopeRulesCheck extends SemanticCheck {
 
 		ifStatement.getCondition().accept(this);
 		ifStatement.getOperation().accept(this);
-		ifStatement.getElseOperation().accept(this);
+		if (ifStatement.getElseOperation() != null)
+			ifStatement.getElseOperation().accept(this);
 		
 		return null;
 	}
