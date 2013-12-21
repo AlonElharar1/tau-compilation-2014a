@@ -6,6 +6,8 @@
  */
 package ic.semantics.checks;
 
+import java.util.List;
+
 import ic.ast.decl.ClassType;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
@@ -179,7 +181,7 @@ public class TypingRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Literal literal){
-		return literal.getType();
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -188,23 +190,16 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(StmtAssignment assignment) {
 		
-		IceCoffeScope scope =  assignment.getScope();
 		
-		Type varType  = (Type) assignment.getVariable().accept(this);
-		Type assigmentType = (Type) assignment.getAssignment().accept(this);
+		assignment.getVariable().accept(this);
+		assignment.getAssignment().accept(this);
 		
-		DeclClass currClass = scope.findClass(assigmentType.getDisplayName());
-		DeclClass varClass = scope.findClass(varType.getDisplayName());
+		Type varType  = (Type) assignment.getVariable().getExpresstionType();
+		Type assigmentType = (Type) assignment.getAssignment().getExpresstionType();
 		
-		while (!currClass.getName().equals(varClass.getName())){
-			
-			String superClassName = scope.findClass(assigmentType.getDisplayName()).getSuperClassName();
-			currClass = scope.findClass(superClassName);
-			if (currClass == null)
-				throw new SemanticException(assignment.getLine(),"Can not convert " + assigmentType.getDisplayName() + " to " + assigmentType.getDisplayName());
-		}
-		
-		
+		if (!isSubType(varType,assigmentType))
+			throw new SemanticException(assignment.getLine(),"Can not convert " + assigmentType.getDisplayName() + " to " + varType.getDisplayName());
+
 		return null;
 	}
 
@@ -225,6 +220,18 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(StmtReturn returnStatement) {
 		
+		String methodType = returnStatement.getScope().currentMethod().getType().getDisplayName();
+		if (returnStatement.getValue() == null){
+			if (!methodType.equals(PrimitiveType.DataType.VOID))
+				throw new SemanticException(returnStatement.getLine(),"The return value is void but expected " + methodType);
+			return null;
+		}
+		
+		String returnType =  returnStatement.getValue().getExpresstionType().getDisplayName();
+		
+		if (!returnType.equals(methodType))
+			throw new SemanticException(returnStatement.getLine(),"The return value is " + returnType + "but expected " + methodType);
+		
 		returnStatement.getValue().accept(this);
 		
 		return null;
@@ -236,9 +243,18 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(StmtIf ifStatement) {
 
-		Type condType = (Type) ifStatement.getCondition().accept(this);
+		
+		Type condType = ifStatement.getCondition().getExpresstionType();
+		if (!condType.getDisplayName().equals(PrimitiveType.DataType.BOOLEAN))
+			throw new SemanticException(ifStatement.getLine(),"Boolean expression is expected");
+		
+		ifStatement.getCondition().accept(this);
 		ifStatement.getOperation().accept(this);
-		ifStatement.getElseOperation().accept(this);
+		if (ifStatement.getElseOperation() != null)
+			ifStatement.getElseOperation().accept(this);
+
+			
+			
 		
 		return null;
 	}
@@ -248,6 +264,10 @@ public class TypingRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StmtWhile whileStatement) {
+		
+		Type condType = whileStatement.getCondition().getExpresstionType();
+		if (!condType.getDisplayName().equals(PrimitiveType.DataType.BOOLEAN))
+			throw new SemanticException(whileStatement.getLine(),"Boolean expression is expected");
 		
 		whileStatement.getCondition().accept(this);
 		whileStatement.getOperation().accept(this);
@@ -290,10 +310,36 @@ public class TypingRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(LocalVariable localVariable) {
-
+		
 		localVariable.getInitialValue().accept(this);
 		
+		typeExistCheck(localVariable.getType(),localVariable.getLine());
+		
+		Type varType  = (Type) localVariable.getType();
+		Type initialValueType = (Type) localVariable.getInitialValue().getExpresstionType();
+		
+		
+		if (!isSubType(varType,initialValueType))
+			throw new SemanticException(localVariable.getLine(),"Can not convert " + initialValueType.getDisplayName() + " to " + varType.getDisplayName());
+		
 		return null;
+	}
+	
+	private boolean isSubType(Type type,Type subType){
+		
+		IceCoffeScope scope = type.getScope();
+		
+		DeclClass currClass = scope.findClass(subType.getDisplayName());
+		DeclClass varClass = scope.findClass(type.getDisplayName());
+		
+		while (!currClass.getName().equals(varClass.getName())){
+			
+			String superClassName = currClass.getSuperClassName();
+			currClass = scope.findClass(superClassName);
+			if (currClass == null)
+				return false;
+		}
+		return true;
 	}
 
 
@@ -303,9 +349,6 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(RefVariable location) {
 		
-		if ((location.getScope().findRef(location) == null) ||
-		    (location.getScope().findRef(location).getLine() > location.getLine()))
-				throw new SemanticException(location.getLine(),"'" + location.getName() + "' is not declared before used");
 		
 		return null;
 	}
@@ -317,15 +360,9 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(RefField location) {
 		
+		location.getObject().accept(this);
 		
-		DeclClass objectClass = (DeclClass)location.getObject().accept(this);
-		
-		for (DeclField field : objectClass.getFields())
-			if (field.getName().equals(location.getField()))
-				return field.getScope().findClass(field.getType().getDisplayName());
-		
-	
-		throw new SemanticException(location.getLine(),"'" + objectClass.getName() + "' does not have field: '" + location.getField() + "'");
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -334,10 +371,16 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(RefArrayElement location) {
 		
+		if (!location.getIndex().getExpresstionType().equals(PrimitiveType.DataType.INT))
+			 throw new SemanticException(location.getLine(),"Index must be int type");
+		
+		if (location.getArray().getExpresstionType().getArrayDimension() < 1)
+			 throw new SemanticException(location.getLine(),"The expression is not an array type");
 		
 		location.getIndex().accept(this);
+		location.getArray().accept(this);
 		
-		return location.getArray().accept(this);
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -345,17 +388,17 @@ public class TypingRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(StaticCall call) {
-			
-		 if (call.getScope().findMethod(call.getClassName()+ "." + call.getMethod()) == null)
-			 throw new SemanticException(call.getLine(),"'" + call.getClassName() + "' does not have static method: '" + call.getMethod() + "'");
-		/*boolean isMethodExist = false;
 		
-		for (DeclMethod method : call.getScope().findClass(call.getClassName()).getMethods())
-			if ((method instanceof DeclStaticMethod) && (method.getName().equals(call.getMethod())))
-				isMethodExist = true;
+		List<Parameter> params = call.getScope().findMethod(call.getClassName(), call.getMethod()).getFormals();
+		List<Expression> args = call.getArguments();
+		if (params.size() != args.size())
+			 throw new SemanticException(call.getLine(),"Wrong number of arguments");
 		
-		if (!isMethodExist)
-			throw new SemanticException(call.getLine(),"'" + call.getClassName() + "' does not have static method: '" + call.getMethod() + "'");*/
+		
+		for (int i = 0; i < args.size() ; i++){
+			if (!isSubType(params.get(i).getType(),args.get(i).getExpresstionType()))
+				 throw new SemanticException(call.getLine(),"Argument number " + i + " is " + args.get(i).getExpresstionType() + " and expected: " +  params.get(i).getType());
+		}
 		
 		for (Expression expression : call.getArguments())
 			expression.accept(this);
@@ -370,41 +413,24 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(VirtualCall call) {
 		
+		List<Parameter> params = call.getScope().findMethod(call.getObject().getExpresstionType().getDisplayName(), call.getMethod()).getFormals();
+		List<Expression> args = call.getArguments();
+		if (params.size() != args.size())
+			 throw new SemanticException(call.getLine(),"Wrong number of arguments");
 		
 		
-		DeclMethod method = call.getScope().findMethod(call.getScope().currentClass().getName(), call.getMethod()) ;
-		
-		if (call.getObject() == null){  
-			if	(method == null)
-				throw new SemanticException(call.getLine(),"The current class does not have virtual method: '" + call.getMethod() + "'");
-			return 	call.getScope().findClass(method.getType().getDisplayName());
-		}	
-		
-		
-		DeclClass objectClass = (DeclClass)call.getObject().accept(this);
-		method = call.getScope().findMethod(objectClass.getName(), call.getMethod());
-		
-		
-		
-		if (method == null)
-			throw new SemanticException(call.getLine(),"'" + objectClass.getName() + "' does not have virtual method: '" + call.getMethod() + "'");
-		
-		return 	call.getScope().findClass(method.getType().getDisplayName());
-		
-		/*
-		 * boolean isMethodExist = false;
-		 * for (DeclMethod method : objectClass.getMethods())
-			if ((method instanceof DeclVirtualMethod) && (method.getName().equals(call.getMethod())))
-					isMethodExist = true;	
-				
-		if (!isMethodExist)
-			throw new SemanticException(call.getLine(),"'" + objectClass.getName() + "' does not have virtual method: '" + call.getMethod() + "'");
+		for (int i = 0; i < args.size() ; i++){
+			if (!isSubType(params.get(i).getType(),args.get(i).getExpresstionType()))
+				 throw new SemanticException(call.getLine(),"Argument number " + i + " is " + args.get(i).getExpresstionType() + " and expected: " +  params.get(i).getType());
+		}
 		
 		for (Expression expression : call.getArguments())
 			expression.accept(this);
-	
 		
-		return method.getType();*/
+		call.getObject().accept(this);
+		
+		return null;
+		
 	}
 
 	/* (non-Javadoc)
@@ -413,7 +439,7 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(This thisExpression) {
 		
-		return thisExpression.getScope().currentClass();
+		return null;
 		
 		
 	}
@@ -424,7 +450,7 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(NewInstance newClass) {
 		
-		return newClass.getScope().findClass(newClass.getName());
+		return null;
 		
 	}
 	
@@ -435,9 +461,11 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(NewArray newArray) {
 		
+		if (!newArray.getSize().getExpresstionType().equals(PrimitiveType.DataType.INT))
+			throw new SemanticException(newArray.getLine(),"Index must be int type");
+		
 		newArray.getSize().accept(this);
 		
-		//return newArray.getScope().findClass(newArray.getType().getDisplayName());
 		return null;
 		
 	}
@@ -447,8 +475,6 @@ public class TypingRulesCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(Length length) {
-		
-		length.getArray().accept(this);
 		
 		return null;
 	}
