@@ -167,7 +167,6 @@ public class ScopeRulesCheck extends SemanticCheck {
 		
 		callStatement.getCall().accept(this);
 
-		
 		return null;
 	}
 
@@ -274,7 +273,8 @@ public class ScopeRulesCheck extends SemanticCheck {
 		
 		for (DeclField field : objectClass.getFields())
 			if (field.getName().equals(location.getField()))
-				return field.getScope().currentClass();
+				return field.getScope().findClass(field.getType().getDisplayName());
+		
 	
 		throw new SemanticException(location.getLine(),"'" + objectClass.getName() + "' does not have field: '" + location.getField() + "'");
 	}
@@ -297,14 +297,16 @@ public class ScopeRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(StaticCall call) {
 			
-		boolean isMethodExist = false;
+		 if (call.getScope().findMethod(call.getClassName()+ "." + call.getMethod()) == null)
+			 throw new SemanticException(call.getLine(),"'" + call.getClassName() + "' does not have static method: '" + call.getMethod() + "'");
+		/*boolean isMethodExist = false;
 		
 		for (DeclMethod method : call.getScope().findClass(call.getClassName()).getMethods())
 			if ((method instanceof DeclStaticMethod) && (method.getName().equals(call.getMethod())))
 				isMethodExist = true;
 		
 		if (!isMethodExist)
-			throw new SemanticException(call.getLine(),"'" + call.getClassName() + "' does not have static method: '" + call.getMethod() + "'");
+			throw new SemanticException(call.getLine(),"'" + call.getClassName() + "' does not have static method: '" + call.getMethod() + "'");*/
 		
 		for (Expression expression : call.getArguments())
 			expression.accept(this);
@@ -319,12 +321,31 @@ public class ScopeRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(VirtualCall call) {
 		
-		boolean isMethodExist = false;
+		
+		
+		DeclMethod method = call.getScope().findMethod(call.getScope().currentClass().getName(), call.getMethod()) ;
+		
+		if (call.getObject() == null){  
+			if	(method == null)
+				throw new SemanticException(call.getLine(),"The current class does not have virtual method: '" + call.getMethod() + "'");
+			return 	call.getScope().findClass(method.getType().getDisplayName());
+		}	
+		
 		
 		DeclClass objectClass = (DeclClass)call.getObject().accept(this);
+		method = call.getScope().findMethod(objectClass.getName(), call.getMethod());
 		
-		for (DeclMethod method : objectClass.getMethods())
-			if ((method instanceof DeclStaticMethod) && (method.getName().equals(call.getMethod())))
+		
+		
+		if (method == null)
+			throw new SemanticException(call.getLine(),"'" + objectClass.getName() + "' does not have virtual method: '" + call.getMethod() + "'");
+		
+		return 	call.getScope().findClass(method.getType().getDisplayName());
+		
+		/*
+		 * boolean isMethodExist = false;
+		 * for (DeclMethod method : objectClass.getMethods())
+			if ((method instanceof DeclVirtualMethod) && (method.getName().equals(call.getMethod())))
 					isMethodExist = true;	
 				
 		if (!isMethodExist)
@@ -334,7 +355,7 @@ public class ScopeRulesCheck extends SemanticCheck {
 			expression.accept(this);
 	
 		
-		return objectClass;
+		return method.getType();*/
 	}
 
 	/* (non-Javadoc)
