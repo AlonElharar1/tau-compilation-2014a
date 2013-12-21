@@ -1,7 +1,9 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.ClassType;
 import ic.ast.decl.Type;
+import ic.semantics.SemanticException;
 
 import java.util.List;
 
@@ -57,13 +59,19 @@ public class VirtualCall extends Call {
 		return object;
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Type objectType = this.getObject().getExpresstionType();
+		
+		if (objectType instanceof ClassType) {
+			return (this.getScope().findMethod(
+					((ClassType) objectType).getClassName(),
+					this.getMethod()).getType());
+		}
+		
+		throw new SemanticException(this.getLine(), 
+				"method doesn't exists");
 	}
 
 }

@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.ClassType;
 import ic.ast.decl.Type;
 
 /**
@@ -23,13 +24,10 @@ public class This extends Expression {
 		super(line);
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return (new ClassType(this.getLine(), 
+				this.getScope().currentClass().getName()));
 	}
 
 }

@@ -1,6 +1,7 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.DeclField;
 import ic.ast.decl.Type;
 
 /**
@@ -32,13 +33,9 @@ public class RefVariable extends Ref {
 		return name;
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return (((DeclField)this.getScope().findRef(this)).getType());
 	}
 
 }

@@ -2,6 +2,7 @@ package ic.ast.expr;
 
 import ic.ast.Visitor;
 import ic.ast.decl.Type;
+import ic.ast.stmt.LocalVariable;
 
 /**
  * Variable reference AST node.
@@ -41,13 +42,9 @@ public class RefField extends Ref {
 		return fieldName;
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return (((LocalVariable)this.getScope().findRef(this)).getType());
 	}
 
 }

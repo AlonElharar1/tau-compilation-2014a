@@ -2,6 +2,7 @@ package ic.ast.expr;
 
 import ic.ast.Visitor;
 import ic.ast.decl.Type;
+import ic.ast.decl.PrimitiveType;
 
 /**
  * Array length expression AST node.
@@ -30,13 +31,10 @@ public class Length extends Expression {
 		return array;
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return (new PrimitiveType(this.getLine(), 
+					PrimitiveType.DataType.INT));
 	}
 
 }

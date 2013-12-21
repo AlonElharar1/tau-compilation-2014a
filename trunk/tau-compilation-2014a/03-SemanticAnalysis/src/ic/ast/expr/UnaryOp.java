@@ -1,7 +1,10 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
+import ic.ast.decl.PrimitiveType;
+import ic.ast.decl.PrimitiveType.DataType;
 import ic.ast.decl.Type;
+import ic.semantics.SemanticException;
 
 
 /**
@@ -70,13 +73,24 @@ public class UnaryOp extends Expression {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
 	@Override
 	public Type getExpresstionType() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Type operandType = this.getOperand().getExpresstionType();
+		
+		if (operandType instanceof PrimitiveType) {
+			PrimitiveType operandPrimitive = (PrimitiveType)operandType;
+			
+			if (((operandPrimitive.getDataType() == DataType.BOOLEAN) &&
+				 (this.getOperator() == UnaryOps.LNEG)) ||
+				((operandPrimitive.getDataType() == DataType.INT) &&
+				 (this.getOperator() == UnaryOps.UMINUS))) {
+				return (operandPrimitive);
+			}
+		}
+		
+		throw new SemanticException(this.getLine(), 
+			"operator '" + this.getOperator() + "' doesnt support this type");
 	}
 
 }
