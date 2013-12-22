@@ -146,8 +146,8 @@ public class TypingRulesCheck extends SemanticCheck {
 		if (!this.typeAnalyzer.isInstanceOf(assignment.getScope(), 
 				assigmentType, varType))
 			throw new SemanticException(assignment.getLine(),
-					"Can not convert " + assigmentType.getDisplayName() +
-					" to " + varType.getDisplayName());
+					String.format("Invalid assignment of type %s to variable of type %s",
+							assigmentType.getDisplayName(), varType.getDisplayName()));
 
 		return null;
 	}
@@ -185,14 +185,12 @@ public class TypingRulesCheck extends SemanticCheck {
 				return null;
 			
 			throw new SemanticException(returnStatement.getLine(),
-					String.format("method expect '%s' bit got '%s'", 
-							expectedType.getDisplayName(),
+					String.format("Return statement is not of type %s", 
 							returnType.getDisplayName()));
 		}
 		
 		throw new SemanticException(returnStatement.getLine(),
-				String.format("method expect '%s' bit got nothing", 
-						expectedType.getDisplayName()));
+				String.format("Return statement is not of type void")); 
 	}
 
 	@Override
@@ -225,7 +223,7 @@ public class TypingRulesCheck extends SemanticCheck {
 		
 		if (!condType.getDisplayName().equals(PrimitiveType.DataType.BOOLEAN.toString()))
 			throw new SemanticException(whileStatement.getLine(),
-					"Boolean expression is expected");
+					"Non boolean condition for while statement");
 
 		whileStatement.getOperation().accept(this);
 
@@ -260,7 +258,7 @@ public class TypingRulesCheck extends SemanticCheck {
 					initValType, localVariable.getType())) {
 				
 				throw new SemanticException(localVariable.getLine(),
-						String.format("can not convert type '%s' to '%s'",
+						String.format("Invalid assignment of type %s to variable of type %s",
 								initValType.getDisplayName(),
 								localVariable.getType().getDisplayName()));
 			}
@@ -288,7 +286,7 @@ public class TypingRulesCheck extends SemanticCheck {
 
 		location.getIndex().accept(this);
 		
-		if (!this.typeAnalyzer.getExpressionType(location.getIndex()).equals(
+		if (!this.typeAnalyzer.getExpressionType(location.getIndex()).getDisplayName().equals(
 				PrimitiveType.DataType.INT.toString()))
 			throw new SemanticException(location.getLine(),
 					"Index must be intenger");
@@ -305,7 +303,8 @@ public class TypingRulesCheck extends SemanticCheck {
 		
 		if (params.size() != args.size())
 			throw new SemanticException(call.getLine(),
-					"wrong number of arguments");
+					String.format("Invalid number of arguments for %s.%s",
+							call.getClassName(), call.getMethod()));
 
 		for (Expression expression : call.getArguments())
 			expression.accept(this);
@@ -316,8 +315,8 @@ public class TypingRulesCheck extends SemanticCheck {
 					params.get(i).getType()))
 				
 				throw new SemanticException(call.getLine(),
-						String.format("argument '%s' type mismatch", 
-								params.get(i).getName()));
+						String.format("Method %s.%s is not applicable for the arguments given", 
+								call.getClassName(), call.getMethod()));
 		}
 
 		return null;
@@ -326,11 +325,15 @@ public class TypingRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(VirtualCall call) {
 
-		call.getObject().accept(this);
+		if (call.getObject() != null)
+			call.getObject().accept(this);
 		
-		List<Parameter> params = call.getScope().findMethod(
-				this.typeAnalyzer.getExpressionType(call.getObject()).getDisplayName(),
-				call.getMethod()).getFormals();
+		String className = (call.getObject() == null) ?
+				call.getScope().currentClass().getName() :
+					this.typeAnalyzer.getExpressionType(call.getObject()).getDisplayName();
+		
+		List<Parameter> params =
+				call.getScope().findMethod(className, call.getMethod()).getFormals();
 		List<Expression> args = call.getArguments();
 		
 		if (params.size() != args.size())
@@ -358,10 +361,10 @@ public class TypingRulesCheck extends SemanticCheck {
 
 		newArray.getSize().accept(this);
 		
-		if (!this.typeAnalyzer.getExpressionType(newArray.getSize()).equals(
+		if (!this.typeAnalyzer.getExpressionType(newArray.getSize()).getDisplayName().equals(
 				PrimitiveType.DataType.INT.toString()))
 			throw new SemanticException(newArray.getLine(),
-					"index must be intenger");
+					"Index must be intenger");
 
 		return null;
 

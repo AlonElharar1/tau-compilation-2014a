@@ -19,7 +19,7 @@ public class InterpreterRunTimeException extends IceCoffeException {
 	 * @param message
 	 */
 	public InterpreterRunTimeException(int line, String message) {
-		super(line, 0, "run time", message);
+		super(line, IceCoffeException.UNKNOWN, "run time", message);
 	}
 
 }

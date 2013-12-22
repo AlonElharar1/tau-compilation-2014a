@@ -1,0 +1,4 @@
+1c1
+< 4: semantic error; doo not found in symbol table
+---
+> 4: semantic error; Method Test.doo not found in type table

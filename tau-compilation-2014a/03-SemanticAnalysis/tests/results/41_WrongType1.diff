@@ -1,0 +1,4 @@
+1c1
+< 5: semantic error; Invalid assignment of type boolean to variable of type int
+---
+> 5: semantic error; Invalid assignment of type boolean to variable of type integer

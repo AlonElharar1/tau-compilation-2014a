@@ -33,18 +33,19 @@ public class StatementBlockScope extends IceCoffeScope {
 	 */
 	public StatementBlockScope(IceCoffeScope parentScope, List<Statement> statments) {
 		super(parentScope);
+	}
+	
+	public boolean isSymbolExists(String id) {
+		return (this.localVariables.containsKey(id));
+	}
+	
+	public void addLocalVariable(LocalVariable var) {
+		if (this.isSymbolExists(var.getName()))
+			throw new SemanticException(var.getLine(), 
+					String.format("Id %s already defined in current scope",
+							var.getName()));
 		
-		for (Statement stmt : statments) {
-			if (stmt instanceof LocalVariable) {
-				LocalVariable localVar = (LocalVariable)stmt;
-				
-				if (this.localVariables.containsKey(localVar.getName()))
-					throw new SemanticException(localVar.getLine(), 
-							"a local variable with the same name already exists");
-				
-				this.localVariables.put(localVar.getName(), localVar);
-			}
-		}
+		this.localVariables.put(var.getName(), var);
 	}
 	
 	@Override

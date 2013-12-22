@@ -22,16 +22,17 @@ public class GlobalScope extends IceCoffeScope {
 	
 	public GlobalScope(Program program) {
 		super(null);
-		
-		for (DeclClass classNode : program.getClasses()) {
-			if (this.classes.containsKey(classNode.getName()))
-				throw new SemanticException(classNode.getLine(), 
-						"a class with the same name already exists");
-			
-			this.classes.put(classNode.getName(), classNode);
-		}
 	}
 
+	public void addClass(DeclClass classNode) {
+		if (this.isSymbolExists(classNode.getName()))
+			throw new SemanticException(classNode.getLine(), 
+					String.format("Id %s already defined in current scope",
+							classNode.getName()));
+		
+		this.classes.put(classNode.getName(), classNode);
+	}
+	
 	@Override
 	public DeclClass findClass(String className) {
 		if (!this.classes.containsKey(className))
@@ -41,23 +42,19 @@ public class GlobalScope extends IceCoffeScope {
 	}
 	
 	@Override
-	public DeclMethod findMethod(String methodId) {
-		String className = methodId.substring(methodId.indexOf('.'));
-		
+	public DeclMethod findMethod(String className, String methodName) {
 		if (this.classes.containsKey(className))
-			return (this.classes.get(className).getScope().findMethod(methodId));
+			return (this.classes.get(className).getScope().findMethod(methodName));
 		
-		return (super.findMethod(methodId));
+		return (super.findMethod(className, methodName));
 	}
 	
 	@Override
-	public DeclField findField(String fieldId) {
-		String className = fieldId.substring(fieldId.indexOf('.'));
-		
+	public DeclField findField(String className, String fieldName) {
 		if (this.classes.containsKey(className))
-			return (this.classes.get(className).getScope().findField(fieldId));
+			return (this.classes.get(className).getScope().findField(fieldName));
 		
-		return (super.findField(fieldId));
+		return (super.findField(className, fieldName));
 	}
 	
 	@Override
@@ -75,5 +72,10 @@ public class GlobalScope extends IceCoffeScope {
 		for (String classStr : this.classes.keySet()) {
 			System.out.printf("\tClass:\t%s\n", classStr);
 		}
+	}
+
+	@Override
+	public boolean isSymbolExists(String id) {
+		return (this.classes.containsKey(id));
 	}
 }

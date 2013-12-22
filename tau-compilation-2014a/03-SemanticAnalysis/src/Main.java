@@ -42,12 +42,12 @@ public class Main {
 			// Build the symbol tables
 			prog.accept(new ScopesBuilder());
 
-			// Do Semantics checks
-			new SemanticChecker().runAllChecks(prog);
-
 			// Check if the interpreter module is requested
 			if (args.length <= argIndex) {
-				
+
+				// Do Semantics checks
+				new SemanticChecker().runAllChecks(prog);
+
 				// Print the symbol table
 				prog.getScope().print();
 

@@ -87,7 +87,7 @@ public class BreakContinueCheck extends SemanticCheck {
 	public Object visit(StmtBreak breakStatement) {
 		if (this.whileCount == 0) 
 			throw new SemanticException(breakStatement.getLine(),
-					"'break' keyword can only be used inside while loop");
+					"Use of 'break' statement outside of loop not allowed");
 		
 		return null;
 	}
@@ -96,7 +96,7 @@ public class BreakContinueCheck extends SemanticCheck {
 	public Object visit(StmtContinue continueStatement) {
 		if (this.whileCount == 0) 
 			throw new SemanticException(continueStatement.getLine(),
-					"'continue' keyword can only be used inside while loop");
+					"Use of 'continue' statement outside of loop not allowed");
 		
 		return null;
 	}

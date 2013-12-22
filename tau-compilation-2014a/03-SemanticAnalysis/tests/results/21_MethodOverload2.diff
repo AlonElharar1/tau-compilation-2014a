@@ -1,0 +1,31 @@
+1,28c1
+< 
+< Global Symbol Table
+< 	Class:	Test
+< 	Class:	Test2
+< 	Class:	C
+< 
+< Class Symbol Table: Test
+< 	Virtual method:  foo : int, boolean -> int
+< 
+< Method Symbol Table: foo (parent = Test)
+< 	Parameter:	a : int
+< 	Parameter:	b : boolean
+< 	Local variable:	c : int
+< 
+< Class Symbol Table: Test2 (parent = Test)
+< 	Virtual method:  foo : int, boolean -> void
+< 
+< Method Symbol Table: foo (parent = Test2)
+< 	Parameter:	d : int
+< 	Parameter:	e : boolean
+< 	Local variable:	c : int
+< 
+< Class Symbol Table: C
+< 	Static method:  main : string[] -> void
+< 
+< Method Symbol Table: main (parent = C)
+< 	Parameter:	args : string[]
+< 	Local variable:	a : int
+---
+> 11: semantic error; method 'foo' overloads a different method with the same name
