@@ -186,7 +186,7 @@ public class TypingRulesCheck extends SemanticCheck {
 			
 			throw new SemanticException(returnStatement.getLine(),
 					String.format("Return statement is not of type %s", 
-							returnType.getDisplayName()));
+							expectedType.getDisplayName()));
 		}
 		
 		throw new SemanticException(returnStatement.getLine(),
@@ -349,8 +349,8 @@ public class TypingRulesCheck extends SemanticCheck {
 					params.get(i).getType()))
 				
 				throw new SemanticException(call.getLine(),
-						String.format("argument '%s' type mismatch", 
-								params.get(i).getName()));
+						String.format("Method %s.%s is not applicable for the arguments given", 
+								className, call.getMethod()));
 		}
 
 		return null;

@@ -151,6 +151,12 @@ public class ScopeRulesCheck extends SemanticCheck {
 						String.format("%s not found in symbol table",
 								location.getName()));
 		
+		if ((localVar instanceof DeclField) &&
+			(location.getScope().currentMethod() instanceof DeclStaticMethod))
+			throw new SemanticException(location.getLine(),
+					String.format("Use of field inside static method is not allowed"));
+		
+		
 		return null;
 	}
 	

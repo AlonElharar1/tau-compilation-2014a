@@ -1,4 +1,0 @@
-1c1
-< 6: semantic error; Calling a local virtual method from inside a static method is not allowed
----
-> 6: semantic error; Use of field inside static method is not allowed
