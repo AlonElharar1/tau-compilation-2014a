@@ -1,0 +1,13 @@
+
+Global Symbol Table
+	Class:	Test
+
+Class Symbol Table: Test
+	Virtual method:  func :  -> int
+	Static method:  main : string[] -> void
+
+Method Symbol Table: func (parent = Test)
+	Local variable:	a : int
+
+Method Symbol Table: main (parent = Test)
+	Parameter:	args : string[]
