@@ -21,7 +21,12 @@ import ic.ast.builders.decl.ParameterBuilder;
 import ic.ast.builders.decl.PrimitiveTypeBuilder;
 import ic.ast.builders.decl.ProgramBuilder;
 import ic.ast.builders.decl.TypeBuilder;
+import ic.ast.builders.expr.BinaryOpAddBuilder;
+import ic.ast.builders.expr.BinaryOpAndBuilder;
 import ic.ast.builders.expr.BinaryOpBuilder;
+import ic.ast.builders.expr.BinaryOpEqBuilder;
+import ic.ast.builders.expr.BinaryOpMultBuilder;
+import ic.ast.builders.expr.BinaryOpRelationalBuilder;
 import ic.ast.builders.expr.CallBuilder;
 import ic.ast.builders.expr.ExpressionBlockBuilder;
 import ic.ast.builders.expr.ExpressionBuilder;
@@ -82,6 +87,11 @@ public class ASTBuilder {
 		this.registerBuilder(new TypeBuilder());
 		
 		this.registerBuilder(new BinaryOpBuilder());
+		this.registerBuilder(new BinaryOpAndBuilder());
+		this.registerBuilder(new BinaryOpEqBuilder());
+		this.registerBuilder(new BinaryOpRelationalBuilder());
+		this.registerBuilder(new BinaryOpAddBuilder());
+		this.registerBuilder(new BinaryOpMultBuilder());
 		this.registerBuilder(new CallBuilder());
 		this.registerBuilder(new ExpressionBlockBuilder());
 		this.registerBuilder(new ExpressionBuilder());

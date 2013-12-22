@@ -9,6 +9,7 @@ import fun.grammar.Grammar;
 import fun.parser.Tree;
 import fun.parser.earley.EarleyParser;
 import fun.parser.earley.EarleyState;
+import fun.parser.Parser;
 import ic.IceCoffeException;
 import ic.IceCoffeGrammers;
 import ic.ast.PrettyPrint;
@@ -76,7 +77,7 @@ public class Main {
 		if (tokens != null) {
 			// Parse the tokens into an parse tree using early algorithm
 			Grammar icGrammer = new Grammar(isLibrary ? 
-					IceCoffeGrammers.IC_LIB_CFG : IceCoffeGrammers.IC_CFG);
+					IceCoffeGrammers.IC_LIB_CFG : IceCoffeGrammers.IC_CFG_NEW);
 			EarleyParser icParser = new EarleyParser(tokens, icGrammer);
 			
 			List<EarleyState> completedParses = icParser.getCompletedParses();

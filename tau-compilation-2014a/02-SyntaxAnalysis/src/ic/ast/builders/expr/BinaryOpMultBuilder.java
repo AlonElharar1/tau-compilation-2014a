@@ -15,7 +15,7 @@ import ic.ast.expr.BinaryOp;
 import ic.ast.expr.Expression;
 import ic.lexer.Token;
 
-public class BinaryOpBuilder implements ASTNodeBuilder {
+public class BinaryOpMultBuilder implements ASTNodeBuilder {
 
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
@@ -29,7 +29,7 @@ public class BinaryOpBuilder implements ASTNodeBuilder {
 			Expression operand1 = 
 					buildHelper.build(parseTree.subtrees.get(0), Expression.class);
 			
-			Token operatorToken = (Token)parseTree.subtrees.get(1).root;
+			Token operatorToken = (Token)parseTree.subtrees.get(1).subtrees.get(0).root;
 			BinaryOp.BinaryOps operator =
 					BinaryOp.BinaryOps.find(operatorToken.text);
 			
@@ -42,6 +42,6 @@ public class BinaryOpBuilder implements ASTNodeBuilder {
 	
 	@Override
 	public String getParseTreeTag() {
-		return ("EXPRBINOP");
+		return ("EXPRBINOP_MULT");
 	}
 }
