@@ -1,0 +1,15 @@
+class Test {
+
+	int func() {
+		int a;
+	
+	
+		a = 3;
+	
+		return a;
+	}
+
+	static void main(string[] args) {
+	}
+
+}

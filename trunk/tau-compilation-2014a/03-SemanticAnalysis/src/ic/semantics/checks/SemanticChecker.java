@@ -27,8 +27,7 @@ public class SemanticChecker {
 		this.addCheck(new ScopeRulesCheck());
 		this.addCheck(new TypingRulesCheck());
 		
-		// TODO implement bonus checks
-		//this.addCheck(new LocalVariablesInitializationCheck());
+		this.addCheck(new LocalVariablesInitializationCheck());
 		//this.addCheck(new AlwaysReturnCheck());
 	}
 	
