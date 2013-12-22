@@ -1,4 +1,0 @@
-1c1
-< 9: semantic error; argument 'b' type mismatch
----
-> 9: semantic error; Method Test.foo is not applicable for the arguments given

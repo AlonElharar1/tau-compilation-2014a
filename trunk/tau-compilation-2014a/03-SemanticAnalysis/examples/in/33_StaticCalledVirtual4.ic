@@ -3,7 +3,7 @@ class A {
   int i;
 
   static int sfunc() {
-   return i;
+   return vfunc();
   }
 
   int vfunc() {

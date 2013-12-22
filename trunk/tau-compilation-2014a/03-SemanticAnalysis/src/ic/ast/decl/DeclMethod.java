@@ -56,6 +56,23 @@ public abstract class DeclMethod extends Node {
 		return statements;
 	}
 	
+	public boolean hasSameSignature(DeclMethod method) {
+		
+		if (!this.getType().getDisplayName().equals(method.getType().getDisplayName()))
+			return (false);
+
+		if (this.getFormals().size() != method.getFormals().size())
+			return (false);
+		
+		for (int i = 0; i < this.formals.size(); i++) {
+			if (!this.getFormals().get(i).getType().getDisplayName().equals(
+					method.getFormals().get(i).getType().getDisplayName()))
+					return (false);
+		}
+		
+		return (true);
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

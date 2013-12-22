@@ -89,12 +89,21 @@ public class ClassScope extends IceCoffeScope {
 			throw new SemanticException(method.getLine(), 
 					String.format("Method %s is shadowing a field with the same name",
 							method.getName()));
-		else if (this.isMethodExists(method.getName()) &&
-				 ((method instanceof DeclStaticMethod) ||
-				  (this.findMethod(method.getName()) instanceof DeclStaticMethod)))
-			throw new SemanticException(method.getLine(), 
-					String.format("method '%s' overloads a different method with the same name",
-							method.getName()));
+		else if (this.isMethodExists(method.getName())) {
+			
+			DeclMethod overMethod = this.findMethod(method.getName());
+			
+			// Check that overloads and not overrides
+			if (!method.hasSameSignature(overMethod))
+				throw new SemanticException(method.getLine(), 
+						String.format("method '%s' overloads a different method with the same name",
+								method.getName()));
+			else if ((method instanceof DeclStaticMethod) ||
+					 (overMethod instanceof DeclStaticMethod))
+				throw new SemanticException(method.getLine(), 
+						String.format("static overrides are not allowed",
+								method.getName()));
+		}
 		
 		hashMap.put(method.getName(), method);
 	}

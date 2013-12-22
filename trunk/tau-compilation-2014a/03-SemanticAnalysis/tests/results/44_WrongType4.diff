@@ -1,4 +1,4 @@
 1c1
-< 9: semantic error; Return statement is not of type boolean
+< 9: semantic error; Return statement is not of type int
 ---
 > 9: semantic error; Return statement is not of type integer
