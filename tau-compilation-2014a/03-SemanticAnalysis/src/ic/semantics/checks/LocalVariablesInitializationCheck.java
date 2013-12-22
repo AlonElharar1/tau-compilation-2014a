@@ -6,10 +6,15 @@
  */
 package ic.semantics.checks;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import ic.ast.Node;
 import ic.ast.decl.ClassType;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclLibraryMethod;
+import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
 import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.decl.Parameter;
@@ -36,18 +41,25 @@ import ic.ast.stmt.StmtContinue;
 import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
+import ic.semantics.SemanticException;
 
 /**
  * @bonus
  */
 public class LocalVariablesInitializationCheck extends SemanticCheck {
-
+	
+	private Set<Node> isInitializedSet = new HashSet<Node>();
+	
 	/* (non-Javadoc)
 	 * @see ic.ast.Visitor#visit(ic.ast.decl.Program)
 	 */
 	@Override
 	public Object visit(Program program) {
-		// TODO Auto-generated method stub
+		for (DeclClass icClass : program.getClasses())
+		{
+			icClass.accept(this);
+		}
+		
 		return null;
 	}
 
@@ -56,8 +68,15 @@ public class LocalVariablesInitializationCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(DeclClass icClass) {
-		// TODO Auto-generated method stub
+
+		for (DeclField field : icClass.getFields())
+			field.accept(this);
+
+		for (DeclMethod method : icClass.getMethods())
+			method.accept(this);
+
 		return null;
+		
 	}
 
 	/* (non-Javadoc)
@@ -70,7 +89,7 @@ public class LocalVariablesInitializationCheck extends SemanticCheck {
 	}
 
 	/* (non-Javadoc)
-	 * @see ic.ast.Visitor#visit(ic.ast.decl.DeclVirtualMethod)
+`	 * @see ic.ast.Visitor#visit(ic.ast.decl.DeclVirtualMethod)
 	 */
 	@Override
 	public Object visit(DeclVirtualMethod method) {
@@ -200,7 +219,10 @@ public class LocalVariablesInitializationCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(LocalVariable localVariable) {
-		// TODO Auto-generated method stub
+		
+		if(localVariable.isInitialized())
+			this.isInitializedSet.add(localVariable);
+		
 		return null;
 	}
 
@@ -209,7 +231,13 @@ public class LocalVariablesInitializationCheck extends SemanticCheck {
 	 */
 	@Override
 	public Object visit(RefVariable location) {
-		// TODO Auto-generated method stub
+		
+		if(!this.isInitializedSet.contains(location))
+		{
+			throw new SemanticException(location.getLine(),
+					"'" + location.getName() + "' is not initialized before used");
+		}
+		
 		return null;
 	}
 
