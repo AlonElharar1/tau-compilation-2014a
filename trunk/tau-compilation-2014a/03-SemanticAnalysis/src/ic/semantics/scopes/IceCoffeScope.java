@@ -7,13 +7,19 @@
 
 package ic.semantics.scopes;
 
+import ic.ast.Node;
+import ic.ast.decl.ClassType;
+import ic.ast.decl.DeclClass;
+import ic.ast.decl.DeclField;
+import ic.ast.decl.DeclMethod;
+import ic.ast.decl.DeclStaticMethod;
+import ic.ast.decl.DeclVirtualMethod;
+import ic.ast.decl.PrimitiveType;
+import ic.ast.decl.Type;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import ic.ast.Node;
-import ic.ast.decl.DeclClass;
-import ic.ast.decl.DeclMethod;
-import ic.ast.expr.Ref;
 
 public abstract class IceCoffeScope {
 
@@ -59,6 +65,48 @@ public abstract class IceCoffeScope {
 	public DeclMethod findMethod(String className, String methodName) {
 		return (this.findMethod(String.format("%s.%s", className, methodName)));
 	}
+
+	public DeclStaticMethod findStaticMethod(String className, String methodName) {
+		DeclMethod method = this.findMethod(className, methodName);
+		
+		if (method instanceof DeclStaticMethod)
+			return ((DeclStaticMethod)method);
+		
+		return (null);
+	}
+	
+	public DeclVirtualMethod findVirtualMethod(String className, String methodName) {
+		DeclMethod method = this.findMethod(className, methodName);
+		
+		if (method instanceof DeclVirtualMethod)
+			return ((DeclVirtualMethod)method);
+		
+		return (null);
+	}
+	
+	public Node findLocalVariable(String varName) {
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.findLocalVariable(varName));
+	}
+	
+	public DeclField findField(String className, String fieldName) {
+		return (this.findField(String.format("%s.%s", className, fieldName)));
+	}
+	
+	public DeclField findField(String fieldId) {
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.findField(fieldId));
+	}
+	
+	public boolean isTypeExist(Type type) {
+		return ((type instanceof PrimitiveType) ||
+				((type instanceof ClassType) && 
+				 (this.findClass(type.getDisplayName()) != null)));
+	}
 	
 	/**
 	 * Search a method in this scope or in his parents
@@ -70,18 +118,6 @@ public abstract class IceCoffeScope {
 			return (null);
 		
 		return (this.parentScope.findMethod(methodId));
-	}
-	
-	/**
-	 * Search a Ref deceleration node in this scope or in his parents
-	 * @param location
-	 * @return
-	 */
-	public Node findRef(Ref location) {
-		if (this.parentScope == null)
-			return (null);
-		
-		return (this.parentScope.findRef(location));
 	}
 
 	/**

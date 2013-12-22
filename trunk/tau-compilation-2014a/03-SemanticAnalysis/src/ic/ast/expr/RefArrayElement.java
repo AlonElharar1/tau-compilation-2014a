@@ -1,8 +1,6 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
-import ic.ast.decl.Type;
-import ic.ast.decl.*;
 
 /**
  * Array reference AST node.
@@ -39,25 +37,4 @@ public class RefArrayElement extends Ref {
 	public Expression getIndex() {
 		return index;
 	}
-
-	@Override
-	public Type getExpresstionType() {
-		
-		Type arrayType = this.getArray().getExpresstionType();
-		Type cellType = null;
-		
-		if (arrayType instanceof ClassType) {
-			cellType = new ClassType(this.getLine(), 
-					((ClassType)arrayType).getClassName());
-		}
-		else if (arrayType instanceof PrimitiveType) {
-			cellType = new PrimitiveType(this.getLine(), 
-					((PrimitiveType)arrayType).getDataType());
-		}
-		
-		cellType.setArrayDimension(cellType.getArrayDimension() - 1);
-		
-		return (cellType);
-	}
-	
 }

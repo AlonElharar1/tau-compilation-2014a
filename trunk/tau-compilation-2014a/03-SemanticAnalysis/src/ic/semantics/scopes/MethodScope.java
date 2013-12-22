@@ -10,8 +10,6 @@ package ic.semantics.scopes;
 import ic.ast.Node;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.Parameter;
-import ic.ast.expr.Ref;
-import ic.ast.expr.RefVariable;
 import ic.semantics.SemanticException;
 
 import java.util.HashMap;
@@ -46,47 +44,29 @@ public class MethodScope extends StatementBlockScope {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#currentMethod()
-	 */
+	@Override
+	public Node findLocalVariable(String varName) {
+		if (this.parameters.containsKey(varName))
+			return (this.parameters.get(varName));
+		
+		return super.findLocalVariable(varName);
+	}
+	
 	@Override
 	public DeclMethod currentMethod() {
 		return (this.scopeMethod);
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#findRef(ic.ast.expr.Ref)
-	 */
-	@Override
-	public Node findRef(Ref location) {
-		
-		if (!(location instanceof RefVariable) ||
-			(!this.parameters.containsKey(((RefVariable)location).getName())))
-			return (super.findRef(location));
-				
-		return (this.parameters.get(((RefVariable)location).getName()));
-		
-	}
-	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#getScopeName()
-	 */
 	@Override
 	public String getScopeName() {
 		return (this.scopeMethod.getName());
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.StatementBlockScope#getScopeType()
-	 */
 	@Override
 	public String getScopeType() {
 		return ("Method");
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.StatementBlockScope#internalPrint()
-	 */
 	@Override
 	protected void internalPrint() {
 		

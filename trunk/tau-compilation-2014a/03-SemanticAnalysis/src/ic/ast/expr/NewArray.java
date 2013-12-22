@@ -38,10 +38,4 @@ public class NewArray extends New {
 	public Expression getSize() {
 		return size;
 	}
-
-	@Override
-	public Type getExpresstionType() {
-		return (this.getType());
-	}
-
 }

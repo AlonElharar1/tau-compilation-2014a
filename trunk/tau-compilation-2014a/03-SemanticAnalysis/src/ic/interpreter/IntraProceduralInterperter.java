@@ -14,6 +14,7 @@ import ic.ast.decl.PrimitiveType;
 import ic.ast.decl.Program;
 import ic.ast.decl.Type;
 import ic.ast.expr.BinaryOp;
+import ic.ast.expr.Expression;
 import ic.ast.expr.Length;
 import ic.ast.expr.Literal;
 import ic.ast.expr.NewArray;
@@ -110,18 +111,30 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 	@Override
 	public Object visit(StmtAssignment assignment) {
 		
-		Node location = assignment.getScope().findRef(assignment.getVariable());
-		Object value =  assignment.getAssignment().accept(this);
+		Object value = assignment.getAssignment().accept(this);
 		
-		if (assignment.getVariable() instanceof RefArrayElement) {
-			Integer index = (Integer)((RefArrayElement)assignment.getVariable()).getIndex().accept(this);
-			Array.set(this.data.get(location), index , value);
-		}
-		else {
+		if (assignment.getVariable() instanceof RefVariable) {
+			Node location = assignment.getScope().findLocalVariable(
+					((RefVariable)assignment.getVariable()).getName());
 			this.data.put(location, value);
+			
+		}
+		else if (assignment.getVariable() instanceof RefArrayElement) {
+		
+			Expression arrayRef = ((RefArrayElement)assignment.getVariable()).getArray();
+			
+			if (arrayRef instanceof RefVariable) {
+				Node location = assignment.getScope().findLocalVariable(
+						((RefVariable)arrayRef).getName());
+			
+				Integer index = (Integer)((RefArrayElement)assignment.getVariable()).getIndex().accept(this);
+				
+				Array.set(this.data.get(location), index , value);
+			}
 		}
 		
-		return (this.data.get(location));
+		throw new InterpreterRunTimeException(assignment.getLine(), 
+				"assignment supported by the interpreter");
 	}
 	
 	@Override
@@ -265,13 +278,22 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 
 	@Override
 	public Object visit(RefArrayElement location) {
-		return (Array.get(this.data.get(location.getScope().findRef(location)), 
-				(Integer)location.getIndex().accept(this)));
+		
+		if (location.getArray() instanceof RefVariable) {
+			Node arrayVar = location.getScope().findLocalVariable(
+					((RefVariable)location.getArray()).getName());
+		
+			return (Array.get(this.data.get(arrayVar), (Integer)location.getIndex().accept(this)));
+		}
+		
+		super.visit(location);
+		
+		return null;
 	}
 
 	@Override
 	public Object visit(RefVariable location) {
-		return (this.data.get(location.getScope().findRef(location)));
+		return (this.data.get(location.getScope().findLocalVariable(location.getName())));
 	}
 
 	@Override

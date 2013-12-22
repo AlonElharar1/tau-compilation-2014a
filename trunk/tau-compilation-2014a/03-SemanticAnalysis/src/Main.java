@@ -14,7 +14,6 @@ import ic.syntax.IceCoffeParser;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.Arrays;
 
 public class Main {
 
@@ -22,8 +21,7 @@ public class Main {
 
 		// Validate arguments
 		if (args.length < 1) {
-			System.out
-					.println("Usage: program [-Llib] [method] [parameter1] ... ");
+			System.out.println("Usage: program [-Llib] [method] [parameter1] ... ");
 			return;
 		}
 

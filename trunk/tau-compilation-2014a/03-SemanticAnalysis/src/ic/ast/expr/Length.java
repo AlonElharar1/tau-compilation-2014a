@@ -1,8 +1,6 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
-import ic.ast.decl.Type;
-import ic.ast.decl.PrimitiveType;
 
 /**
  * Array length expression AST node.
@@ -30,11 +28,4 @@ public class Length extends Expression {
 	public Expression getArray() {
 		return array;
 	}
-
-	@Override
-	public Type getExpresstionType() {
-		return (new PrimitiveType(this.getLine(), 
-					PrimitiveType.DataType.INT));
-	}
-
 }

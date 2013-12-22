@@ -1,8 +1,6 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
-import ic.ast.decl.Type;
-import ic.ast.decl.ClassType;
 
 /**
  * Class instance creation AST node.
@@ -32,10 +30,4 @@ public class NewInstance extends New {
 	public String getName() {
 		return name;
 	}
-
-	@Override
-	public Type getExpresstionType() {
-		return (new ClassType(this.getLine(), this.getName()));
-	}
-
 }

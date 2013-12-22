@@ -1,7 +1,6 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
-import ic.ast.decl.Type;
 
 import java.util.List;
 
@@ -38,13 +37,4 @@ public class StaticCall extends Call {
 	public String getClassName() {
 		return className;
 	}
-
-	/* (non-Javadoc)
-	 * @see ic.ast.expr.Expression#getExpresstionType()
-	 */
-	@Override
-	public Type getExpresstionType() {
-		return (this.getScope().findMethod(this.getClassName(), this.getMethod()).getType());
-	}
-
 }
