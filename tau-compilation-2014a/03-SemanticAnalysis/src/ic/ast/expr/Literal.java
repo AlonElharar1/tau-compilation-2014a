@@ -45,10 +45,4 @@ public class Literal extends Expression {
 	public Object getValue() {
 		return value;
 	}
-
-	@Override
-	public Type getExpresstionType() {
-		return (this.getType());
-	}
-
 }

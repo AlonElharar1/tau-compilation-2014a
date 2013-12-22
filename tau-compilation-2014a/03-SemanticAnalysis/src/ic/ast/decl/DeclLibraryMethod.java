@@ -6,11 +6,12 @@ import ic.ast.stmt.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Library method declaration AST node.
  * 
  */
-public class DeclLibraryMethod extends DeclMethod {
+public class DeclLibraryMethod extends DeclStaticMethod {
 
 	public Object accept(Visitor visitor) {
 		return visitor.visit(this);

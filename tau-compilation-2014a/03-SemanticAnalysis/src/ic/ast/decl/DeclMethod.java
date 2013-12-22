@@ -68,7 +68,8 @@ public abstract class DeclMethod extends Node {
 			builder.append(param.getType().toString() + ", ");
 		}
 		
-		builder.delete(builder.length() - 2, builder.length());
+		if (!this.formals.isEmpty())
+			builder.delete(builder.length() - 2, builder.length());
 		
 		return (String.format("%s : %s -> %s", 
 				this.getName(), builder.toString(), this.type));

@@ -8,19 +8,22 @@
 package ic.semantics.scopes;
 
 import ic.ast.decl.DeclClass;
-import ic.ast.decl.DeclLibraryMethod;
+import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
 import ic.ast.decl.DeclVirtualMethod;
+import ic.semantics.SemanticException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public abstract class ClassScope extends IceCoffeScope {
+public class ClassScope extends IceCoffeScope {
 
 	protected DeclClass scopeClass;
 	
-	public HashMap<String, DeclMethod> methods = new LinkedHashMap<String, DeclMethod>();
+	public HashMap<String, DeclField> fields = new LinkedHashMap<String, DeclField>();;
+	public HashMap<String, DeclStaticMethod> staticMethods = new LinkedHashMap<String, DeclStaticMethod>();
+	public HashMap<String, DeclVirtualMethod> virtualMethods = new LinkedHashMap<String, DeclVirtualMethod>();
 	
 	/**
 	 * @param parentScope
@@ -30,10 +33,37 @@ public abstract class ClassScope extends IceCoffeScope {
 		
 		this.scopeClass = classNode;
 		
-		this.extractSymbols();
+		for (DeclField field : this.scopeClass.getFields()) {
+			this.fields.put(
+					String.format("%s.%s", this.scopeClass.getName(), field.getName()), 
+					field);
+		}
+		
+		for (DeclMethod method : this.scopeClass.getMethods()) {
+			
+			String methodId = 
+					String.format("%s.%s", 
+							this.scopeClass.getName(), 
+							method.getName());
+			
+			if (this.staticMethods.containsKey(methodId) || 
+				this.virtualMethods.containsKey(methodId))
+				throw new SemanticException(method.getLine(), 
+						"a method with the same name already exists");
+			
+			if (this.fields.containsKey(method.getName()))
+				throw new SemanticException(method.getLine(), 
+						"a field with the same name already exists");
+			
+			
+			if (method instanceof DeclVirtualMethod) {
+				this.virtualMethods.put(methodId, (DeclVirtualMethod)method);
+			}
+			else if (method instanceof DeclStaticMethod) {
+				this.staticMethods.put(methodId, (DeclStaticMethod)method);
+			}
+		}
 	}
-	
-	protected abstract void extractSymbols();
 	
 	@Override
 	public DeclClass currentClass() {
@@ -42,10 +72,22 @@ public abstract class ClassScope extends IceCoffeScope {
 	
 	@Override
 	public DeclMethod findMethod(String methodId) {
-		if (!this.methods.containsKey(methodId))
-			return (super.findMethod(methodId));
 		
-		return (this.methods.get(methodId));
+		if (this.staticMethods.containsKey(methodId))
+			return (this.staticMethods.get(methodId));
+		
+		if (this.virtualMethods.containsKey(methodId))
+			return (this.virtualMethods.get(methodId));
+		
+		return (super.findMethod(methodId));
+	}
+	
+	@Override
+	public DeclField findField(String fieldId) {
+		if (this.fields.containsKey(fieldId))
+			return (this.fields.get(fieldId));
+		
+		return (super.findField(fieldId));
 	}
 	
 	@Override
@@ -61,41 +103,21 @@ public abstract class ClassScope extends IceCoffeScope {
 	@Override
 	protected void internalPrint() {
 		
-		for (String methodId : this.methods.keySet()) {
-			
-			DeclMethod method = this.methods.get(methodId);
-			
-			if (method instanceof DeclVirtualMethod) {
-				System.out.printf("\tVirtual Mehod: %s\n", method);
-			}
-			else if ((method instanceof DeclStaticMethod) ||
-					 (method instanceof DeclLibraryMethod)) {
-				System.out.printf("\tStatic Mehod: %s\n", method);
-			}
+		for (String fieldId : this.fields.keySet()) {
+			System.out.printf("\tField:\t%s : %s\n",
+					this.fields.get(fieldId).getName(),
+					this.fields.get(fieldId).getType());
 		}
 		
-	}
-	
-	@Override
-	public void print() {
-		
-		String title = String.format("%s Symbol Table", this.getScopeType());
-		
-		if (this.getScopeName() != null)
-			title += String.format(": %s", this.getScopeName());
-		
-		if ((this.parentScope != null) && (this.parentScope.getScopeName() != null))
-			title += String.format(" (parent = %s)", this.parentScope.getScopeName());
-		
-		System.out.println(title);
-		
-		for (IceCoffeScope scope : this.childrenScopes) {
-			scope.internalPrint();
+		for (String methodId : this.staticMethods.keySet()) {
+			System.out.printf("\tStatic method: %s\n", 
+					this.staticMethods.get(methodId));
 		}
 		
-		this.internalPrint();
-		
-		System.out.println();
+		for (String methodId : this.virtualMethods.keySet()) {
+			System.out.printf("\tVirtual method: %s\n", 
+					this.virtualMethods.get(methodId));
+		}
 	}
 	
 }

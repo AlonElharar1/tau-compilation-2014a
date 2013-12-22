@@ -8,7 +8,6 @@
 package ic.semantics.scopes;
 
 import ic.ast.Node;
-import ic.ast.expr.*;
 import ic.ast.stmt.LocalVariable;
 import ic.ast.stmt.Statement;
 import ic.ast.stmt.StmtBlock;
@@ -48,43 +47,24 @@ public class StatementBlockScope extends IceCoffeScope {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#findRef(ic.ast.expr.Ref)
-	 */
 	@Override
-	public Node findRef(Ref location) {
-		if (location instanceof RefArrayElement) {
-			RefArrayElement refArray = (RefArrayElement)location;
-			if (refArray.getArray() instanceof Ref)
-				return (this.findRef((Ref)refArray.getArray()));
-		}
-		else if (location instanceof RefVariable) {
-			if (this.localVariables.containsKey(((RefVariable)location).getName()))
-				return (this.localVariables.get(((RefVariable)location).getName()));
-		}
+	public Node findLocalVariable(String varName) {
+		if (this.localVariables.containsKey(varName))
+			return (this.localVariables.get(varName));
 		
-		return (super.findRef(location));
+		return (super.findLocalVariable(varName));
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#getScopeName()
-	 */
 	@Override
 	public String getScopeName() {
 		return ("@" + this.currentMethod().getName());
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#getScopeType()
-	 */
 	@Override
 	public String getScopeType() {
 		return ("Statement Block");
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#internalPrint()
-	 */
 	@Override
 	protected void internalPrint() {
 		for (String localId : this.localVariables.keySet()) {

@@ -1,8 +1,6 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
-import ic.ast.decl.ClassType;
-import ic.ast.decl.Type;
 
 /**
  * 'This' expression AST node.
@@ -23,11 +21,4 @@ public class This extends Expression {
 	public This(int line) {
 		super(line);
 	}
-
-	@Override
-	public Type getExpresstionType() {
-		return (new ClassType(this.getLine(), 
-				this.getScope().currentClass().getName()));
-	}
-
 }

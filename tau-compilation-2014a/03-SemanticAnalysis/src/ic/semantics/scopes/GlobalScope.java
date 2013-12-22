@@ -8,6 +8,7 @@
 package ic.semantics.scopes;
 
 import ic.ast.decl.DeclClass;
+import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.Program;
 import ic.semantics.SemanticException;
@@ -28,12 +29,9 @@ public class GlobalScope extends IceCoffeScope {
 						"a class with the same name already exists");
 			
 			this.classes.put(classNode.getName(), classNode);
-;		}
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#findClass(java.lang.String)
-	 */
 	@Override
 	public DeclClass findClass(String className) {
 		if (!this.classes.containsKey(className))
@@ -42,41 +40,36 @@ public class GlobalScope extends IceCoffeScope {
 		return (this.classes.get(className));
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#findMethod(java.lang.String)
-	 */
 	@Override
 	public DeclMethod findMethod(String methodId) {
-
-		for (DeclClass classNode : this.classes.values()) {
-			DeclMethod method = classNode.getScope().findMethod(methodId);
-			
-			if (method != null)
-				return (method);
-		}
+		String className = methodId.substring(methodId.indexOf('.'));
+		
+		if (this.classes.containsKey(className))
+			return (this.classes.get(className).getScope().findMethod(methodId));
 		
 		return (super.findMethod(methodId));
 	}
 	
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#getScopeName()
-	 */
+	@Override
+	public DeclField findField(String fieldId) {
+		String className = fieldId.substring(fieldId.indexOf('.'));
+		
+		if (this.classes.containsKey(className))
+			return (this.classes.get(className).getScope().findField(fieldId));
+		
+		return (super.findField(fieldId));
+	}
+	
 	@Override
 	public String getScopeName() {
 		return (null);
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#getScopeType()
-	 */
 	@Override
 	public String getScopeType() {
 		return ("Global");
 	}
 
-	/* (non-Javadoc)
-	 * @see ic.semantics.scopes.IceCoffeScope#internalPrint()
-	 */
 	@Override
 	protected void internalPrint() {
 		for (String classStr : this.classes.keySet()) {

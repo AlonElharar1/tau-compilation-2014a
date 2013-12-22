@@ -1,8 +1,6 @@
 package ic.ast.expr;
 
 import ic.ast.Visitor;
-import ic.ast.decl.DeclField;
-import ic.ast.decl.Type;
 
 /**
  * Variable reference AST node.
@@ -32,10 +30,4 @@ public class RefVariable extends Ref {
 	public String getName() {
 		return name;
 	}
-
-	@Override
-	public Type getExpresstionType() {
-		return (((DeclField)this.getScope().findRef(this)).getType());
-	}
-
 }
