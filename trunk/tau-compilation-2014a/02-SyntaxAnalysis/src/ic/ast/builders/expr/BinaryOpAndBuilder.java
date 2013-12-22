@@ -15,7 +15,7 @@ import ic.ast.expr.BinaryOp;
 import ic.ast.expr.Expression;
 import ic.lexer.Token;
 
-public class BinaryOpBuilder implements ASTNodeBuilder {
+public class BinaryOpAndBuilder implements ASTNodeBuilder {
 
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
@@ -42,6 +42,6 @@ public class BinaryOpBuilder implements ASTNodeBuilder {
 	
 	@Override
 	public String getParseTreeTag() {
-		return ("EXPRBINOP");
+		return ("EXPRBINOP_AND");
 	}
 }

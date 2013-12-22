@@ -1,0 +1,5 @@
+class Assaf {
+	void main(){
+		int a = 7 * 5 + 4;
+	}
+}
