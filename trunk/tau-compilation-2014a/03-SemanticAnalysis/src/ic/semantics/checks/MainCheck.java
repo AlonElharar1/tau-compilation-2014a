@@ -11,6 +11,7 @@ import ic.ast.decl.DeclLibraryMethod;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
 import ic.ast.decl.DeclVirtualMethod;
+import ic.ast.decl.PrimitiveType;
 import ic.ast.decl.Program;
 import ic.semantics.SemanticException;
 
@@ -48,17 +49,22 @@ public class MainCheck extends SemanticCheck {
 		
 		if (hasMainMethod) 
 			throw new SemanticException(method.getLine(),
-					"there is more then one 'main' method");
+					"Found more than one main in the file");
 		
-		if ((method.getFormals().size() == 1) && 
-		    (method.getFormals().get(0).getType().getDisplayName().equals("string")) &&
-		    (method.getFormals().get(0).getType().getArrayDimension() == 1)) {
-			hasMainMethod = true;
-		}
-		else {
+		if (!method.getType().getDisplayName().equals(
+				 PrimitiveType.DataType.VOID.toString())) {
 			throw new SemanticException(method.getLine(),
-					"the 'main' method has wrong signature");
+					"Main method should have 'void' return type");
 		}
+		else if ((method.getFormals().size() != 1) || 
+				 (!method.getFormals().get(0).getType().getDisplayName().equals(
+						 PrimitiveType.DataType.STRING.toString())) ||
+				 (method.getFormals().get(0).getType().getArrayDimension() != 1)) {
+			throw new SemanticException(method.getLine(),
+					"Argument for main method should be 'string[] args'");
+		}
+		
+		hasMainMethod = true;
 		
 		return (null);
 	}

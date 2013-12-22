@@ -95,7 +95,8 @@ public class ScopeRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(StmtReturn returnStatement) {
 		
-		returnStatement.getValue().accept(this);
+		if (returnStatement.getValue() != null)
+			returnStatement.getValue().accept(this);
 		
 		return null;
 	}
@@ -133,7 +134,8 @@ public class ScopeRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(LocalVariable localVariable) {
 
-		localVariable.getInitialValue().accept(this);
+		if (localVariable.isInitialized())
+			localVariable.getInitialValue().accept(this);
 		
 		return null;
 	}
@@ -146,7 +148,8 @@ public class ScopeRulesCheck extends SemanticCheck {
 		if ((localVar == null) ||
 			(localVar.getLine() > location.getLine()))
 				throw new SemanticException(location.getLine(),
-						"'" + location.getName() + "' is not declared before used");
+						String.format("%s not found in symbol table",
+								location.getName()));
 		
 		return null;
 	}
@@ -179,7 +182,7 @@ public class ScopeRulesCheck extends SemanticCheck {
 			
 		if (call.getScope().findStaticMethod(call.getClassName(), call.getMethod()) == null)
 			throw new SemanticException(call.getLine(),
-					"'" + call.getClassName() + "' does not have the static method: '" + call.getMethod() + "'");
+					String.format("Method %s doesn't exist", call.getMethod()));
 		
 		for (Expression expression : call.getArguments())
 			expression.accept(this);
@@ -191,9 +194,11 @@ public class ScopeRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(VirtualCall call) {
 		
-		call.getObject().accept(this);
+		if (call.getObject() != null)
+			call.getObject().accept(this);
 		
-		String className = 
+		String className = (call.getObject() == null) ?
+				call.getScope().currentClass().getName() :
 				this.typeAnalyzer.getExpressionType(call.getObject()).getDisplayName();
 
 		DeclVirtualMethod method = 
@@ -201,7 +206,14 @@ public class ScopeRulesCheck extends SemanticCheck {
 		
 		if (method == null)  
 			throw new SemanticException(call.getLine(),
-					"'" + className + "' does not have the virtual method: '" + call.getMethod() + "'");
+					String.format("%s not found in symbol table",
+							call.getMethod()));
+
+		if ((call.getObject() == null) &&
+			(call.getScope().currentMethod() instanceof DeclStaticMethod))
+			throw new SemanticException(call.getLine(),
+					"Calling a local virtual method from inside " +
+					"a static method is not allowed");
 		
 		for (Expression expression : call.getArguments())
 			expression.accept(this);

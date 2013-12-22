@@ -1,0 +1,4 @@
+1c1
+< 9: semantic error; Invalid binary op (>) on expressions
+---
+> 9: semantic error; Invalid logical binary op (>) on non-integer expression

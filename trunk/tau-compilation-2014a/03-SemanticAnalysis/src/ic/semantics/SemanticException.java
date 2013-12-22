@@ -19,7 +19,7 @@ public class SemanticException extends IceCoffeException {
 	 * @param message
 	 */
 	public SemanticException(int line, String message) {
-		super(line, 0, "semantic", message);
+		super(line, IceCoffeException.UNKNOWN, "semantic", message);
 	}
 
 }

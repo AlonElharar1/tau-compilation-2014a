@@ -152,7 +152,8 @@ public class ThisCheck extends SemanticCheck {
 	@Override
 	public Object visit(VirtualCall call) {
 		
-		call.getObject().accept(this);
+		if (call.getObject() != null)
+			call.getObject().accept(this);
 		
 		for (Expression expression : call.getArguments())
 			expression.accept(this);
@@ -163,7 +164,7 @@ public class ThisCheck extends SemanticCheck {
 	@Override
 	public Object visit(This thisExpression) {
 		throw new SemanticException(thisExpression.getLine(),
-				"'this' keyword can only be used in instance methods");
+				"Use of 'this' expression inside static method is not allowed");
 	}
 	
 	@Override

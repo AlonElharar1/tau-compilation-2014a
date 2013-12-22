@@ -63,7 +63,10 @@ public abstract class IceCoffeScope {
 	}
 	
 	public DeclMethod findMethod(String className, String methodName) {
-		return (this.findMethod(String.format("%s.%s", className, methodName)));
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.findMethod(className, methodName));
 	}
 
 	public DeclStaticMethod findStaticMethod(String className, String methodName) {
@@ -92,7 +95,10 @@ public abstract class IceCoffeScope {
 	}
 	
 	public DeclField findField(String className, String fieldName) {
-		return (this.findField(String.format("%s.%s", className, fieldName)));
+		if (this.parentScope == null)
+			return (null);
+		
+		return (this.parentScope.findField(className, fieldName));
 	}
 	
 	public DeclField findField(String fieldId) {
@@ -120,6 +126,8 @@ public abstract class IceCoffeScope {
 		return (this.parentScope.findMethod(methodId));
 	}
 
+	public abstract boolean isSymbolExists(String id);
+	
 	/**
 	 * Gets this scope name
 	 * @return
@@ -143,15 +151,13 @@ public abstract class IceCoffeScope {
 		if ((this.parentScope != null) && (this.parentScope.getScopeName() != null))
 			title += String.format(" (parent = %s)", this.parentScope.getScopeName());
 		
+		System.out.println();
 		System.out.println(title);
 		
 		this.internalPrint();
-
-		System.out.println();
 		
 		for (IceCoffeScope scope : this.childrenScopes) {
 			scope.print();
 		}
 	}
-	
 }

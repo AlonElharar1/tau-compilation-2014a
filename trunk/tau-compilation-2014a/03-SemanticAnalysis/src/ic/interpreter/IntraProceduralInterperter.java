@@ -58,9 +58,16 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 	}
 	
 	public Object executeMethod(String methodId, String[] parameters) {
+		return (this.executeMethod(
+				methodId.substring(0, methodId.indexOf('.')),
+				methodId.substring(methodId.indexOf('.') + 1),
+				parameters));
+	}
+	
+	public Object executeMethod(String className, String methodName, String[] parameters) {
 		
 		// Get the method
-		DeclMethod method = this.program.getScope().findMethod(methodId);
+		DeclMethod method = this.program.getScope().findMethod(className, methodName);
 		
 		// Push parameters into the stack
 		if (parameters.length != method.getFormals().size())
@@ -132,9 +139,12 @@ public class IntraProceduralInterperter extends IceCoffeInterpreter {
 				Array.set(this.data.get(location), index , value);
 			}
 		}
+		else {
+			throw new InterpreterRunTimeException(assignment.getLine(), 
+					"the assignment is not supported by the interpreter");
+		}
 		
-		throw new InterpreterRunTimeException(assignment.getLine(), 
-				"assignment supported by the interpreter");
+		return (null);
 	}
 	
 	@Override

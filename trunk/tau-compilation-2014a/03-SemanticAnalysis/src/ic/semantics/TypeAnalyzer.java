@@ -10,6 +10,8 @@ import ic.ast.EmptyVisitor;
 import ic.ast.Node;
 import ic.ast.decl.ClassType;
 import ic.ast.decl.DeclClass;
+import ic.ast.decl.DeclField;
+import ic.ast.decl.DeclMethod;
 import ic.ast.decl.Parameter;
 import ic.ast.decl.PrimitiveType;
 import ic.ast.decl.PrimitiveType.DataType;
@@ -89,9 +91,11 @@ public class TypeAnalyzer extends EmptyVisitor {
 		Node varDeclNode = location.getScope().findLocalVariable(location.getName());
 		
 		if (varDeclNode instanceof LocalVariable) 
-			return (((LocalVariable) varDeclNode).getType());
+			return (((LocalVariable)varDeclNode).getType());
 		else if (varDeclNode instanceof Parameter)
-			return (((Parameter) varDeclNode).getType());
+			return (((Parameter)varDeclNode).getType());
+		else if (varDeclNode instanceof DeclField)
+			return (((DeclField)varDeclNode).getType());
 		
 		return (null);
 	}
@@ -130,13 +134,15 @@ public class TypeAnalyzer extends EmptyVisitor {
 	@Override
 	public Object visit(VirtualCall call) {
 		
-		Type objectType = this.getExpressionType(call.getObject());
+		String className = (call.getObject() == null) ? 
+				call.getScope().currentClass().getName() :
+				this.getExpressionType(call.getObject()).getDisplayName();
 		
-		if (objectType instanceof ClassType) {
-			return (call.getScope().findMethod(
-					((ClassType) objectType).getClassName(),
-					call.getMethod()).getType());
-		}
+		DeclMethod method = 
+				call.getScope().findMethod(className, call.getMethod());
+		
+		if (method != null)
+			return (method.getType());
 		
 		throw new SemanticException(call.getLine(), 
 				"method doesn't exists");
@@ -194,14 +200,26 @@ public class TypeAnalyzer extends EmptyVisitor {
 		Type firstType = this.getExpressionType(binaryOp.getFirstOperand());
 		Type secondType = this.getExpressionType(binaryOp.getSecondOperand());
 		
-		// Class types can only used with '==' or '!='
-		if ((firstType instanceof ClassType) &&
-		    (secondType instanceof ClassType))  {
+		if (((firstType instanceof ClassType) &&
+			 (binaryOp.getSecondOperand() instanceof Literal) &&
+			 (secondType.getDisplayName().equals(PrimitiveType.DataType.VOID.toString()))) ||
+			((secondType instanceof ClassType) &&
+			 (binaryOp.getFirstOperand() instanceof Literal) &&
+			 (firstType.getDisplayName().equals(PrimitiveType.DataType.VOID.toString())))) {
+			
+			if ((binaryOp.getOperator() == BinaryOps.EQUAL) ||
+				(binaryOp.getOperator() == BinaryOps.NEQUAL))
+				return (new PrimitiveType(binaryOp.getLine(),
+						PrimitiveType.DataType.BOOLEAN));
+		}
+		else if ((firstType instanceof ClassType) &&
+				 (secondType instanceof ClassType))  {
 			
 			ClassType firstClass = (ClassType)firstType;
 			ClassType secondClass = (ClassType)secondType;
 			
-			if ((firstClass.getClassName() == secondClass.getClassName()) &&
+			if ((this.isInstanceOf(binaryOp.getScope(), firstClass, secondClass) ||
+				(this.isInstanceOf(binaryOp.getScope(), secondClass, firstClass))) &&
 				((binaryOp.getOperator() == BinaryOps.EQUAL) ||
 				 (binaryOp.getOperator() == BinaryOps.NEQUAL))) {
 				return (new PrimitiveType(binaryOp.getLine(),
@@ -271,7 +289,8 @@ public class TypeAnalyzer extends EmptyVisitor {
 		}
 		
 		throw new SemanticException(binaryOp.getLine(), 
-				"operator '" + binaryOp.getOperator() + "' doesnt support these types");
+				String.format("Invalid binary op (%s) on expressions",
+						binaryOp.getOperator()));
 	}
 
 }
