@@ -17,7 +17,7 @@ import ic.ast.Visitor;
  * Class multi-field AST node.
  * 
  */
-public class DecMultilField extends Node {
+public class DeclMultilField extends Node {
 
 	private Type type;
 	private List<DeclField> fields = new ArrayList<DeclField>();
@@ -34,7 +34,7 @@ public class DecMultilField extends Node {
 	 * @param ids
 	 *            The ids of the fields
 	 */
-	public DecMultilField(Type type, Iterable<String> ids)
+	public DeclMultilField(Type type, Iterable<String> ids)
 	{
 		super(type.getLine());
 		this.type = type;

@@ -156,7 +156,7 @@ public class _3ACILGenerator {
 		NOT("!", 2),
 		
 		// Control
-		GTO("goto", 1),
+		GOTO("goto", 1),
 		IF("if", 2),
 		NIF("if!", 2),
 		IFE("if=", 3),
@@ -165,9 +165,9 @@ public class _3ACILGenerator {
 		// Invocation
 		PRM("param", 1),
 		CALL("call", 1),
-		CALL2("call", 2),
-		RET("ret", 1),
-		RET2("ret", 2),
+		CALLINTO("call", 2),
+		RET("ret", 0),
+		RETVAL("ret", 1),
 		
 		;
 

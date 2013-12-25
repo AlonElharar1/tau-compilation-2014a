@@ -8,6 +8,9 @@ package ic.codegeneration;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import ic.ast.RunThroughVisitor;
 import ic.ast.Visitor;
@@ -15,6 +18,7 @@ import ic.ast.decl.ClassType;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclLibraryMethod;
+import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
 import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.decl.Parameter;
@@ -41,12 +45,19 @@ import ic.ast.stmt.StmtContinue;
 import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
+import ic.codegeneration._3ACILGenerator.OpCodes;
+import ic.semantics.scopes.IceCoffeScope;
 
 public class ASTTranslator extends RunThroughVisitor {
 
+	private static final String MAIN_LABEL = "_ic_main";
+	
 	private _3ACILGenerator generator;
 	private RunTimeChecksGenerator checksGenerator;
 
+	private int freeRegister = 1;
+	private HashMap<LocalVariable, Integer> variablesRegisters = new HashMap<LocalVariable, Integer>();
+	
 	public ASTTranslator() {
 		this.generator = new _3ACILGenerator();
 		this.checksGenerator = new RunTimeChecksGenerator(this.generator);
@@ -60,5 +71,60 @@ public class ASTTranslator extends RunThroughVisitor {
 		this.generator.write(stream);
 	}
 	
+	@Override
+	public Object visit(Program program) {
 
+		// Jump to the main method
+		this.generator.addOpcode(OpCodes.GOTO, MAIN_LABEL);
+		
+		return (super.visit(program));
+	}
+	
+	@Override
+	public Object visit(DeclMethod method) {
+		
+		// Add the method label
+		this.generator.addLabel(method.getId());
+		
+		// Add the statements implementations
+		super.visit(method);
+		
+		// Just to be safe, end the method with an 'RET' instruction
+		this.generator.addOpcode(OpCodes.RET);
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(DeclLibraryMethod method) {
+		// Ignore library methods implementation
+		return (null);
+	}
+	
+	@Override
+	public Object visit(LocalVariable localVariable) {
+
+		// Assign the variable with an register
+		Integer varReg = ++this.freeRegister;
+		this.variablesRegisters.put(localVariable, varReg);
+		
+		// Assign the initial value if exists
+		if (localVariable.getInitialValue() != null) {
+			Integer initValReg = (Integer)localVariable.getInitialValue().accept(this);
+			
+			this.generator.addOpcode(OpCodes.MOV, "$" + initValReg, "$" + varReg);
+		}
+
+		return (varReg);
+	}
+	
+	@Override
+	public Object visit(StmtAssignment assignment) {
+		
+		Integer assignValReg = (Integer)assignment.getAssignment().accept(this);
+		
+		
+		
+		return (null);
+	}
 }
