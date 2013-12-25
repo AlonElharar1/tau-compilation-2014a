@@ -44,9 +44,11 @@ import ic.ast.stmt.StmtWhile;
 public class ASTTranslator extends RunThroughVisitor {
 
 	private _3ACILGenerator generator;
+	private RunTimeChecksGenerator checksGenerator;
 
 	public ASTTranslator() {
 		this.generator = new _3ACILGenerator();
+		this.checksGenerator = new RunTimeChecksGenerator(this.generator);
 	}
 	
 	public void translate(Program program) {
