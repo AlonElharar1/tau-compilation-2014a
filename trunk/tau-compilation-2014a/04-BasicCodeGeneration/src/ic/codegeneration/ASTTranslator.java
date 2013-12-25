@@ -7,6 +7,7 @@
 package ic.codegeneration;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 import ic.ast.RunThroughVisitor;
 import ic.ast.Visitor;
@@ -55,8 +56,8 @@ public class ASTTranslator extends RunThroughVisitor {
 		program.accept(this);
 	}
 	
-	public void write(String path) throws IOException {
-		this.generator.write(path);
+	public void write(PrintStream stream) throws IOException {
+		this.generator.write(stream);
 	}
 	
 

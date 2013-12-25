@@ -8,6 +8,8 @@
 package ic.codegeneration;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,11 +64,11 @@ public class _3ACILGenerator {
 	}
 	
 	/**
-	 * Writes the generated code into file
+	 * Writes the generated code into a stream
 	 * @param path
 	 * @throws IOException
 	 */
-	public void write(String path) throws IOException {
+	public void write(PrintStream stream) throws IOException {
 		// TODO implement
 	}
 	
