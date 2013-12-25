@@ -73,9 +73,12 @@ public abstract class DeclMethod extends Node {
 		return (true);
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	public String getId() {
+		return (String.format("%s_%s", 
+				this.getScope().currentClass().getName(),
+				this.getName()));
+	}
+	
 	@Override
 	public String toString() {
 		
