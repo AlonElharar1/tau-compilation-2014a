@@ -20,7 +20,7 @@ public class _3ACILGenerator {
 	}
 	
 	/**
-	 * Adds somthing to the data section
+	 * Adds something to the data section
 	 * @param data
 	 */
 	public void addData(String data) {
