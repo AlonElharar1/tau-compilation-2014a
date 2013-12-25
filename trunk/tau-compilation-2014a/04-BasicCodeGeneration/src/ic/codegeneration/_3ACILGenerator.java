@@ -9,11 +9,12 @@ package ic.codegeneration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class _3ACILGenerator {
 
-	private List<String> data = new ArrayList<String>();
+	private HashMap<String, Object> data = new HashMap<String, Object>();
 	private List<Instrucation> instrucations = new ArrayList<Instrucation>();
 	
 	public _3ACILGenerator() {
@@ -23,7 +24,15 @@ public class _3ACILGenerator {
 	 * Adds something to the data section
 	 * @param data
 	 */
-	public void addData(String data) {
+	public void addData(String label, String data) {
+		// TODO implement
+	}
+	
+	/**
+	 * Adds something to the data section
+	 * @param data
+	 */
+	public void addData(String label, int data) {
 		// TODO implement
 	}
 	
