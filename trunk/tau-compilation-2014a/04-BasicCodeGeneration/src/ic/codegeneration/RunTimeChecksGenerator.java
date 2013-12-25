@@ -8,19 +8,25 @@ package ic.codegeneration;
 
 public class RunTimeChecksGenerator {
 
-	public void emitNullCheck(_3ACILGenerator generator, int register) {
+	private _3ACILGenerator generator;
+	
+	public RunTimeChecksGenerator(_3ACILGenerator generator) {
+		this.generator = generator;
+	}
+
+	public void emitNullCheck(int register) {
 		// TODO implement
 	}
 	
-	public void emitArrayIndexCheck(_3ACILGenerator generator, int register) {
+	public void emitArrayIndexCheck(int register) {
 		// TODO implement
 	}
 	
-	public void emitArrayAllocationCheck(_3ACILGenerator generator, int register) {
+	public void emitArrayAllocationCheck(int register) {
 		// TODO implement
 	}
 	
-	public void emitDivisionByZeroCheck(_3ACILGenerator generator, int register) {
+	public void emitDivisionByZeroCheck(int register) {
 		// TODO implement
 	}
 	
