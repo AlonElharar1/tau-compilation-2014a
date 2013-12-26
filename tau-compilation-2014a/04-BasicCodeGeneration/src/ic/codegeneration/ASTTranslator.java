@@ -45,12 +45,14 @@ import ic.ast.stmt.StmtContinue;
 import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
+import ic.codegeneration._3acil.Immediate;
 import ic.codegeneration._3acil.Label;
 import ic.codegeneration._3acil.MemoryLocation;
 import ic.codegeneration._3acil.Operand;
 import ic.codegeneration._3acil.Register;
 import ic.codegeneration._3acil._3ACILGenerator;
 import ic.codegeneration._3acil.OpCodes;
+import ic.semantics.checks.LibraryCheck;
 import ic.semantics.scopes.IceCoffeScope;
 
 public class ASTTranslator extends RunThroughVisitor {
@@ -65,13 +67,32 @@ public class ASTTranslator extends RunThroughVisitor {
 	
 	private Label currWhileStartLabel = null;
 	private Label currWhileEndLabel = null;
+
+	private HashMap<DeclMethod, Label> libraryLabels = new HashMap<DeclMethod, Label>();
 	
 	public ASTTranslator() {
 		this.generator = new _3ACILGenerator();
 		this.checksGenerator = new RunTimeChecksGenerator(this.generator);
 	}
 	
+	private void findLibaryLabels(Program program) {
+		
+		DeclClass libraryClass = program.getScope().findClass("Library");
+		
+		if (libraryClass == null)
+			return;
+		
+		for (DeclMethod libMethod : libraryClass.getMethods()) {
+			if (libMethod instanceof DeclLibraryMethod) {
+				this.libraryLabels.put(libMethod, new Label(libMethod.getName()));
+			}
+		}
+	}
+	
 	public void translate(Program program) {
+		
+		this.findLibaryLabels(program);
+		
 		program.accept(this);
 	}
 	
@@ -83,7 +104,11 @@ public class ASTTranslator extends RunThroughVisitor {
 	public Object visit(Program program) {
 
 		// Jump to the main method
-		this.generator.addOpcode(OpCodes.GOTO, MAIN_LABEL);
+		this.generator.addOpcode(OpCodes.CALL, MAIN_LABEL);
+		
+		// Exit program
+		this.generator.addOpcode(OpCodes.PARAM, new Immediate(0));
+		this.generator.addOpcode(OpCodes.CALL, new Label("exit"));
 		
 		return (super.visit(program));
 	}

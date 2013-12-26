@@ -43,7 +43,7 @@ public enum OpCodes {
 	IFNE("if!=", 3),
 
 	// Invocation
-	PRM("param", 1),
+	PARAM("param", 1),
 	CALL("call", 1),
 	CALLINTO("call", 2),
 	RET("ret", 0),
