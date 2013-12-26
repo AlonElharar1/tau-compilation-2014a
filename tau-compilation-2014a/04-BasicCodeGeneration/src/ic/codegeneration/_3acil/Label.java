@@ -13,6 +13,10 @@ public class Label extends Operand {
 		this.label = label;
 	}
 	
+	public Label(int label) {
+		this.label = Integer.toString(label);
+	}
+	
 	public String getLabel() {
 		return (this.label);
 	}

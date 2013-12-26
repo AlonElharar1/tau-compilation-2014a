@@ -46,6 +46,8 @@ import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
 import ic.codegeneration._3acil.Label;
+import ic.codegeneration._3acil.MemoryLocation;
+import ic.codegeneration._3acil.Operand;
 import ic.codegeneration._3acil.Register;
 import ic.codegeneration._3acil._3ACILGenerator;
 import ic.codegeneration._3acil.OpCodes;
@@ -60,6 +62,9 @@ public class ASTTranslator extends RunThroughVisitor {
 
 	private int freeRegister = 1;
 	private HashMap<LocalVariable, Register> variablesRegisters = new HashMap<LocalVariable, Register>();
+	
+	private Label currWhileStartLabel = null;
+	private Label currWhileEndLabel = null;
 	
 	public ASTTranslator() {
 		this.generator = new _3ACILGenerator();
@@ -126,7 +131,109 @@ public class ASTTranslator extends RunThroughVisitor {
 	@Override
 	public Object visit(StmtAssignment assignment) {
 		
+		Operand ref = (Operand)assignment.getVariable().accept(this);
+		Register register = (Register)assignment.getAssignment().accept(this);
 		
+		if (ref instanceof Register) {
+			this.generator.addOpcode(OpCodes.MOV, register, ref);
+		}
+		else if (ref instanceof MemoryLocation) {
+			this.generator.addOpcode(OpCodes.WRITE, ref, register);
+		}
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(StmtBreak breakStatement) {
+		
+		this.generator.addOpcode(OpCodes.GOTO, this.currWhileEndLabel);
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(StmtContinue continueStatement) {
+		
+		this.generator.addOpcode(OpCodes.GOTO, this.currWhileStartLabel);
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(StmtIf ifStatement) {
+
+		Label ifEndLabel = new Label(String.format("if_end_%d", 
+				ifStatement.getLine()));
+		
+		Register condReg = (Register)ifStatement.getCondition().accept(this);
+		
+		if (ifStatement.getElseOperation() != null) {
+			Label ifElseLabel = new Label(String.format("if_else_%d", 
+					ifStatement.getLine()));
+			
+			this.generator.addOpcode(OpCodes.NIF, condReg, ifElseLabel);
+			
+			ifStatement.getOperation().accept(this);
+			this.generator.addOpcode(OpCodes.GOTO, ifEndLabel);
+			
+			this.generator.addLabel(ifElseLabel);
+			ifStatement.getElseOperation().accept(this);
+		}
+		else {
+			
+			this.generator.addOpcode(OpCodes.NIF, condReg, ifEndLabel);
+			ifStatement.getOperation().accept(this);
+		}
+
+		this.generator.addLabel(ifEndLabel);
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(StmtReturn returnStatement) {
+		
+		if (returnStatement.getValue() == null) {
+			this.generator.addOpcode(OpCodes.RET);
+		}
+		else {
+			
+			Register retVal = (Register)returnStatement.getValue().accept(this);
+			this.generator.addOpcode(OpCodes.RETVAL, retVal);
+		}
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(StmtWhile whileStatement) {
+		
+		// Save the previous while labels
+		Label prevStartLabel = this.currWhileStartLabel;
+		Label prevEndLabel = this.currWhileEndLabel;
+		
+		// Create new while labels
+		this.currWhileStartLabel = new Label(String.format("while_start_%d", 
+				whileStatement.getLine()));
+		this.currWhileEndLabel = new Label(String.format("while_end_%d", 
+				whileStatement.getLine()));
+		
+		// Generate the while opcodes
+		this.generator.addLabel(this.currWhileStartLabel);
+		
+		Register condReg = (Register)whileStatement.getCondition().accept(this);
+		this.generator.addOpcode(OpCodes.NIF, condReg, this.currWhileEndLabel);
+		
+		whileStatement.getOperation().accept(this);
+		
+		this.generator.addOpcode(OpCodes.GOTO, this.currWhileStartLabel);
+		
+		this.generator.addLabel(this.currWhileEndLabel);
+		
+		// Restore previous while labels
+		this.currWhileEndLabel = prevEndLabel;
+		this.currWhileStartLabel = prevStartLabel;
 		
 		return (null);
 	}
