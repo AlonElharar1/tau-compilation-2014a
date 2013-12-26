@@ -27,7 +27,7 @@ public class _3ACILGenerator {
 	 * Adds something to the data section
 	 * @param data
 	 */
-	public Label addData(String label, String data) {
+	public Label addData(Label label, String data) {
 		// TODO implement
 		return (null);
 	}
@@ -36,7 +36,7 @@ public class _3ACILGenerator {
 	 * Adds something to the data section
 	 * @param data
 	 */
-	public Label addData(String label, int data) {
+	public Label addData(Label label, int data) {
 		// TODO implement
 		return (null);
 	}
