@@ -45,18 +45,21 @@ import ic.ast.stmt.StmtContinue;
 import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
 import ic.ast.stmt.StmtWhile;
-import ic.codegeneration._3ACILGenerator.OpCodes;
+import ic.codegeneration._3acil.Label;
+import ic.codegeneration._3acil.Register;
+import ic.codegeneration._3acil._3ACILGenerator;
+import ic.codegeneration._3acil.OpCodes;
 import ic.semantics.scopes.IceCoffeScope;
 
 public class ASTTranslator extends RunThroughVisitor {
 
-	private static final String MAIN_LABEL = "_ic_main";
+	private static final Label MAIN_LABEL = new Label("_ic_main");
 	
 	private _3ACILGenerator generator;
 	private RunTimeChecksGenerator checksGenerator;
 
 	private int freeRegister = 1;
-	private HashMap<LocalVariable, Integer> variablesRegisters = new HashMap<LocalVariable, Integer>();
+	private HashMap<LocalVariable, Register> variablesRegisters = new HashMap<LocalVariable, Register>();
 	
 	public ASTTranslator() {
 		this.generator = new _3ACILGenerator();
@@ -84,7 +87,9 @@ public class ASTTranslator extends RunThroughVisitor {
 	public Object visit(DeclMethod method) {
 		
 		// Add the method label
-		this.generator.addLabel(method.getId());
+		Label methodLabel = method.getName().equals("main") ?
+				MAIN_LABEL : new Label(method.getId());
+		this.generator.addLabel(methodLabel);
 		
 		// Add the statements implementations
 		super.visit(method);
@@ -105,14 +110,14 @@ public class ASTTranslator extends RunThroughVisitor {
 	public Object visit(LocalVariable localVariable) {
 
 		// Assign the variable with an register
-		Integer varReg = ++this.freeRegister;
+		Register varReg = new Register(++this.freeRegister);
 		this.variablesRegisters.put(localVariable, varReg);
 		
 		// Assign the initial value if exists
 		if (localVariable.getInitialValue() != null) {
-			Integer initValReg = (Integer)localVariable.getInitialValue().accept(this);
+			Register initValReg = (Register)localVariable.getInitialValue().accept(this);
 			
-			this.generator.addOpcode(OpCodes.MOV, "$" + initValReg, "$" + varReg);
+			this.generator.addOpcode(OpCodes.MOV, initValReg, varReg);
 		}
 
 		return (varReg);
@@ -120,8 +125,6 @@ public class ASTTranslator extends RunThroughVisitor {
 	
 	@Override
 	public Object visit(StmtAssignment assignment) {
-		
-		Integer assignValReg = (Integer)assignment.getAssignment().accept(this);
 		
 		
 		
