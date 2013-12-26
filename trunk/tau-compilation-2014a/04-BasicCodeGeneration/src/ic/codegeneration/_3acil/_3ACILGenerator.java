@@ -25,6 +25,10 @@ public class _3ACILGenerator {
 	public _3ACILGenerator() {
 	}
 	
+	public List<Instrucation> getInstrucations() {
+		return (this.instrucations);
+	}
+	
 	/**
 	 * Adds something to the data section
 	 * @param data
