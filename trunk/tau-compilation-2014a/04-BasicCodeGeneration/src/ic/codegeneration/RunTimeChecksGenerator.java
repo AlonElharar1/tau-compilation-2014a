@@ -6,6 +6,8 @@
  */
 package ic.codegeneration;
 
+import ic.codegeneration._3acil._3ACILGenerator;
+
 public class RunTimeChecksGenerator {
 
 	private _3ACILGenerator generator;
