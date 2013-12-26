@@ -7,6 +7,8 @@
 
 package ic.codegeneration._3acil;
 
+import ic.codegeneration._3acil.optimizers._3ACILOptimizer;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -64,6 +66,14 @@ public class _3ACILGenerator {
 	 * @param operands
 	 */
 	public void addOpcode(OpCodes opcode, Operand... operands) {
+		// TODO implement
+	}
+	
+	/**
+	 * Optimize the generated code so far
+	 * @param optimizer
+	 */
+	public void optimize(_3ACILOptimizer optimizer) {
 		// TODO implement
 	}
 	
