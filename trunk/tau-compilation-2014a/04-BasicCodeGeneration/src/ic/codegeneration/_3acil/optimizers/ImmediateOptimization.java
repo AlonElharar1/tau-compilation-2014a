@@ -6,7 +6,6 @@
  */
 package ic.codegeneration._3acil.optimizers;
 
-import groovyjarjarasm.asm.Opcodes;
 import ic.codegeneration._3acil.Immediate;
 import ic.codegeneration._3acil.Instrucation;
 import ic.codegeneration._3acil.OpCodeInstrucation;
@@ -18,6 +17,8 @@ public class ImmediateOptimization extends _3ACILOptimizer {
 
 	@Override
 	public void optimize(_3ACILGenerator generator) {
+		
+		// TODO MEGA refactor ImmediateOptimization!!!
 		
 		for (int i = 0; i < generator.getInstrucations().size(); i++) {
 			
