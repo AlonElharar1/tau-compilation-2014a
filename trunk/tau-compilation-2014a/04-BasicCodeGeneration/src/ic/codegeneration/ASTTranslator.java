@@ -6,42 +6,25 @@
  */
 package ic.codegeneration;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Stack;
-
 import ic.ast.RunThroughVisitor;
-import ic.ast.Visitor;
-import ic.ast.decl.ClassType;
 import ic.ast.decl.DeclClass;
-import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclLibraryMethod;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
-import ic.ast.decl.DeclVirtualMethod;
-import ic.ast.decl.Parameter;
-import ic.ast.decl.PrimitiveType;
 import ic.ast.decl.Program;
 import ic.ast.expr.BinaryOp;
+import ic.ast.expr.Expression;
 import ic.ast.expr.Length;
 import ic.ast.expr.Literal;
 import ic.ast.expr.NewArray;
-import ic.ast.expr.NewInstance;
 import ic.ast.expr.RefArrayElement;
-import ic.ast.expr.RefField;
 import ic.ast.expr.RefVariable;
 import ic.ast.expr.StaticCall;
-import ic.ast.expr.This;
 import ic.ast.expr.UnaryOp;
 import ic.ast.expr.VirtualCall;
 import ic.ast.stmt.LocalVariable;
 import ic.ast.stmt.StmtAssignment;
-import ic.ast.stmt.StmtBlock;
 import ic.ast.stmt.StmtBreak;
-import ic.ast.stmt.StmtCall;
 import ic.ast.stmt.StmtContinue;
 import ic.ast.stmt.StmtIf;
 import ic.ast.stmt.StmtReturn;
@@ -49,12 +32,16 @@ import ic.ast.stmt.StmtWhile;
 import ic.codegeneration._3acil.Immediate;
 import ic.codegeneration._3acil.Label;
 import ic.codegeneration._3acil.MemoryLocation;
+import ic.codegeneration._3acil.OpCodes;
 import ic.codegeneration._3acil.Operand;
 import ic.codegeneration._3acil.Register;
 import ic.codegeneration._3acil._3ACILGenerator;
-import ic.codegeneration._3acil.OpCodes;
-import ic.semantics.checks.LibraryCheck;
-import ic.semantics.scopes.IceCoffeScope;
+import ic.semantics.TypeAnalyzer;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Stack;
 
 public class ASTTranslator extends RunThroughVisitor {
 
@@ -275,13 +262,72 @@ public class ASTTranslator extends RunThroughVisitor {
 	@Override
 	public Object visit(BinaryOp binaryOp) {
 		
+		TypeAnalyzer typeAnalyzer = new TypeAnalyzer();
+		
 		// Get the operands values
 		Register firstReg = (Register)binaryOp.getFirstOperand().accept(this);
 		Register secondReg = (Register)binaryOp.getSecondOperand().accept(this);
 
-		// TODO implement binaryop to 3acil
+		Register resultReg = this.getFreeRegister();
 		
-		return (null);
+		// Call the binary operator instruction
+		switch (binaryOp.getOperator()) {
+		case PLUS:
+			if (typeAnalyzer.getExpressionType(binaryOp.getFirstOperand())
+					.getDisplayName().equals("string")) {
+				
+				this.generator.addOpcode(OpCodes.PARAM, firstReg);
+				this.generator.addOpcode(OpCodes.PARAM, secondReg);
+				this.generator.addOpcode(OpCodes.CALLINTO, 
+						new Label("stringCat"), resultReg);
+			}
+			else {
+				
+				this.generator.addOpcode(OpCodes.ADD, firstReg, secondReg, resultReg);
+			}
+			
+			break;
+		case MINUS:
+			this.generator.addOpcode(OpCodes.SUB, firstReg, secondReg, resultReg);
+			break;
+		case MULTIPLY:
+			this.generator.addOpcode(OpCodes.MUL, firstReg, secondReg, resultReg);
+			break;
+		case DIVIDE:
+			this.generator.addOpcode(OpCodes.DIV, firstReg, secondReg, resultReg);
+			break;
+		case MOD:
+			this.generator.addOpcode(OpCodes.MOD, firstReg, secondReg, resultReg);
+			break;
+		case EQUAL:
+			this.generator.addOpcode(OpCodes.EQ, firstReg, secondReg, resultReg);
+			break;
+		case NEQUAL:
+			this.generator.addOpcode(OpCodes.NEQ, firstReg, secondReg, resultReg);
+			break;
+		case GT:
+			this.generator.addOpcode(OpCodes.GT, firstReg, secondReg, resultReg);
+			break;
+		case GTE:
+			this.generator.addOpcode(OpCodes.GTE, firstReg, secondReg, resultReg);
+			break;
+		case LT:
+			this.generator.addOpcode(OpCodes.LT, firstReg, secondReg, resultReg);
+			break;
+		case LTE:
+			this.generator.addOpcode(OpCodes.LTE, firstReg, secondReg, resultReg);
+			break;
+		case LAND:
+			this.generator.addOpcode(OpCodes.AND, firstReg, secondReg, resultReg);
+			break;
+		case LOR:
+			this.generator.addOpcode(OpCodes.OR, firstReg, secondReg, resultReg);
+			break;
+		default:
+			break;
+		}
+		
+		return (resultReg);
 	}
 	
 	@Override
@@ -377,7 +423,73 @@ public class ASTTranslator extends RunThroughVisitor {
 	
 	@Override
 	public Object visit(StaticCall call) {
-		// TODO Auto-generated method stub
-		return super.visit(call);
+
+		DeclStaticMethod method = 
+				call.getScope().findStaticMethod(call.getClassName(), call.getMethod());
+		
+		// Set arguments
+		for (Expression expr : call.getArguments()) {
+			Register argReg = (Register)expr.accept(this);
+			this.generator.addOpcode(OpCodes.PARAM, argReg);
+		}
+		
+		// Find the method label
+		Label methodLabel = (method instanceof DeclLibraryMethod) ?
+				this.libraryLabels.get(method) : new Label(method.getId());
+		
+		// Call the method
+		Register retVal = null;
+				
+		if (method.getType().getDisplayName().equals("void")) {
+			this.generator.addOpcode(OpCodes.CALL, methodLabel);
+		}
+		else {
+			retVal = this.getFreeRegister();
+			this.generator.addOpcode(OpCodes.CALL, methodLabel, retVal);
+		}
+		
+		return (retVal);
+	}
+	
+	@Override
+	public Object visit(UnaryOp unaryOp) {
+		
+		Register resultReg = this.getFreeRegister();
+		
+		Register operandReg = (Register)unaryOp.getOperand().accept(this);
+		
+		switch (unaryOp.getOperator()) {
+		case LNEG:
+			
+			this.generator.addOpcode(OpCodes.NOT, operandReg, resultReg);
+			
+			break;
+		case UMINUS:
+			
+			this.generator.addOpcode(OpCodes.NEG, operandReg, resultReg);
+			
+			break;
+		default:
+			break;
+		}
+		
+		return (resultReg);
+	}
+	
+	@Override
+	public Object visit(VirtualCall call) {
+		
+		// Check if it's a local static call
+		if ((call.getObject() == null) &&
+			(call.getScope().findStaticMethod(call.getScope().currentClass().getName(),
+					call.getMethod()) != null)) {
+			
+			return (new StaticCall(call.getLine(), 
+					call.getScope().currentClass().getName(),
+					call.getMethod(),
+					call.getArguments()).accept(this));
+		}
+		
+		return (null);
 	}
 }
