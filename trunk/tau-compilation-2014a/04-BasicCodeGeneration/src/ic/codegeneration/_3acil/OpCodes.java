@@ -27,8 +27,8 @@ public enum OpCodes {
 	GTE(">=", 3),
 
 	// Memory
-	RED("[]", 2),
-	WRT("[]=", 2),
+	READ("[]", 2),
+	WRITE("[]=", 2),
 	
 	// Logic
 	AND("&&", 3),
