@@ -7,7 +7,7 @@
 
 package ic.codegeneration._3acil;
 
-public class Register extends Operand {
+public class Register implements Operand {
 
 	private int registerNum;
 	
@@ -21,7 +21,7 @@ public class Register extends Operand {
 	}
 
 	@Override
-	public String toString() {
+	public String getOperandString() {
 		return (String.format("$%d", this.registerNum));
 	}
 }
