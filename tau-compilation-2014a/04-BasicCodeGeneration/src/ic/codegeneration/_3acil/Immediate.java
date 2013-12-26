@@ -6,7 +6,7 @@
  */
 package ic.codegeneration._3acil;
 
-public class Immediate extends Operand {
+public class Immediate implements Operand {
 
 	int value;
 
@@ -21,5 +21,10 @@ public class Immediate extends Operand {
 	@Override
 	public String toString() {
 		return (Integer.toString(this.value));
+	}
+
+	@Override
+	public String getOperandString() {
+		return (this.toString());
 	}
 }

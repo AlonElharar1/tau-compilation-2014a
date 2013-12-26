@@ -12,11 +12,12 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class _3ACILGenerator {
 
-	private HashMap<String, Object> data = new HashMap<String, Object>();
+	private HashMap<Label, Object> data = new LinkedHashMap<Label, Object>();
 	private List<Instrucation> instrucations = new ArrayList<Instrucation>();
 	
 	public _3ACILGenerator() {
@@ -26,16 +27,27 @@ public class _3ACILGenerator {
 	 * Adds something to the data section
 	 * @param data
 	 */
-	public void addData(String label, String data) {
+	public Label addData(String label, String data) {
 		// TODO implement
+		return (null);
 	}
 	
 	/**
 	 * Adds something to the data section
 	 * @param data
 	 */
-	public void addData(String label, int data) {
+	public Label addData(String label, int data) {
 		// TODO implement
+		return (null);
+	}
+	
+	/**
+	 * Creates a new unique label
+	 * @return
+	 */
+	public Label generateUniqueLabel() {
+		// TODO implement
+		return null;
 	}
 	
 	/**

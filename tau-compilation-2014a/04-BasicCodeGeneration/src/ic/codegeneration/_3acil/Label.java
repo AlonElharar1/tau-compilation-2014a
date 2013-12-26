@@ -6,7 +6,7 @@
  */
 package ic.codegeneration._3acil;
 
-public class Label extends Operand {
+public class Label implements Operand {
 	private String label;
 
 	public Label(String label) {
@@ -22,7 +22,20 @@ public class Label extends Operand {
 	}
 
 	@Override
-	public String toString() {
+	public int hashCode() {
+		return (this.label.hashCode());
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if ((obj == null) || (!this.getClass().equals(obj.getClass())))
+			return (false);
+		
+		return (this.label.equals(((Label)obj).label));
+	}
+	
+	@Override
+	public String getOperandString() {
 		return (String.format(":%s", this.label));
 	}
 }

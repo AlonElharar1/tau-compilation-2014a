@@ -7,6 +7,6 @@
 
 package ic.codegeneration._3acil;
 
-public abstract class Operand {
-	
+public abstract interface Operand {
+	public String getOperandString();
 }

@@ -6,7 +6,7 @@
  */
 package ic.codegeneration._3acil;
 
-public class MemoryLocation extends Operand {
+public class MemoryLocation implements Operand {
 	private int location;
 
 	public MemoryLocation(int location) {
@@ -18,8 +18,8 @@ public class MemoryLocation extends Operand {
 	}
 
 	@Override
-	public String toString() {
-		return (Integer.toString(this.location));
+	public String getOperandString() {
+		return (String.format("%d", this.location));
 	}
 	
 }
