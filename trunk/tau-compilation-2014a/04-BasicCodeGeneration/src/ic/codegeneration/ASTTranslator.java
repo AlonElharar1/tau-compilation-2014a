@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Stack;
 
 import ic.ast.RunThroughVisitor;
 import ic.ast.Visitor;
@@ -62,7 +63,7 @@ public class ASTTranslator extends RunThroughVisitor {
 	private _3ACILGenerator generator;
 	private RunTimeChecksGenerator checksGenerator;
 
-	private int freeRegister = 1;
+	private Stack<Integer> freeRegisterStack = new Stack<Integer>();
 	private HashMap<LocalVariable, Register> variablesRegisters = new HashMap<LocalVariable, Register>();
 	
 	private Label currWhileStartLabel = null;
@@ -122,7 +123,9 @@ public class ASTTranslator extends RunThroughVisitor {
 		this.generator.addLabel(methodLabel);
 		
 		// Add the statements implementations
+		this.freeRegisterStack.push(method.getFormals().size());
 		super.visit(method);
+		this.freeRegisterStack.pop();
 		
 		// Just to be safe, end the method with an 'RET' instruction
 		this.generator.addOpcode(OpCodes.RET);
@@ -136,11 +139,17 @@ public class ASTTranslator extends RunThroughVisitor {
 		return (null);
 	}
 	
+	public Register getFreeRegister() {
+		Register reg = new Register(this.freeRegisterStack.peek());
+		this.freeRegisterStack.push(this.freeRegisterStack.pop() + 1);
+		return (reg);
+	}
+	
 	@Override
 	public Object visit(LocalVariable localVariable) {
 
 		// Assign the variable with an register
-		Register varReg = new Register(++this.freeRegister);
+		Register varReg = this.getFreeRegister();
 		this.variablesRegisters.put(localVariable, varReg);
 		
 		// Assign the initial value if exists
@@ -261,5 +270,114 @@ public class ASTTranslator extends RunThroughVisitor {
 		this.currWhileStartLabel = prevStartLabel;
 		
 		return (null);
+	}
+	
+	@Override
+	public Object visit(BinaryOp binaryOp) {
+		
+		// Get the operands values
+		Register firstReg = (Register)binaryOp.getFirstOperand().accept(this);
+		Register secondReg = (Register)binaryOp.getSecondOperand().accept(this);
+
+		// TODO implement binaryop to 3acil
+		
+		return (null);
+	}
+	
+	@Override
+	public Object visit(Length length) {
+		
+		// Get the array pointer
+		Register arrayPtrReg = (Register)length.getArray().accept(this);
+		
+		// The array length is in the first 32bits
+		Register lengthReg = this.getFreeRegister();
+		this.generator.addOpcode(OpCodes.READ, arrayPtrReg, lengthReg);
+		
+		return (lengthReg);
+	}
+	
+	@Override
+	public Object visit(Literal literal) {
+
+		// Set a new free register with the literal value
+		Register literalReg = this.getFreeRegister();
+		
+		switch (literal.getDataType()) {
+		case BOOLEAN:
+		case INT:
+			this.generator.addOpcode(OpCodes.MOV, 
+					new Immediate((Integer)literal.getValue()), literalReg);
+			
+			break;
+		case VOID:
+			this.generator.addOpcode(OpCodes.MOV, 
+					new Immediate(0), literalReg);
+			
+			break;
+		case STRING:
+			Label strLabel = this.generator.generateUniqueLabel();
+			this.generator.addData(strLabel, (String)literal.getValue());
+			
+			this.generator.addOpcode(OpCodes.MOV, 
+					strLabel, literalReg);
+			
+			break;
+		default:
+			break;
+		}
+		
+		return (literalReg);
+	}
+	
+	@Override
+	public Object visit(NewArray newArray) {
+		
+		// Get a register for the array pointer
+		Register arrayReg = this.getFreeRegister();
+
+		// Get the array size
+		Register sizeReg = (Register)newArray.getSize().accept(this);
+		this.generator.addOpcode(OpCodes.ADD, sizeReg, new Immediate(1), sizeReg);
+		
+		// Allocate a new array
+		this.generator.addOpcode(OpCodes.PARAM, sizeReg);
+		this.generator.addOpcode(OpCodes.CALLINTO, new Label("alloc"), arrayReg);
+		
+		// Put the array size in the first cell
+		this.generator.addOpcode(OpCodes.WRITE, arrayReg, sizeReg);
+		
+		return (arrayReg);
+	}
+	
+	@Override
+	public Object visit(RefArrayElement location) {
+		
+		Register cellPtrReg = this.getFreeRegister();
+		
+		// Get the array pointer and index into registers
+		Register arrayPtrReg = (Register)location.getArray().accept(this);
+		Register indexReg = (Register)location.getIndex().accept(this);
+		
+		// Calculate the cell location
+		this.generator.addOpcode(OpCodes.ADD, arrayPtrReg, indexReg, cellPtrReg);
+		this.generator.addOpcode(OpCodes.ADD, cellPtrReg, new Immediate(1), cellPtrReg);
+		
+		return (cellPtrReg);
+	}
+	
+	@Override
+	public Object visit(RefVariable location) {
+		
+		Register varReg =  this.variablesRegisters.get(
+				location.getScope().findLocalVariable(location.getName()));
+		
+		return (varReg);
+	}
+	
+	@Override
+	public Object visit(StaticCall call) {
+		// TODO Auto-generated method stub
+		return super.visit(call);
 	}
 }
