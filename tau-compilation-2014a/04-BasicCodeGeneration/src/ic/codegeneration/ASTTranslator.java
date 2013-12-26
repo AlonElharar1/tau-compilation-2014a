@@ -294,9 +294,11 @@ public class ASTTranslator extends RunThroughVisitor {
 			this.generator.addOpcode(OpCodes.MUL, firstReg, secondReg, resultReg);
 			break;
 		case DIVIDE:
+			this.checksGenerator.emitDivisionByZeroCheck(secondReg);
 			this.generator.addOpcode(OpCodes.DIV, firstReg, secondReg, resultReg);
 			break;
 		case MOD:
+			this.checksGenerator.emitDivisionByZeroCheck(secondReg);
 			this.generator.addOpcode(OpCodes.MOD, firstReg, secondReg, resultReg);
 			break;
 		case EQUAL:
@@ -335,6 +337,9 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		// Get the array pointer
 		Register arrayPtrReg = (Register)length.getArray().accept(this);
+		
+		// Emit null check
+		this.checksGenerator.emitNullCheck(arrayPtrReg);
 		
 		// The array length is in the first 32bits
 		Register lengthReg = this.getFreeRegister();
@@ -384,6 +389,11 @@ public class ASTTranslator extends RunThroughVisitor {
 
 		// Get the array size
 		Register sizeReg = (Register)newArray.getSize().accept(this);
+		
+		// Emit size check
+		this.checksGenerator.emitArraySizeCheck(sizeReg);
+		
+		// Add space for the length
 		this.generator.addOpcode(OpCodes.ADD, sizeReg, new Immediate(1), sizeReg);
 		
 		// Allocate a new array
@@ -408,6 +418,9 @@ public class ASTTranslator extends RunThroughVisitor {
 		// Calculate the cell location
 		this.generator.addOpcode(OpCodes.ADD, arrayPtrReg, indexReg, cellPtrReg);
 		this.generator.addOpcode(OpCodes.ADD, cellPtrReg, new Immediate(1), cellPtrReg);
+		
+		// Emit check for the index
+		this.checksGenerator.emitArrayIndexCheck(arrayPtrReg, indexReg);
 		
 		return (cellPtrReg);
 	}

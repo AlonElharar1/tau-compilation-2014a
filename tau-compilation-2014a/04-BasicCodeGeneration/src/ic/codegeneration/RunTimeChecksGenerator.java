@@ -17,19 +17,19 @@ public class RunTimeChecksGenerator {
 		this.generator = generator;
 	}
 
-	public void emitNullCheck(Register register) {
+	public void emitNullCheck(Register ptr) {
 		// TODO implement
 	}
 	
-	public void emitArrayIndexCheck(Register register) {
+	public void emitArrayIndexCheck(Register array, Register index) {
 		// TODO implement
 	}
 	
-	public void emitArrayAllocationCheck(Register register) {
+	public void emitArraySizeCheck(Register size) {
 		// TODO implement
 	}
 	
-	public void emitDivisionByZeroCheck(Register register) {
+	public void emitDivisionByZeroCheck(Register val) {
 		// TODO implement
 	}
 	
