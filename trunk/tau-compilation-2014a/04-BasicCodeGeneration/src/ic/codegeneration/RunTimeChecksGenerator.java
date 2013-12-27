@@ -6,6 +6,7 @@
  */
 package ic.codegeneration;
 
+import ic.codegeneration._3acil.Operand;
 import ic.codegeneration._3acil.Register;
 import ic.codegeneration._3acil._3ACILGenerator;
 
@@ -17,19 +18,19 @@ public class RunTimeChecksGenerator {
 		this.generator = generator;
 	}
 
-	public void emitNullCheck(Register ptr) {
+	public void emitNullCheck(Operand ptr) {
 		// TODO implement
 	}
 	
-	public void emitArrayIndexCheck(Register array, Register index) {
+	public void emitArrayIndexCheck(Operand array, Operand index) {
 		// TODO implement
 	}
 	
-	public void emitArraySizeCheck(Register size) {
+	public void emitArraySizeCheck(Operand size) {
 		// TODO implement
 	}
 	
-	public void emitDivisionByZeroCheck(Register val) {
+	public void emitDivisionByZeroCheck(Operand val) {
 		// TODO implement
 	}
 	
