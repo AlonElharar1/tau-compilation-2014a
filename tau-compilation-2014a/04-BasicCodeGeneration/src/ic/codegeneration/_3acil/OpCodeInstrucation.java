@@ -29,7 +29,7 @@ public class OpCodeInstrucation extends Instrucation {
 		String str = this.getOpcode() + " ";
 		
 		for (Operand operand : this.getOperands()) {
-			str += operand + " ";
+			str += operand.getOperandString() + " ";
 		}
 		
 		return (str.trim());
