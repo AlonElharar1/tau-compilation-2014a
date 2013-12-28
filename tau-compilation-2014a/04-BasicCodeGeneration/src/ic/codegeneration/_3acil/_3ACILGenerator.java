@@ -19,6 +19,8 @@ import java.util.List;
 
 public class _3ACILGenerator {
 
+	private int uniqueLabelId = 1;
+	
 	private HashMap<Label, Object> data = new LinkedHashMap<Label, Object>();
 	private List<Instrucation> instrucations = new ArrayList<Instrucation>();
 	
@@ -33,18 +35,16 @@ public class _3ACILGenerator {
 	 * Adds something to the data section
 	 * @param data
 	 */
-	public Label addData(Label label, String data) {
-		// TODO implement
-		return (null);
+	public void addData(Label label, String data) {
+		this.data.put(label, data);
 	}
 	
 	/**
 	 * Adds something to the data section
 	 * @param data
 	 */
-	public Label addData(Label label, int data) {
-		// TODO implement
-		return (null);
+	public void addData(Label label, int data) {
+		this.data.put(label, data);
 	}
 	
 	/**
@@ -52,8 +52,7 @@ public class _3ACILGenerator {
 	 * @return
 	 */
 	public Label generateUniqueLabel() {
-		// TODO implement
-		return null;
+		return (new Label(String.format("unique%d", this.uniqueLabelId++)));
 	}
 	
 	/**
@@ -61,7 +60,7 @@ public class _3ACILGenerator {
 	 * @param label
 	 */
 	public void addLabel(Label label) {
-		// TODO implement
+		this.instrucations.add(new LabelInstrucation(label));
 	}
 	
 	/**
@@ -70,7 +69,10 @@ public class _3ACILGenerator {
 	 * @param operands
 	 */
 	public void addOpcode(OpCodes opcode, Operand... operands) {
-		// TODO implement
+		if (opcode.getNumberOfOperands() != operands.length)
+			throw new RuntimeException("operands number don't match the opcode");
+		
+		this.instrucations.add(new OpCodeInstrucation(opcode, operands));
 	}
 	
 	/**
@@ -78,7 +80,7 @@ public class _3ACILGenerator {
 	 * @param optimizer
 	 */
 	public void optimize(_3ACILOptimizer optimizer) {
-		// TODO implement
+		optimizer.optimize(this);
 	}
 	
 	/**
