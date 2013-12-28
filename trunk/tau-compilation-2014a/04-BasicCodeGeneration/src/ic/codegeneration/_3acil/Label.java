@@ -38,4 +38,9 @@ public class Label implements Operand {
 	public String getOperandString() {
 		return (String.format(":%s", this.label));
 	}
+	
+	@Override
+	public String toString() {
+		return (this.label);
+	}
 }
