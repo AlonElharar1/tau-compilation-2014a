@@ -44,7 +44,7 @@ public class _3ACILGenerator {
 	 * @param data
 	 */
 	public void addData(Label label, int data) {
-		this.data.put(label, data);
+		this.data.put(label, new Integer(data));
 	}
 	
 	/**
@@ -89,6 +89,28 @@ public class _3ACILGenerator {
 	 * @throws IOException
 	 */
 	public void write(PrintStream stream) throws IOException {
-		// TODO implement
+		
+		// Code section
+		for (Instrucation instruction : this.instrucations) {
+			stream.println(instruction.generateString());
+		}
+		
+		// Data section
+		stream.println(".data");
+		
+		for (Label dataLabel : this.data.keySet()) {
+			stream.println(dataLabel.getOperandString());
+			
+			Object data = this.data.get(dataLabel);
+			
+			if (data instanceof Integer) {
+				stream.println(data.toString());
+			}
+			else {
+				String dataStr = data.toString();
+				stream.println(dataStr.length());
+				stream.println(String.format("\"%s\"", dataStr));
+			}
+		}
 	}
 }
