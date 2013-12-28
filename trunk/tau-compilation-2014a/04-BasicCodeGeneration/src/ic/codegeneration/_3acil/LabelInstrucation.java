@@ -7,22 +7,18 @@
 package ic.codegeneration._3acil;
 
 public class LabelInstrucation extends Instrucation {
-	private String identifer;
+	private Label label;
 
-	public LabelInstrucation(String identifer) {
-		this.identifer = identifer;
+	public LabelInstrucation(Label label) {
+		this.label = label;
 	}
 
-	public LabelInstrucation(int identifer) {
-		this(Integer.toString(identifer));
-	}
-
-	public String getIdentifer() {
-		return identifer;
+	public Label getLabel() {
+		return label;
 	}
 
 	@Override
 	public String generateString() {
-		return (String.format(":%s", this.identifer));
+		return (String.format(":%s", this.label));
 	}
 }
