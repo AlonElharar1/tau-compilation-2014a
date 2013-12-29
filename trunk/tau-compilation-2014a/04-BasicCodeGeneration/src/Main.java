@@ -7,6 +7,8 @@
 
 import ic.IceCoffeException;
 import ic.ast.decl.Program;
+import ic.codegeneration.ASTTranslator;
+import ic.codegeneration._3acil._3ACILGenerator;
 import ic.interpreter.IntraProceduralInterperter;
 import ic.semantics.checks.SemanticChecker;
 import ic.semantics.scopes.ScopesBuilder;
@@ -42,44 +44,18 @@ public class Main {
 			// Build the symbol tables
 			prog.accept(new ScopesBuilder());
 
-			// Check if the interpreter module is requested
-			if (args.length <= argIndex) {
+			// Do Semantics checks
+			new SemanticChecker().runAllChecks(prog);
 
-				// Do Semantics checks
-				new SemanticChecker().runAllChecks(prog);
-
-				// Print the symbol table
-				prog.getScope().print();
-
-			} else {
-				
-				// Extract the interpreter data
-				String interperterMethod = args[argIndex++];
-				String[] params = new String[args.length - argIndex];
-
-				for (int i = 0; i < params.length; i++) {
-					params[i] = args[argIndex++];
-				}
-
-				// Run the interpreter and print the result
-				Object result = new IntraProceduralInterperter(prog).executeMethod(
-						interperterMethod, params);
-				
-				if (!result.getClass().isArray()) {
-					System.out.println(result);
-				}
-				else {
-					for (int i = 0; i < Array.getLength(result); i++) {
-						System.out.println(Array.get(result, i));
-					}
-				}
-					
-			}
-
+			// Generate 3ACIL code
+			ASTTranslator translator = new ASTTranslator(new _3ACILGenerator());
+			translator.translate(prog);
+			translator.write(System.out);
+			
 		} catch (IceCoffeException e) {
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
-			System.out.println("Error reading file...");
+			System.out.println("IO Error: " + e.getLocalizedMessage());
 		}
 	}
 }

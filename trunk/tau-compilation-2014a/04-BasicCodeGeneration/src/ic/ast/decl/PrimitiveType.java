@@ -93,4 +93,9 @@ public class PrimitiveType extends Type {
 		}
 	}
 
+	@Override
+	public boolean isReferenceType() {
+		return ((this.type == DataType.STRING) ||
+				(this.getArrayDimension() > 0));
+	}
 }

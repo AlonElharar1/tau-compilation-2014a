@@ -6,11 +6,13 @@
  */
 package ic.codegeneration;
 
+import ic.ast.Node;
 import ic.ast.RunThroughVisitor;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclLibraryMethod;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
+import ic.ast.decl.Parameter;
 import ic.ast.decl.Program;
 import ic.ast.expr.BinaryOp;
 import ic.ast.expr.Expression;
@@ -38,28 +40,25 @@ import ic.codegeneration._3acil.Register;
 import ic.codegeneration._3acil._3ACILGenerator;
 import ic.semantics.TypeAnalyzer;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.Stack;
 
 public class ASTTranslator extends RunThroughVisitor {
 
 	private static final Label MAIN_LABEL = new Label("_ic_main");
-	
+
 	private _3ACILGenerator generator;
 	private RunTimeChecksGenerator checksGenerator;
-
-	private Stack<Integer> freeRegisterStack = new Stack<Integer>();
-	private HashMap<LocalVariable, Register> variablesRegisters = new HashMap<LocalVariable, Register>();
+	
+	private HashMap<DeclMethod, Label> libraryLabels = new HashMap<DeclMethod, Label>();
+	
+	private HashMap<Node, Register> variablesRegisters = new HashMap<Node, Register>();
 	
 	private Label currWhileStartLabel = null;
 	private Label currWhileEndLabel = null;
-
-	private HashMap<DeclMethod, Label> libraryLabels = new HashMap<DeclMethod, Label>();
 	
-	public ASTTranslator() {
-		this.generator = new _3ACILGenerator();
+	public ASTTranslator(_3ACILGenerator generator) {
+		this.generator = generator;
 		this.checksGenerator = new RunTimeChecksGenerator(this.generator);
 	}
 	
@@ -84,14 +83,15 @@ public class ASTTranslator extends RunThroughVisitor {
 		program.accept(this);
 	}
 	
-	public void write(PrintStream stream) throws IOException {
+	public void write(PrintStream stream) {
 		this.generator.write(stream);
 	}
 	
 	@Override
 	public Object visit(Program program) {
 
-		// Jump to the main method
+		// Call the main method
+		this.generator.addOpcode(OpCodes.PARAM, new Register(0));
 		this.generator.addOpcode(OpCodes.CALL, MAIN_LABEL);
 		
 		// Exit program
@@ -109,13 +109,20 @@ public class ASTTranslator extends RunThroughVisitor {
 				MAIN_LABEL : new Label(method.getId());
 		this.generator.addLabel(methodLabel);
 		
+		this.generator.startNewRegisterContext();
+		
+		// Assign parameters with registers
+		for (Parameter param : method.getFormals()) {
+			this.variablesRegisters.put(param, this.generator.getFreeRegister());
+		}
+		
 		// Add the statements implementations
-		this.freeRegisterStack.push(method.getFormals().size());
 		super.visit(method);
-		this.freeRegisterStack.pop();
 		
 		// Just to be safe, end the method with an 'RET' instruction
 		this.generator.addOpcode(OpCodes.RET);
+		
+		this.generator.endRegisterContext();
 		
 		return (null);
 	}
@@ -126,22 +133,17 @@ public class ASTTranslator extends RunThroughVisitor {
 		return (null);
 	}
 	
-	public Register getFreeRegister() {
-		Register reg = new Register(this.freeRegisterStack.peek());
-		this.freeRegisterStack.push(this.freeRegisterStack.pop() + 1);
-		return (reg);
-	}
-	
 	@Override
 	public Object visit(LocalVariable localVariable) {
 
 		// Assign the variable with an register
-		Register varReg = this.getFreeRegister();
+		Register varReg = this.generator.getFreeRegister();
 		this.variablesRegisters.put(localVariable, varReg);
 		
 		// Assign the initial value if exists
 		if (localVariable.getInitialValue() != null) {
-			Register initValReg = (Register)localVariable.getInitialValue().accept(this);
+			Register initValReg = this.generator.addGetInstruction(
+					localVariable.getInitialValue().accept(this));
 			
 			this.generator.addOpcode(OpCodes.MOV, initValReg, varReg);
 		}
@@ -152,15 +154,9 @@ public class ASTTranslator extends RunThroughVisitor {
 	@Override
 	public Object visit(StmtAssignment assignment) {
 		
-		Operand ref = (Operand)assignment.getVariable().accept(this);
-		Register register = (Register)assignment.getAssignment().accept(this);
-		
-		if (ref instanceof Register) {
-			this.generator.addOpcode(OpCodes.MOV, register, ref);
-		}
-		else if (ref instanceof MemoryLocation) {
-			this.generator.addOpcode(OpCodes.WRITE, ref, register);
-		}
+		this.generator.addSetInstruction(
+				assignment.getAssignment().accept(this),
+				assignment.getVariable().accept(this));
 		
 		return (null);
 	}
@@ -187,7 +183,8 @@ public class ASTTranslator extends RunThroughVisitor {
 		Label ifEndLabel = new Label(String.format("if_end_%d", 
 				ifStatement.getLine()));
 		
-		Register condReg = (Register)ifStatement.getCondition().accept(this);
+		Register condReg = this.generator.addGetInstruction(
+				ifStatement.getCondition().accept(this));
 		
 		if (ifStatement.getElseOperation() != null) {
 			Label ifElseLabel = new Label(String.format("if_else_%d", 
@@ -220,7 +217,8 @@ public class ASTTranslator extends RunThroughVisitor {
 		}
 		else {
 			
-			Register retVal = (Register)returnStatement.getValue().accept(this);
+			Register retVal = this.generator.addGetInstruction(
+					returnStatement.getValue().accept(this));
 			this.generator.addOpcode(OpCodes.RETVAL, retVal);
 		}
 		
@@ -243,7 +241,8 @@ public class ASTTranslator extends RunThroughVisitor {
 		// Generate the while opcodes
 		this.generator.addLabel(this.currWhileStartLabel);
 		
-		Register condReg = (Register)whileStatement.getCondition().accept(this);
+		Register condReg = this.generator.addGetInstruction(
+				whileStatement.getCondition().accept(this));
 		this.generator.addOpcode(OpCodes.NIF, condReg, this.currWhileEndLabel);
 		
 		whileStatement.getOperation().accept(this);
@@ -265,10 +264,12 @@ public class ASTTranslator extends RunThroughVisitor {
 		TypeAnalyzer typeAnalyzer = new TypeAnalyzer();
 		
 		// Get the operands values
-		Register firstReg = (Register)binaryOp.getFirstOperand().accept(this);
-		Register secondReg = (Register)binaryOp.getSecondOperand().accept(this);
+		Register firstReg = this.generator.addGetInstruction(
+				binaryOp.getFirstOperand().accept(this));
+		Register secondReg = this.generator.addGetInstruction(
+				binaryOp.getSecondOperand().accept(this));
 
-		Register resultReg = this.getFreeRegister();
+		Register resultReg = this.generator.getFreeRegister();
 		
 		// Call the binary operator instruction
 		switch (binaryOp.getOperator()) {
@@ -336,14 +337,14 @@ public class ASTTranslator extends RunThroughVisitor {
 	public Object visit(Length length) {
 		
 		// Get the array pointer
-		Register arrayPtrReg = (Register)length.getArray().accept(this);
+		Register arrayLocation = (Register)length.getArray().accept(this);
 		
 		// Emit null check
-		this.checksGenerator.emitNullCheck(arrayPtrReg);
+		this.checksGenerator.emitNullCheck(arrayLocation);
 		
 		// The array length is in the first 32bits
-		Register lengthReg = this.getFreeRegister();
-		this.generator.addOpcode(OpCodes.READ, arrayPtrReg, lengthReg);
+		Register lengthReg = this.generator.getFreeRegister();
+		this.generator.addOpcode(OpCodes.READ, arrayLocation, lengthReg);
 		
 		return (lengthReg);
 	}
@@ -352,43 +353,39 @@ public class ASTTranslator extends RunThroughVisitor {
 	public Object visit(Literal literal) {
 
 		// Set a new free register with the literal value
-		Register literalReg = this.getFreeRegister();
+		Operand data = null;
 		
 		switch (literal.getDataType()) {
 		case BOOLEAN:
 		case INT:
-			this.generator.addOpcode(OpCodes.MOV, 
-					new Immediate((Integer)literal.getValue()), literalReg);
+			data = new Immediate((Integer)literal.getValue());
 			
 			break;
 		case VOID:
-			this.generator.addOpcode(OpCodes.MOV, 
-					new Immediate(0), literalReg);
+			data = new Immediate(0);
 			
 			break;
 		case STRING:
-			Label strLabel = this.generator.generateUniqueLabel();
-			this.generator.addData(strLabel, (String)literal.getValue());
-			
-			this.generator.addOpcode(OpCodes.MOV, 
-					strLabel, literalReg);
+			data = this.generator.generateUniqueLabel();
+			this.generator.addData((Label)data, literal.getValue().toString());
 			
 			break;
 		default:
 			break;
 		}
 		
-		return (literalReg);
+		return (data);
 	}
 	
 	@Override
 	public Object visit(NewArray newArray) {
 		
 		// Get a register for the array pointer
-		Register arrayReg = this.getFreeRegister();
+		Register arrayPtrReg = this.generator.getFreeRegister();
 
 		// Get the array size
-		Register sizeReg = (Register)newArray.getSize().accept(this);
+		Register sizeReg = this.generator.addGetInstruction(
+				newArray.getSize().accept(this));
 		
 		// Emit size check
 		this.checksGenerator.emitArraySizeCheck(sizeReg);
@@ -398,31 +395,34 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		// Allocate a new array
 		this.generator.addOpcode(OpCodes.PARAM, sizeReg);
-		this.generator.addOpcode(OpCodes.CALLINTO, new Label("alloc"), arrayReg);
+		this.generator.addOpcode(OpCodes.CALLINTO, new Label("alloc"), arrayPtrReg);
 		
 		// Put the array size in the first cell
-		this.generator.addOpcode(OpCodes.WRITE, arrayReg, sizeReg);
+		this.generator.addOpcode(OpCodes.WRITE, arrayPtrReg, sizeReg);
 		
-		return (arrayReg);
+		return (arrayPtrReg);
 	}
 	
 	@Override
 	public Object visit(RefArrayElement location) {
 		
-		Register cellPtrReg = this.getFreeRegister();
-		
 		// Get the array pointer and index into registers
-		Register arrayPtrReg = (Register)location.getArray().accept(this);
-		Register indexReg = (Register)location.getIndex().accept(this);
+		Register arrayLocation = (Register)location.getArray().accept(this);
 		
+		// Emit check for the array pointer
+		this.checksGenerator.emitNullCheck(arrayLocation);
+
+		// Emit check for the index
+		Register indexReg = this.generator.addGetInstruction(
+				location.getIndex().accept(this));
+		this.checksGenerator.emitArrayIndexCheck(arrayLocation, indexReg);
+
 		// Calculate the cell location
-		this.generator.addOpcode(OpCodes.ADD, arrayPtrReg, indexReg, cellPtrReg);
+		Register cellPtrReg = this.generator.getFreeRegister();
+		this.generator.addOpcode(OpCodes.ADD, arrayLocation, indexReg, cellPtrReg);
 		this.generator.addOpcode(OpCodes.ADD, cellPtrReg, new Immediate(1), cellPtrReg);
 		
-		// Emit check for the index
-		this.checksGenerator.emitArrayIndexCheck(arrayPtrReg, indexReg);
-		
-		return (cellPtrReg);
+		return (new MemoryLocation(cellPtrReg));
 	}
 	
 	@Override
@@ -442,7 +442,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		// Set arguments
 		for (Expression expr : call.getArguments()) {
-			Register argReg = (Register)expr.accept(this);
+			Register argReg = this.generator.addGetInstruction(expr.accept(this));
 			this.generator.addOpcode(OpCodes.PARAM, argReg);
 		}
 		
@@ -457,8 +457,8 @@ public class ASTTranslator extends RunThroughVisitor {
 			this.generator.addOpcode(OpCodes.CALL, methodLabel);
 		}
 		else {
-			retVal = this.getFreeRegister();
-			this.generator.addOpcode(OpCodes.CALL, methodLabel, retVal);
+			retVal = this.generator.getFreeRegister();
+			this.generator.addOpcode(OpCodes.CALLINTO, methodLabel, retVal);
 		}
 		
 		return (retVal);
@@ -467,9 +467,10 @@ public class ASTTranslator extends RunThroughVisitor {
 	@Override
 	public Object visit(UnaryOp unaryOp) {
 		
-		Register resultReg = this.getFreeRegister();
+		Register resultReg = this.generator.getFreeRegister();
 		
-		Register operandReg = (Register)unaryOp.getOperand().accept(this);
+		Register operandReg = this.generator.addGetInstruction(
+				unaryOp.getOperand().accept(this));
 		
 		switch (unaryOp.getOperator()) {
 		case LNEG:
@@ -497,10 +498,14 @@ public class ASTTranslator extends RunThroughVisitor {
 			(call.getScope().findStaticMethod(call.getScope().currentClass().getName(),
 					call.getMethod()) != null)) {
 			
-			return (new StaticCall(call.getLine(), 
+			StaticCall staticCall = new StaticCall(
+					call.getLine(), 
 					call.getScope().currentClass().getName(),
 					call.getMethod(),
-					call.getArguments()).accept(this));
+					call.getArguments());
+			staticCall.setScope(call.getScope());
+					
+			return (staticCall.accept(this));
 		}
 		
 		return (null);

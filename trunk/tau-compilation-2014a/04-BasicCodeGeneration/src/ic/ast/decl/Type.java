@@ -25,6 +25,8 @@ public abstract class Type extends Node {
 	}
 
 	public abstract String getDisplayName();
+	
+	public abstract boolean isReferenceType();
 
 	public int getArrayDimension() {
 		return dimension;

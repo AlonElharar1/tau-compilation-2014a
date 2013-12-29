@@ -10,12 +10,12 @@ package ic.codegeneration._3acil;
 import ic.codegeneration._3acil.optimizers._3ACILOptimizer;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Stack;
 
 public class _3ACILGenerator {
 
@@ -23,6 +23,8 @@ public class _3ACILGenerator {
 	
 	private HashMap<Label, Object> data = new LinkedHashMap<Label, Object>();
 	private List<Instrucation> instrucations = new ArrayList<Instrucation>();
+	
+	private Stack<Integer> freeRegisterStack = new Stack<Integer>();
 	
 	public _3ACILGenerator() {
 	}
@@ -74,6 +76,68 @@ public class _3ACILGenerator {
 		
 		this.instrucations.add(new OpCodeInstrucation(opcode, operands));
 	}
+
+	public Register addGetInstruction(Object data) {
+		if (data instanceof Operand)
+			return (this.addGetInstruction((Operand)data));
+		
+		throw new RuntimeException("invalid arguments. only operands allowed");
+	}
+	
+	public Register addGetInstruction(Operand data) {
+		
+		if (data instanceof Register) {
+			return ((Register)data);
+		}
+		
+		Register dest = this.getFreeRegister();
+		
+		if (data instanceof MemoryLocation) {
+			this.addOpcode(OpCodes.READ, ((MemoryLocation)data).getAddress(), dest);
+		}
+		else {
+			this.addOpcode(OpCodes.MOV, data, dest);
+		}
+		
+		return (dest);
+	}
+	
+	public void addSetInstruction(Object src, Object dest) {
+		if ((src instanceof Operand) && (dest instanceof Operand))
+			this.addSetInstruction((Operand)src, (Operand)dest);
+		else {
+			throw new RuntimeException("invalid arguments. only operands allowed");
+		}
+	}
+	
+	public void addSetInstruction(Operand src, Operand dest) {
+		
+		Register srcReg = this.addGetInstruction(src);
+		
+		if (dest instanceof Register) {
+			this.addOpcode(OpCodes.MOV, srcReg, dest);
+		}
+		else if (dest instanceof MemoryLocation) {
+			this.addOpcode(OpCodes.WRITE, ((MemoryLocation)dest).getAddress(), srcReg);
+		}
+		else {
+			throw new RuntimeException("invalid dest operand");
+		}
+	}
+	
+	public Register getFreeRegister() {
+		Register reg = new Register(this.freeRegisterStack.peek());
+		this.freeRegisterStack.push(this.freeRegisterStack.pop() + 1);
+		return (reg);
+	}
+	
+	public void startNewRegisterContext() {
+		this.freeRegisterStack.push(1);
+	}
+	
+	public void endRegisterContext() {
+		this.freeRegisterStack.pop();
+	}
 	
 	/**
 	 * Optimize the generated code so far
@@ -88,7 +152,7 @@ public class _3ACILGenerator {
 	 * @param path
 	 * @throws IOException
 	 */
-	public void write(PrintStream stream) throws IOException {
+	public void write(PrintStream stream) {
 		
 		// Code section
 		for (Instrucation instruction : this.instrucations) {

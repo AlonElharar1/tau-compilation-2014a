@@ -57,6 +57,10 @@ public class TypeAnalyzer extends EmptyVisitor {
 		return (false);
 	}
 	
+	public boolean isReferenceType(Expression expr) {
+		return (this.getExpressionType(expr).isReferenceType());
+	}
+	
 	public Type getExpressionType(Expression expr) {
 		return ((Type)expr.accept(this));
 	}
@@ -292,5 +296,4 @@ public class TypeAnalyzer extends EmptyVisitor {
 				String.format("Invalid binary op (%s) on expressions",
 						binaryOp.getOperator()));
 	}
-
 }

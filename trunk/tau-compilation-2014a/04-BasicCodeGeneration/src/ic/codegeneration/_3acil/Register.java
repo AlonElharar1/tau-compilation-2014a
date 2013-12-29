@@ -12,7 +12,6 @@ public class Register implements Operand {
 	private int registerNum;
 	
 	public Register(int registerNum) {
-		super();
 		this.registerNum = registerNum;
 	}
 	

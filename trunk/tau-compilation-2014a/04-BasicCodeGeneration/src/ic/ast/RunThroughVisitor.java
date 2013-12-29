@@ -90,12 +90,12 @@ public abstract class RunThroughVisitor implements Visitor {
 	
 	@Override
 	public Object visit(DeclVirtualMethod method) {
-		return (this.visit(method));
+		return (this.visit((DeclMethod)method));
 	}
 
 	@Override
 	public Object visit(DeclStaticMethod method) {
-		return (this.visit(method));
+		return (this.visit((DeclMethod)method));
 	}
 
 	@Override
