@@ -21,7 +21,7 @@ public class _3ACILGenerator {
 
 	private int uniqueLabelId = 1;
 	
-	private HashMap<Label, Object> data = new LinkedHashMap<Label, Object>();
+	private HashMap<Object, Label> data = new LinkedHashMap<Object, Label>();
 	private List<Instrucation> instrucations = new ArrayList<Instrucation>();
 	
 	private Stack<Integer> freeRegisterStack = new Stack<Integer>();
@@ -34,27 +34,26 @@ public class _3ACILGenerator {
 	}
 	
 	/**
-	 * Adds something to the data section
+	 * Adds a string to the data section
 	 * @param data
 	 */
-	public void addData(Label label, String data) {
-		this.data.put(label, data);
-	}
-	
-	/**
-	 * Adds something to the data section
-	 * @param data
-	 */
-	public void addData(Label label, int data) {
-		this.data.put(label, new Integer(data));
+	public Label addString(String data) {
+		
+		if (this.data.containsKey(data))
+			return (this.data.get(data));
+		
+		Label strLabel = this.generateUniqueLabel("str");
+		this.data.put(data, strLabel);
+		
+		return (strLabel);
 	}
 	
 	/**
 	 * Creates a new unique label
 	 * @return
 	 */
-	public Label generateUniqueLabel() {
-		return (new Label(String.format("unique%d", this.uniqueLabelId++)));
+	public Label generateUniqueLabel(String prefix) {
+		return (new Label(String.format("%s%d", prefix, this.uniqueLabelId++)));
 	}
 	
 	/**
@@ -132,7 +131,7 @@ public class _3ACILGenerator {
 	}
 	
 	public void startNewRegisterContext() {
-		this.freeRegisterStack.push(1);
+		this.freeRegisterStack.push(0);
 	}
 	
 	public void endRegisterContext() {
@@ -162,18 +161,19 @@ public class _3ACILGenerator {
 		// Data section
 		stream.println(".data");
 		
-		for (Label dataLabel : this.data.keySet()) {
+		for (Object data : this.data.keySet()) {
+			
+			Label dataLabel = this.data.get(data);
+			
 			stream.println(dataLabel.getOperandString());
 			
-			Object data = this.data.get(dataLabel);
-			
 			if (data instanceof Integer) {
-				stream.println(data.toString());
+				stream.println("\t" + data.toString());
 			}
 			else {
 				String dataStr = data.toString();
-				stream.println(dataStr.length());
-				stream.println(String.format("\"%s\"", dataStr));
+				stream.println("\t" + dataStr.length());
+				stream.println(String.format("\t\"%s\"", dataStr));
 			}
 		}
 	}

@@ -40,7 +40,9 @@ public class TypeAnalyzer extends EmptyVisitor {
 
 	public boolean isInstanceOf(IceCoffeScope scope, Type subType, Type type) {
 
-		if (subType.getDisplayName().equals(type.getDisplayName()))
+		if (subType.getDisplayName().equals("void") && type.isReferenceType())
+			return (true);
+		else if (subType.getDisplayName().equals(type.getDisplayName()))
 			return (true);
 		else if ((subType instanceof ClassType) && (type instanceof ClassType)) {
 			DeclClass superClass = 
@@ -54,6 +56,7 @@ public class TypeAnalyzer extends EmptyVisitor {
 				superClass = scope.findClass(superClass.getSuperClassName());
 			}
 		}
+		
 		return (false);
 	}
 	

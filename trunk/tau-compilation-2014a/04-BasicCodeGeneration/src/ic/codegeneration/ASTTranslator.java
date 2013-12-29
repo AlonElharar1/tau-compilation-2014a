@@ -24,6 +24,7 @@ import ic.ast.expr.RefVariable;
 import ic.ast.expr.StaticCall;
 import ic.ast.expr.UnaryOp;
 import ic.ast.expr.VirtualCall;
+import ic.ast.expr.BinaryOp.BinaryOps;
 import ic.ast.stmt.LocalVariable;
 import ic.ast.stmt.StmtAssignment;
 import ic.ast.stmt.StmtBreak;
@@ -180,22 +181,20 @@ public class ASTTranslator extends RunThroughVisitor {
 	@Override
 	public Object visit(StmtIf ifStatement) {
 
-		Label ifEndLabel = new Label(String.format("if_end_%d", 
-				ifStatement.getLine()));
+		Label ifEndLabel = this.generator.generateUniqueLabel("endif");
 		
 		Register condReg = this.generator.addGetInstruction(
 				ifStatement.getCondition().accept(this));
 		
 		if (ifStatement.getElseOperation() != null) {
-			Label ifElseLabel = new Label(String.format("if_else_%d", 
-					ifStatement.getLine()));
+			Label elseLabel = this.generator.generateUniqueLabel("else");
 			
-			this.generator.addOpcode(OpCodes.NIF, condReg, ifElseLabel);
+			this.generator.addOpcode(OpCodes.NIF, condReg, elseLabel);
 			
 			ifStatement.getOperation().accept(this);
 			this.generator.addOpcode(OpCodes.GOTO, ifEndLabel);
 			
-			this.generator.addLabel(ifElseLabel);
+			this.generator.addLabel(elseLabel);
 			ifStatement.getElseOperation().accept(this);
 		}
 		else {
@@ -233,10 +232,8 @@ public class ASTTranslator extends RunThroughVisitor {
 		Label prevEndLabel = this.currWhileEndLabel;
 		
 		// Create new while labels
-		this.currWhileStartLabel = new Label(String.format("while_start_%d", 
-				whileStatement.getLine()));
-		this.currWhileEndLabel = new Label(String.format("while_end_%d", 
-				whileStatement.getLine()));
+		this.currWhileStartLabel = this.generator.generateUniqueLabel("while_start");
+		this.currWhileEndLabel = this.generator.generateUniqueLabel("while_end");
 		
 		// Generate the while opcodes
 		this.generator.addLabel(this.currWhileStartLabel);
@@ -263,13 +260,25 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		TypeAnalyzer typeAnalyzer = new TypeAnalyzer();
 		
+		Register resultReg = this.generator.getFreeRegister();
+		
 		// Get the operands values
 		Register firstReg = this.generator.addGetInstruction(
 				binaryOp.getFirstOperand().accept(this));
+		
+		// Short-Circuit
+		Label shortCircuitLabel = null;
+		
+		if ((binaryOp.getOperator() == BinaryOps.LAND) ||
+		 	(binaryOp.getOperator() == BinaryOps.LOR)) {
+			shortCircuitLabel = this.generator.generateUniqueLabel("shortcircit");
+			this.generator.addOpcode(OpCodes.MOV, firstReg, resultReg);
+			this.generator.addOpcode((binaryOp.getOperator() == BinaryOps.LAND) ?
+					OpCodes.NIF : OpCodes.IF, resultReg, shortCircuitLabel);
+		}
+		
 		Register secondReg = this.generator.addGetInstruction(
 				binaryOp.getSecondOperand().accept(this));
-
-		Register resultReg = this.generator.getFreeRegister();
 		
 		// Call the binary operator instruction
 		switch (binaryOp.getOperator()) {
@@ -321,14 +330,17 @@ public class ASTTranslator extends RunThroughVisitor {
 			this.generator.addOpcode(OpCodes.LTE, firstReg, secondReg, resultReg);
 			break;
 		case LAND:
-			this.generator.addOpcode(OpCodes.AND, firstReg, secondReg, resultReg);
+			this.generator.addOpcode(OpCodes.AND, resultReg, secondReg, resultReg);
 			break;
 		case LOR:
-			this.generator.addOpcode(OpCodes.OR, firstReg, secondReg, resultReg);
+			this.generator.addOpcode(OpCodes.OR, resultReg, secondReg, resultReg);
 			break;
 		default:
 			break;
 		}
+		
+		if (shortCircuitLabel != null)
+			this.generator.addLabel(shortCircuitLabel);
 		
 		return (resultReg);
 	}
@@ -357,6 +369,9 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		switch (literal.getDataType()) {
 		case BOOLEAN:
+			data = new Immediate((Boolean)literal.getValue() ? 1 : 0);
+			
+			break;
 		case INT:
 			data = new Immediate((Integer)literal.getValue());
 			
@@ -366,8 +381,7 @@ public class ASTTranslator extends RunThroughVisitor {
 			
 			break;
 		case STRING:
-			data = this.generator.generateUniqueLabel();
-			this.generator.addData((Label)data, literal.getValue().toString());
+			data = this.generator.addString(literal.getValue().toString());
 			
 			break;
 		default:
