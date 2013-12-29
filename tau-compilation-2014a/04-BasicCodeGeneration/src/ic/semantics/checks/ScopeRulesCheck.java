@@ -200,8 +200,23 @@ public class ScopeRulesCheck extends SemanticCheck {
 	@Override
 	public Object visit(VirtualCall call) {
 		
-		if (call.getObject() != null)
+		if (call.getObject() != null) {
 			call.getObject().accept(this);
+		}
+		else if (call.getScope().findStaticMethod(
+					call.getScope().currentClass().getName(),
+					call.getMethod()) != null) {
+			
+			StaticCall staticCall = new StaticCall(
+					call.getLine(), 
+					call.getScope().currentClass().getName(),
+					call.getMethod(),
+					call.getArguments());
+			staticCall.setScope(call.getScope());
+					
+			return (staticCall.accept(this));
+			
+		}
 		
 		String className = (call.getObject() == null) ?
 				call.getScope().currentClass().getName() :

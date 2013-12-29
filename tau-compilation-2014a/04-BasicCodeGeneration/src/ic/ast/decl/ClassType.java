@@ -35,4 +35,8 @@ public class ClassType extends Type {
 		return name;
 	}
 
+	@Override
+	public boolean isReferenceType() {
+		return (true);
+	}
 }

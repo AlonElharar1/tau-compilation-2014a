@@ -7,19 +7,18 @@
 package ic.codegeneration._3acil;
 
 public class MemoryLocation implements Operand {
-	private int location;
+	private Operand address;
 
-	public MemoryLocation(int location) {
-		this.location = location;
+	public MemoryLocation(Operand address) {
+		this.address = address;
 	}
 	
-	public int getLocation() {
-		return location;
+	public Operand getAddress() {
+		return address;
 	}
 
 	@Override
 	public String getOperandString() {
-		return (String.format("%d", this.location));
+		return (this.address.getOperandString());
 	}
-	
 }
