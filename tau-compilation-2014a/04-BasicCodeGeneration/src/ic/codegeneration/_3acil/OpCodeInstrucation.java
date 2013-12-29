@@ -26,12 +26,19 @@ public class OpCodeInstrucation extends Instrucation {
 
 	@Override
 	public String generateString() {
-		String str = this.getOpcode().getOpcodeString() + " ";
+		StringBuilder strBuilder = new StringBuilder();
+		
+		strBuilder.append("\t");
+		strBuilder.append(this.getOpcode().getOpcodeString());
+		strBuilder.append(" ");
 		
 		for (Operand operand : this.getOperands()) {
-			str += operand.getOperandString() + " ";
+			strBuilder.append(operand.getOperandString());
+			strBuilder.append(" ");
 		}
 		
-		return (str.trim());
+		strBuilder.deleteCharAt(strBuilder.length() - 1);
+		
+		return (strBuilder.toString());
 	}
 }
