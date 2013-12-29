@@ -45,6 +45,7 @@ import ic.ast.builders.expr.ThisBuilder;
 import ic.ast.builders.expr.UnaryOpBuilder;
 import ic.ast.builders.expr.VirtualCallBuilder;
 import ic.ast.builders.stmt.LocalVariableBuilder;
+import ic.ast.builders.stmt.NonIfStatementBuilder;
 import ic.ast.builders.stmt.StatementBuilder;
 import ic.ast.builders.stmt.StmtAssignmentBuilder;
 import ic.ast.builders.stmt.StmtBlockBuilder;
@@ -52,7 +53,9 @@ import ic.ast.builders.stmt.StmtBreakBuilder;
 import ic.ast.builders.stmt.StmtCallBuilder;
 import ic.ast.builders.stmt.StmtContinueBuilder;
 import ic.ast.builders.stmt.StmtIfBuilder;
+import ic.ast.builders.stmt.StmtMatchedIfBuilder;
 import ic.ast.builders.stmt.StmtReturnBuilder;
+import ic.ast.builders.stmt.StmtUnmatchedIfBuilder;
 import ic.ast.builders.stmt.StmtWhileBuilder;
 
 import java.util.ArrayList;
@@ -112,12 +115,15 @@ public class ASTBuilder {
 		
 		this.registerBuilder(new LocalVariableBuilder());
 		this.registerBuilder(new StatementBuilder());
+		this.registerBuilder(new NonIfStatementBuilder());
 		this.registerBuilder(new StmtAssignmentBuilder());
 		this.registerBuilder(new StmtBlockBuilder());
 		this.registerBuilder(new StmtBreakBuilder());
 		this.registerBuilder(new StmtCallBuilder());
 		this.registerBuilder(new StmtContinueBuilder());
 		this.registerBuilder(new StmtIfBuilder());
+		this.registerBuilder(new StmtMatchedIfBuilder());
+		this.registerBuilder(new StmtUnmatchedIfBuilder());
 		this.registerBuilder(new StmtReturnBuilder());
 		this.registerBuilder(new StmtWhileBuilder());
 	}

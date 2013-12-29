@@ -1,10 +1,5 @@
-/**
- * @team Happy Tree Friends
- * 1. Sagi Katorza
- * 2. Assaf Krintza
- * 3. Nir Malbin
- */
 package ic.ast.builders.stmt;
+
 
 import fun.parser.Tree;
 import ic.ast.Node;
@@ -15,11 +10,15 @@ import ic.ast.expr.Expression;
 import ic.ast.stmt.Statement;
 import ic.ast.stmt.StmtIf;
 
-public class StmtIfBuilder implements ASTNodeBuilder {
+public class StmtUnmatchedIfBuilder implements ASTNodeBuilder {
 
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
-		/*
+		if (parseTree.subtrees.size() == 1)
+		{
+			return (buildHelper.build(parseTree.subtrees.get(0)));
+		}
+		
 		Expression condition = 
 				buildHelper.build(parseTree.subtrees.get(2), Expression.class);
 		
@@ -30,12 +29,10 @@ public class StmtIfBuilder implements ASTNodeBuilder {
 				buildHelper.build(parseTree.subtrees.get(6), Statement.class) : null;
 		
 		return (new StmtIf(condition, operation, elseOperation));
-		*/
-		return (buildHelper.build(parseTree.subtrees.get(0)));
 	}
 	
 	@Override
 	public String getParseTreeTag() {
-		return ("STMTIF");
+		return ("UNMATCHED_IF");
 	}
 }
