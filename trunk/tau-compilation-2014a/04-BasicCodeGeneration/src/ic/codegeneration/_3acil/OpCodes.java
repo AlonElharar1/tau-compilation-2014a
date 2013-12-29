@@ -51,16 +51,16 @@ public enum OpCodes {
 	
 	;
 
-	private String opcode;
+	private String opcodeStr;
 	private int numberOfOperands;
 	
-	private OpCodes(String opcode, int numberOfOperands) {
-		this.opcode = opcode;
+	private OpCodes(String opcodeStr, int numberOfOperands) {
+		this.opcodeStr = opcodeStr;
 		this.numberOfOperands = numberOfOperands;
 	}
 	
-	public String getOpcode() {
-		return (this.opcode);
+	public String getOpcodeString() {
+		return (this.opcodeStr);
 	}
 	
 	public int getNumberOfOperands() {

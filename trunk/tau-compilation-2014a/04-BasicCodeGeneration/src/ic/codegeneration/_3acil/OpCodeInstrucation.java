@@ -26,7 +26,7 @@ public class OpCodeInstrucation extends Instrucation {
 
 	@Override
 	public String generateString() {
-		String str = this.getOpcode() + " ";
+		String str = this.getOpcode().getOpcodeString() + " ";
 		
 		for (Operand operand : this.getOperands()) {
 			str += operand.getOperandString() + " ";
