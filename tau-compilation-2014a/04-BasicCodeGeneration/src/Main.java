@@ -9,13 +9,11 @@ import ic.IceCoffeException;
 import ic.ast.decl.Program;
 import ic.codegeneration.ASTTranslator;
 import ic.codegeneration._3acil._3ACILGenerator;
-import ic.interpreter.IntraProceduralInterperter;
 import ic.semantics.checks.SemanticChecker;
 import ic.semantics.scopes.ScopesBuilder;
 import ic.syntax.IceCoffeParser;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 
 public class Main {
 
