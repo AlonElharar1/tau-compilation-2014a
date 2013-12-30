@@ -140,7 +140,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		// Assign the initial value if exists
 		if (localVariable.getInitialValue() != null) {
-			Register initValReg = this.generator.addGetInstruction(
+			Operand initValReg = this.generator.addGetInstruction(
 					localVariable.getInitialValue().accept(this));
 			
 			this.generator.addOpcode(OpCodes.MOV, initValReg, varReg);
@@ -180,7 +180,7 @@ public class ASTTranslator extends RunThroughVisitor {
 
 		Label ifEndLabel = this.generator.generateUniqueLabel("endif");
 		
-		Register condReg = this.generator.addGetInstruction(
+		Operand condReg = this.generator.addGetInstruction(
 				ifStatement.getCondition().accept(this));
 		
 		if (ifStatement.getElseOperation() != null) {
@@ -213,7 +213,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		}
 		else {
 			
-			Register retVal = this.generator.addGetInstruction(
+			Operand retVal = this.generator.addGetInstruction(
 					returnStatement.getValue().accept(this));
 			this.generator.addOpcode(OpCodes.RETVAL, retVal);
 		}
@@ -235,7 +235,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		// Generate the while opcodes
 		this.generator.addLabel(this.currWhileStartLabel);
 		
-		Register condReg = this.generator.addGetInstruction(
+		Operand condReg = this.generator.addGetInstruction(
 				whileStatement.getCondition().accept(this));
 		this.generator.addOpcode(OpCodes.NIF, condReg, this.currWhileEndLabel);
 		
@@ -260,7 +260,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		Register resultReg = this.generator.getFreeRegister();
 		
 		// Get the operands values
-		Register firstReg = this.generator.addGetInstruction(
+		Operand firstReg = this.generator.addGetInstruction(
 				binaryOp.getFirstOperand().accept(this));
 		
 		// Short-Circuit
@@ -274,7 +274,7 @@ public class ASTTranslator extends RunThroughVisitor {
 					OpCodes.NIF : OpCodes.IF, resultReg, shortCircuitLabel);
 		}
 		
-		Register secondReg = this.generator.addGetInstruction(
+		Operand secondReg = this.generator.addGetInstruction(
 				binaryOp.getSecondOperand().accept(this));
 		
 		// Call the binary operator instruction
@@ -395,7 +395,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		Register arrayPtrReg = this.generator.getFreeRegister();
 
 		// Get the array size
-		Register sizeReg = this.generator.addGetInstruction(
+		Operand sizeReg = this.generator.addGetInstruction(
 				newArray.getSize().accept(this));
 		
 		// Emit size check
@@ -425,7 +425,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		this.checksGenerator.emitNullCheck(arrayLocation);
 
 		// Emit check for the index
-		Register indexReg = this.generator.addGetInstruction(
+		Operand indexReg = this.generator.addGetInstruction(
 				location.getIndex().accept(this));
 		this.checksGenerator.emitArrayIndexCheck(arrayLocation, indexReg);
 
@@ -452,16 +452,16 @@ public class ASTTranslator extends RunThroughVisitor {
 		DeclStaticMethod method = 
 				call.getScope().findStaticMethod(call.getClassName(), call.getMethod());
 		
-		// Get the arguments into registers
-		List<Register> arguments = 
-				new ArrayList<Register>(call.getArguments().size());
+		// Get the arguments
+		List<Operand> arguments = 
+				new ArrayList<Operand>(call.getArguments().size());
 		
 		for (Expression expr : call.getArguments()) {
 			arguments.add(this.generator.addGetInstruction(expr.accept(this)));
 		}
 		
 		// Set the arguments as parameters
-		for (Register register : arguments) {
+		for (Operand register : arguments) {
 			this.generator.addOpcode(OpCodes.PARAM, register);
 		}
 		
@@ -488,7 +488,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		Register resultReg = this.generator.getFreeRegister();
 		
-		Register operandReg = this.generator.addGetInstruction(
+		Operand operandReg = this.generator.addGetInstruction(
 				unaryOp.getOperand().accept(this));
 		
 		switch (unaryOp.getOperator()) {
