@@ -42,7 +42,9 @@ import ic.codegeneration._3acil._3ACILGenerator;
 import ic.semantics.TypeAnalyzer;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ASTTranslator extends RunThroughVisitor {
 
@@ -91,13 +93,8 @@ public class ASTTranslator extends RunThroughVisitor {
 	@Override
 	public Object visit(Program program) {
 
-		// Call the main method
-		this.generator.addOpcode(OpCodes.PARAM, new Register(0));
-		this.generator.addOpcode(OpCodes.CALL, MAIN_LABEL);
-		
-		// Exit program
-		this.generator.addOpcode(OpCodes.PARAM, new Immediate(0));
-		this.generator.addOpcode(OpCodes.CALL, new Label("exit"));
+		// Goto the main function
+		this.generator.addOpcode(OpCodes.GOTO, MAIN_LABEL);
 		
 		return (super.visit(program));
 	}
@@ -405,10 +402,11 @@ public class ASTTranslator extends RunThroughVisitor {
 		this.checksGenerator.emitArraySizeCheck(sizeReg);
 		
 		// Add space for the length
-		this.generator.addOpcode(OpCodes.ADD, sizeReg, new Immediate(1), sizeReg);
+		Register actualSize = this.generator.getFreeRegister();
+		this.generator.addOpcode(OpCodes.ADD, sizeReg, new Immediate(1), actualSize);
 		
 		// Allocate a new array
-		this.generator.addOpcode(OpCodes.PARAM, sizeReg);
+		this.generator.addOpcode(OpCodes.PARAM, actualSize);
 		this.generator.addOpcode(OpCodes.CALLINTO, new Label("alloc"), arrayPtrReg);
 		
 		// Put the array size in the first cell
@@ -454,10 +452,17 @@ public class ASTTranslator extends RunThroughVisitor {
 		DeclStaticMethod method = 
 				call.getScope().findStaticMethod(call.getClassName(), call.getMethod());
 		
-		// Set arguments
+		// Get the arguments into registers
+		List<Register> arguments = 
+				new ArrayList<Register>(call.getArguments().size());
+		
 		for (Expression expr : call.getArguments()) {
-			Register argReg = this.generator.addGetInstruction(expr.accept(this));
-			this.generator.addOpcode(OpCodes.PARAM, argReg);
+			arguments.add(this.generator.addGetInstruction(expr.accept(this)));
+		}
+		
+		// Set the arguments as parameters
+		for (Register register : arguments) {
+			this.generator.addOpcode(OpCodes.PARAM, register);
 		}
 		
 		// Find the method label
