@@ -76,29 +76,25 @@ public class _3ACILGenerator {
 		this.instrucations.add(new OpCodeInstrucation(opcode, operands));
 	}
 
-	public Register addGetInstruction(Object data) {
+	public Operand addGetInstruction(Object data) {
 		if (data instanceof Operand)
 			return (this.addGetInstruction((Operand)data));
 		
 		throw new RuntimeException("invalid arguments. only operands allowed");
 	}
 	
-	public Register addGetInstruction(Operand data) {
-		
-		if (data instanceof Register) {
-			return ((Register)data);
-		}
-		
-		Register dest = this.getFreeRegister();
+	public Operand addGetInstruction(Operand data) {
 		
 		if (data instanceof MemoryLocation) {
+			
+			Register dest = this.getFreeRegister();
 			this.addOpcode(OpCodes.READ, ((MemoryLocation)data).getAddress(), dest);
+			
+			return (dest);
 		}
 		else {
-			this.addOpcode(OpCodes.MOV, data, dest);
+			return (data);
 		}
-		
-		return (dest);
 	}
 	
 	public void addSetInstruction(Object src, Object dest) {
@@ -111,13 +107,13 @@ public class _3ACILGenerator {
 	
 	public void addSetInstruction(Operand src, Operand dest) {
 		
-		Register srcReg = this.addGetInstruction(src);
+		Operand srcAfterGet = this.addGetInstruction(src);
 		
 		if (dest instanceof Register) {
-			this.addOpcode(OpCodes.MOV, srcReg, dest);
+			this.addOpcode(OpCodes.MOV, srcAfterGet, dest);
 		}
 		else if (dest instanceof MemoryLocation) {
-			this.addOpcode(OpCodes.WRITE, ((MemoryLocation)dest).getAddress(), srcReg);
+			this.addOpcode(OpCodes.WRITE, ((MemoryLocation)dest).getAddress(), srcAfterGet);
 		}
 		else {
 			throw new RuntimeException("invalid dest operand");
