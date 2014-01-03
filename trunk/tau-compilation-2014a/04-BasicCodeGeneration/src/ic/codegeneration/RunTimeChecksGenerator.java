@@ -6,6 +6,9 @@
  */
 package ic.codegeneration;
 
+import ic.codegeneration._3acil.Immediate;
+import ic.codegeneration._3acil.Label;
+import ic.codegeneration._3acil.OpCodes;
 import ic.codegeneration._3acil.Operand;
 import ic.codegeneration._3acil.Register;
 import ic.codegeneration._3acil._3ACILGenerator;
@@ -19,19 +22,70 @@ public class RunTimeChecksGenerator {
 	}
 
 	public void emitNullCheck(Operand ptr) {
-		// TODO implement
+		
+		Label endCheckLabel = this.generator.generateUniqueLabel("endCheck");
+
+		this.generator.addOpcode(OpCodes.IF, ptr, endCheckLabel);
+		
+		printErrorMessage("Null pointer dereference!");
+		
+		exitWithError();
+		
+		this.generator.addLabel(endCheckLabel);
+	}
+
+	private void exitWithError() {
+		this.generator.addOpcode(OpCodes.PARAM, new Immediate(1));
+		this.generator.addOpcode(OpCodes.CALL,new Label("exit"));
+	}
+
+	private void printErrorMessage(String message) {
+		this.generator.addOpcode(OpCodes.PARAM, this.generator.addString(message));
+		this.generator.addOpcode(OpCodes.CALL,new Label("println"));
 	}
 	
 	public void emitArrayIndexCheck(Operand array, Operand index) {
-		// TODO implement
+		
+		Register size = this.generator.getFreeRegister();
+		this.generator.addOpcode(OpCodes.READ, array, size);
+		
+		Label errorLabel = this.generator.generateUniqueLabel("error");
+		Label endCheckLabel = this.generator.generateUniqueLabel("endCheck");
+		
+		Register firstCheckResult = this.generator.getFreeRegister();
+		this.generator.addOpcode(OpCodes.GTE, size, new Immediate(0),firstCheckResult);
+		this.generator.addOpcode(OpCodes.NIF, firstCheckResult, errorLabel);
+		
+		Register secondCheckResult = this.generator.getFreeRegister();
+		this.generator.addOpcode(OpCodes.GTE, size, index, secondCheckResult);
+		this.generator.addOpcode(OpCodes.NIF, secondCheckResult, endCheckLabel);
+		
+		this.generator.addLabel(errorLabel);
+		printErrorMessage("Array index out of bounds!");
+		exitWithError();
+		this.generator.addLabel(endCheckLabel);
 	}
 	
 	public void emitArraySizeCheck(Operand size) {
-		// TODO implement
+		
+		Label endCheckLabel = this.generator.generateUniqueLabel("endCheck");
+		
+		Register result = this.generator.getFreeRegister();
+		this.generator.addOpcode(OpCodes.GTE, size, new Immediate(0),result);
+		this.generator.addOpcode(OpCodes.IF, result, endCheckLabel);
+		
+		printErrorMessage("Array allocation with negative array size!");
+		exitWithError();
+		this.generator.addLabel(endCheckLabel);
 	}
 	
 	public void emitDivisionByZeroCheck(Operand val) {
-		// TODO implement
+		
+		Label endCheckLabel = this.generator.generateUniqueLabel("endCheck");
+		this.generator.addOpcode(OpCodes.IF, val, endCheckLabel);
+		printErrorMessage("Division by zero!");
+		exitWithError();
+		this.generator.addLabel(endCheckLabel);
 	}
 	
 }
