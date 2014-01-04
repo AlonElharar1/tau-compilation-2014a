@@ -10,60 +10,79 @@ package ic.codegeneration._3acil;
 public enum OpCodes {
 
 	// Move
-	MOV("=", 2),
+	MOV("=", "Move", 2, new Integer[] { 0 }, new Integer[] { 1 }),
 	
 	// Arithmetic
-	ADD("+", 3),
-	SUB("-", 3),
-	MUL("*", 3),
-	DIV("/", 3),
-	MOD("%", 3),
-	NEG("-", 2),
-	EQ("==", 3),
-	NEQ("!=", 3),
-	LT("<", 3),
-	LTE("<=", 3),
-	GT(">", 3),
-	GTE(">=", 3),
+	ADD("+", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	SUB("-", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	MUL("*", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	DIV("/", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	MOD("%", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	NEG("-", "Arithmetic", 2, new Integer[] { 0 }, new Integer[] { 1 }),
+	EQ("==", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	NEQ("!=", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	LT("<", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	LTE("<=", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	GT(">", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	GTE(">=", "Arithmetic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
 
 	// Memory
-	READ("[]", 2),
-	WRITE("[]=", 2),
+	READ("[]", "Memory", 2, new Integer[] { 0 }, new Integer[] { 1 }),
+	WRITE("[]=", "Memory", 2, new Integer[] { 0, 1 }, new Integer[] { }),
 	
 	// Logic
-	AND("&&", 3),
-	OR("||", 3),
-	NOT("!", 2),
+	AND("&&", "Logic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	OR("||", "Logic", 3, new Integer[] { 0, 1 }, new Integer[] { 2 }),
+	NOT("!", "Logic", 2, new Integer[] { 0 }, new Integer[] { 1 }),
 	
 	// Control
-	GOTO("goto", 1),
-	IF("if", 2),
-	NIF("if!", 2),
-	IFE("if=", 3),
-	IFNE("if!=", 3),
+	GOTO("goto", "Control", 1, new Integer[] { 0 }, new Integer[] { }),
+	IF("if", "Control", 2, new Integer[] { 0, 1 }, new Integer[] { }),
+	NIF("if!", "Control", 2, new Integer[] { 0, 1 }, new Integer[] { }),
+	IFE("if=", "Control", 3, new Integer[] { 0, 1, 2 }, new Integer[] { }),
+	IFNE("if!=", "Control", 3, new Integer[] { 0, 1, 2 }, new Integer[] { }),
 
 	// Invocation
-	PARAM("param", 1),
-	CALL("call", 1),
-	CALLINTO("call", 2),
-	RET("ret", 0),
-	RETVAL("ret", 1),
+	PARAM("param", "Invocation", 1, new Integer[] { 0 }, new Integer[] { }),
+	CALL("call", "Invocation", 1, new Integer[] { 0 }, new Integer[] { }),
+	CALLINTO("call", "Invocation", 2, new Integer[] { 0 }, new Integer[] { 1 }),
+	RET("ret", "Invocation", 0, new Integer[] { }, new Integer[] { }),
+	RETVAL("ret", "Invocation", 1, new Integer[] { 0 }, new Integer[] { }),
 	
 	;
 
 	private String opcodeStr;
+	private String category;
 	private int numberOfOperands;
-	
-	private OpCodes(String opcodeStr, int numberOfOperands) {
+	private Integer[] useOperators;
+	private Integer[] defOperators;
+
+	private OpCodes(String opcodeStr, String category, int numberOfOperands,
+			Integer[] useOperators, Integer[] defOperators) {
 		this.opcodeStr = opcodeStr;
+		this.category = category;
 		this.numberOfOperands = numberOfOperands;
+		this.useOperators = useOperators;
+		this.defOperators = defOperators;
 	}
 	
 	public String getOpcodeString() {
 		return (this.opcodeStr);
 	}
 	
+	public String getCategory() {
+		return category;
+	}
+
 	public int getNumberOfOperands() {
 		return (this.numberOfOperands);
+	}
+	
+	public Integer[] getUseOperators() {
+		return useOperators;
+	}
+
+	public Integer[] getDefOperators() {
+		return defOperators;
 	}
 }
