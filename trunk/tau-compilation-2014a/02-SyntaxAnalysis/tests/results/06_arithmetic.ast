@@ -21,10 +21,10 @@
   [8]         +-- Assignment statement
   [8]             +-- Reference to variable: a
   [8]             +-- Binary operation: subtract (-)
+  [8]                 +-- int: 5
   [8]                 +-- Binary operation: subtract (-)
-  [8]                     +-- int: 5
   [8]                     +-- int: 8
-  [8]                 +-- int: 11
+  [8]                     +-- int: 11
   [9]         +-- Assignment statement
   [9]             +-- Reference to variable: a
   [9]             +-- Unary operation: negate (-)

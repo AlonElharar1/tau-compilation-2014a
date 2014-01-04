@@ -36,6 +36,7 @@ import ic.ast.builders.expr.LiteralBuilder;
 import ic.ast.builders.expr.NewArrayBuilder;
 import ic.ast.builders.expr.NewBuilder;
 import ic.ast.builders.expr.NewInstanceBuilder;
+import ic.ast.builders.expr.NonBinaryOpExpressionBuilder;
 import ic.ast.builders.expr.RefArrayElementBuilder;
 import ic.ast.builders.expr.RefBuilder;
 import ic.ast.builders.expr.RefFieldBuilder;
@@ -89,6 +90,7 @@ public class ASTBuilder {
 		this.registerBuilder(new ProgramBuilder());
 		this.registerBuilder(new TypeBuilder());
 		
+		this.registerBuilder(new NonBinaryOpExpressionBuilder());
 		this.registerBuilder(new BinaryOpBuilder());
 		this.registerBuilder(new BinaryOpAndBuilder());
 		this.registerBuilder(new BinaryOpEqBuilder());
