@@ -18,6 +18,9 @@ import java.io.IOException;
 
 public class Main {
 
+	/**
+	 * @bonus constants, reusing
+	 */
 	public static void main(String[] args) throws IOException {
 
 		// Validate arguments
