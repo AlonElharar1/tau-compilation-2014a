@@ -27,23 +27,22 @@ public class RunTimeChecksGenerator {
 
 		this.generator.addOpcode(OpCodes.IF, ptr, endCheckLabel);
 		
-		printErrorMessage("Null pointer dereference!");
-		
-		exitWithError();
+		this.exitWithError("Null pointer dereference!");
 		
 		this.generator.addLabel(endCheckLabel);
 	}
 
-	private void exitWithError() {
+	private void exitWithError(String msg) {
+		if (msg != null) {
+			this.generator.addOpcode(OpCodes.PARAM, 
+					this.generator.addString(String.format("Runtime Error: %s", msg)));
+			this.generator.addOpcode(OpCodes.CALL,new Label("println"));
+		}
+		
 		this.generator.addOpcode(OpCodes.PARAM, new Immediate(1));
 		this.generator.addOpcode(OpCodes.CALL,new Label("exit"));
 	}
 
-	private void printErrorMessage(String message) {
-		this.generator.addOpcode(OpCodes.PARAM, this.generator.addString(message));
-		this.generator.addOpcode(OpCodes.CALL,new Label("println"));
-	}
-	
 	public void emitArrayIndexCheck(Operand array, Operand index) {
 		
 		Register size = this.generator.getFreeRegister();
@@ -53,16 +52,15 @@ public class RunTimeChecksGenerator {
 		Label endCheckLabel = this.generator.generateUniqueLabel("endCheck");
 		
 		Register firstCheckResult = this.generator.getFreeRegister();
-		this.generator.addOpcode(OpCodes.GTE, size, new Immediate(0),firstCheckResult);
+		this.generator.addOpcode(OpCodes.GTE, index, new Immediate(0), firstCheckResult);
 		this.generator.addOpcode(OpCodes.NIF, firstCheckResult, errorLabel);
 		
 		Register secondCheckResult = this.generator.getFreeRegister();
-		this.generator.addOpcode(OpCodes.GTE, size, index, secondCheckResult);
+		this.generator.addOpcode(OpCodes.GTE, index, size, secondCheckResult);
 		this.generator.addOpcode(OpCodes.NIF, secondCheckResult, endCheckLabel);
 		
 		this.generator.addLabel(errorLabel);
-		printErrorMessage("Array index out of bounds!");
-		exitWithError();
+		this.exitWithError("Array index out of bounds!");
 		this.generator.addLabel(endCheckLabel);
 	}
 	
@@ -74,8 +72,7 @@ public class RunTimeChecksGenerator {
 		this.generator.addOpcode(OpCodes.GTE, size, new Immediate(0),result);
 		this.generator.addOpcode(OpCodes.IF, result, endCheckLabel);
 		
-		printErrorMessage("Array allocation with negative array size!");
-		exitWithError();
+		this.exitWithError("Array allocation with negative array size!");
 		this.generator.addLabel(endCheckLabel);
 	}
 	
@@ -83,8 +80,7 @@ public class RunTimeChecksGenerator {
 		
 		Label endCheckLabel = this.generator.generateUniqueLabel("endCheck");
 		this.generator.addOpcode(OpCodes.IF, val, endCheckLabel);
-		printErrorMessage("Division by zero!");
-		exitWithError();
+		this.exitWithError("Division by zero!");
 		this.generator.addLabel(endCheckLabel);
 	}
 	
