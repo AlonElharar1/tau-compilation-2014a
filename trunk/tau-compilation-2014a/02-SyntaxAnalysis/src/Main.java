@@ -76,8 +76,7 @@ public class Main {
 		
 		if (tokens != null) {
 			// Parse the tokens into an parse tree using early algorithm
-			Grammar icGrammer = new Grammar(isLibrary ? 
-					IceCoffeGrammers.IC_LIB_CFG : IceCoffeGrammers.IC_CFG_NEW);
+			Grammar icGrammer = new Grammar(IceCoffeGrammers.getIceCoffeGrammer(isLibrary));
 			EarleyParser icParser = new EarleyParser(tokens, icGrammer);
 			
 			List<EarleyState> completedParses = icParser.getCompletedParses();
@@ -86,6 +85,9 @@ public class Main {
 				throw new SyntaxException(icParser.diagnoseError());
 			}
 			else {
+				
+				System.out.println(Parser.prettyPrint(icParser.getCompletedParsesString()));
+				System.out.println(completedParses.size());
 				
 				Tree parseTree = completedParses.get(0).parseTree();
 				
