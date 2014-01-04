@@ -1,0 +1,46 @@
+	goto :_ic_main
+:_ic_main
+	= 5 $1
+	= 10 $2
+	= 20 $3
+	+ $1 $2 $5
+	+ $5 $3 $4
+	param $4
+	call :printi
+	param :str1
+	call :println
+	* $1 $2 $5
+	+ $5 $3 $4
+	param $4
+	call :printi
+	param :str1
+	call :println
+	if $1 :endCheck2
+	param :str3
+	call :println
+	param 1
+	call :exit
+:endCheck2
+	/ $2 $1 $5
+	* $5 $3 $4
+	* $3 $3 $5
+	+ $4 $5 $8
+	param $8
+	call :printi
+	param :str1
+	call :println
+	- $3 $2 $5
+	- $5 $1 $2
+	- $2 5 $1
+	param $1
+	call :printi
+	param :str1
+	call :println
+	ret
+.data
+:str1
+	0
+	""
+:str3
+	32
+	"Runtime Error: Division by zero!"

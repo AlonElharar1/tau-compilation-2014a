@@ -1,0 +1,30 @@
+	goto :_ic_main
+:A_true_print
+	param :str1
+	call :println
+	ret 1
+	ret
+:_ic_main
+	param :str2
+	call :println
+	= 1 $1
+	= $1 $2
+	if $2 :shortcircit4
+	call :A_true_print $1
+	|| $2 $1 $2
+:shortcircit4
+	if! $2 :endif3
+	param :str5
+	call :println
+:endif3
+	ret
+.data
+:str1
+	21
+	"Should not be printed"
+:str2
+	13
+	"short circuit"
+:str5
+	10
+	"This is ok"

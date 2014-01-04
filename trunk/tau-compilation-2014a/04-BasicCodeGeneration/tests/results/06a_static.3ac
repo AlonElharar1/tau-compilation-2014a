@@ -1,0 +1,25 @@
+	goto :_ic_main
+:A_print_sum
+	+ $0 $1 $2
+	param $2
+	call :printi
+	param :str1
+	call :println
+	ret
+:_ic_main
+	param 4
+	param 6
+	call :A_print_sum
+	+ 4 6 $1
+	+ 5 5 $2
+	param $1
+	param $2
+	call :A_print_sum
+	param 1
+	param 2
+	call :A_print_sum
+	ret
+.data
+:str1
+	0
+	""

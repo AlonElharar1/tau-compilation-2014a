@@ -1,0 +1,32 @@
+	goto :_ic_main
+:_ic_main
+	= 0 $1
+	param :str1
+	call :println
+	if $1 :endCheck2
+	param :str3
+	call :println
+	param 1
+	call :exit
+:endCheck2
+	[] $1 $2
+	param $2
+	call :printi
+	param :str4
+	call :println
+	param :str5
+	call :println
+	ret
+.data
+:str1
+	12
+	"null.length "
+:str3
+	40
+	"Runtime Error: Null pointer dereference!"
+:str4
+	0
+	""
+:str5
+	34
+	"Should not print this or get here."

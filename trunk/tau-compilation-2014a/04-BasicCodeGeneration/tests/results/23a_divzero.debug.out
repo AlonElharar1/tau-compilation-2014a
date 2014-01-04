@@ -1,0 +1,11 @@
+pc = 0    @   goto :_ic_main
+pc = 1    @   param :str1
+pc = 2    @   call :println
+5 / 0 = 
+pc = 3    @   if 0 :endCheck2
+pc = 4    @   param :str3
+pc = 5    @   call :println
+Runtime Error: Division by zero!
+pc = 6    @   param 1
+pc = 7    @   call :exit
+HALTED

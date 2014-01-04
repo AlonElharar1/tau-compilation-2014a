@@ -1,0 +1,380 @@
+	goto :_ic_main
+:Quicksort_partition
+	if $0 :endCheck1
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck1
+	[] $0 $4
+	>= $1 0 $5
+	if! $5 :error3
+	>= $1 $4 $5
+	if! $5 :endCheck4
+:error3
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck4
+	+ $0 $1 $4
+	+ $4 1 $4
+	[] $4 $5
+	= $5 $4
+	= $1 $5
+	= $2 $1
+:while_start6
+	if! 1 :while_end7
+:while_start8
+	if $0 :endCheck10
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck10
+	[] $0 $2
+	>= $5 0 $14
+	if! $14 :error11
+	>= $5 $2 $14
+	if! $14 :endCheck12
+:error11
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck12
+	+ $0 $5 $2
+	+ $2 1 $2
+	[] $2 $14
+	< $14 $4 $2
+	if! $2 :while_end9
+	+ $5 1 $2
+	= $2 $5
+	goto :while_start8
+:while_end9
+:while_start13
+	if $0 :endCheck15
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck15
+	[] $0 $2
+	>= $1 0 $14
+	if! $14 :error16
+	>= $1 $2 $14
+	if! $14 :endCheck17
+:error16
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck17
+	+ $0 $1 $2
+	+ $2 1 $2
+	[] $2 $14
+	> $14 $4 $2
+	if! $2 :while_end14
+	- $1 1 $2
+	= $2 $1
+	goto :while_start13
+:while_end14
+	>= $5 $1 $2
+	if! $2 :endif18
+	goto :while_end7
+:endif18
+	if $0 :endCheck19
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck19
+	[] $0 $2
+	>= $5 0 $14
+	if! $14 :error20
+	>= $5 $2 $14
+	if! $14 :endCheck21
+:error20
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck21
+	+ $0 $5 $2
+	+ $2 1 $2
+	[] $2 $14
+	= $14 $2
+	if $0 :endCheck22
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck22
+	[] $0 $14
+	>= $1 0 $33
+	if! $33 :error23
+	>= $1 $14 $33
+	if! $33 :endCheck24
+:error23
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck24
+	+ $0 $1 $14
+	+ $14 1 $14
+	if $0 :endCheck25
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck25
+	[] $0 $33
+	>= $5 0 $37
+	if! $37 :error26
+	>= $5 $33 $37
+	if! $37 :endCheck27
+:error26
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck27
+	+ $0 $5 $33
+	+ $33 1 $33
+	[] $14 $37
+	[]= $33 $37
+	if $0 :endCheck28
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck28
+	[] $0 $14
+	>= $1 0 $33
+	if! $33 :error29
+	>= $1 $14 $33
+	if! $33 :endCheck30
+:error29
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck30
+	+ $0 $1 $14
+	+ $14 1 $14
+	[]= $14 $2
+	+ $5 1 $2
+	= $2 $5
+	- $1 1 $2
+	= $2 $1
+	goto :while_start6
+:while_end7
+	ret $1
+	ret
+:Quicksort_quicksort
+	< $1 $2 $3
+	if! $3 :endif31
+	param $0
+	param $1
+	param $2
+	call :Quicksort_partition $3
+	= $3 $4
+	param $0
+	param $1
+	param $4
+	call :Quicksort_quicksort
+	+ $4 1 $1
+	param $0
+	param $1
+	param $2
+	call :Quicksort_quicksort
+:endif31
+	ret
+:Quicksort_initArray
+	= 0 $1
+:while_start32
+	if $0 :endCheck34
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck34
+	[] $0 $3
+	< $1 $3 $2
+	if! $2 :while_end33
+	if $0 :endCheck35
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck35
+	[] $0 $3
+	* $3 2 $2
+	param $2
+	call :random $3
+	if $0 :endCheck36
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck36
+	[] $0 $2
+	>= $1 0 $8
+	if! $8 :error37
+	>= $1 $2 $8
+	if! $8 :endCheck38
+:error37
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck38
+	+ $0 $1 $2
+	+ $2 1 $2
+	[]= $2 $3
+	+ $1 1 $3
+	= $3 $1
+	goto :while_start32
+:while_end33
+	ret
+:Quicksort_printArray
+	= 0 $1
+	param :str39
+	call :print
+:while_start40
+	if $0 :endCheck42
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck42
+	[] $0 $3
+	< $1 $3 $2
+	if! $2 :while_end41
+	if $0 :endCheck43
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck43
+	[] $0 $4
+	>= $1 0 $5
+	if! $5 :error44
+	>= $1 $4 $6
+	if! $6 :endCheck45
+:error44
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck45
+	+ $0 $1 $4
+	+ $4 1 $4
+	[] $4 $8
+	param $8
+	call :printi
+	param :str46
+	call :print
+	+ $1 1 $9
+	= $9 $1
+	goto :while_start40
+:while_end41
+	param :str47
+	call :print
+	ret
+:_ic_main
+	if $0 :endCheck49
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck49
+	[] $0 $3
+	!= $3 1 $2
+	if! $2 :endif48
+	param :str50
+	call :println
+	param 1
+	call :exit $4
+:endif48
+	if $0 :endCheck51
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck51
+	[] $0 $5
+	>= 0 0 $6
+	if! $6 :error52
+	>= 0 $5 $4
+	if! $4 :endCheck53
+:error52
+	param :str5
+	call :println
+	param 1
+	call :exit
+:endCheck53
+	+ $0 0 $8
+	+ $8 1 $8
+	[] $8 $9
+	param $9
+	param 0
+	call :stoi $0
+	= $0 $1
+	<= $1 0 $0
+	if! $0 :endif54
+	param :str55
+	call :println
+	param 1
+	call :exit $12
+:endif54
+	>= $1 0 $0
+	if $0 :endCheck56
+	param :str57
+	call :println
+	param 1
+	call :exit
+:endCheck56
+	+ $1 1 $0
+	param $0
+	call :alloc $0
+	[]= $0 $1
+	= $0 $3
+	param $3
+	call :Quicksort_initArray
+	param $3
+	call :Quicksort_printArray
+	- $1 1 $0
+	param $3
+	param 0
+	param $0
+	call :Quicksort_quicksort
+	param $3
+	call :Quicksort_printArray
+	ret
+.data
+:str2
+	40
+	"Runtime Error: Null pointer dereference!"
+:str5
+	41
+	"Runtime Error: Array index out of bounds!"
+:str39
+	16
+	"Array elements: "
+:str46
+	1
+	" "
+:str47
+	2
+	"\n"
+:str50
+	24
+	"Unspecified array length"
+:str55
+	20
+	"Invalid array length"
+:str57
+	57
+	"Runtime Error: Array allocation with negative array size!"

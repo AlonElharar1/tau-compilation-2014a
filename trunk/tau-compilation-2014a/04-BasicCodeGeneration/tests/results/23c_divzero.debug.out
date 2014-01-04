@@ -1,0 +1,39 @@
+pc = 0    @   goto :_ic_main
+pc = 1    @   = 0 $2
+ $0 = 0
+ $1 = 0
+ $2 = 0
+pc = 2    @   param :str1
+ $0 = 0
+ $1 = 0
+ $2 = 0
+pc = 3    @   call :println
+5 / b = 
+ $0 = 0
+ $1 = 0
+ $2 = 0
+pc = 4    @   if $2 :endCheck2
+ $0 = 0
+ $1 = 0
+ $2 = 0
+pc = 5    @   param :str3
+ $0 = 0
+ $1 = 0
+ $2 = 0
+pc = 6    @   call :println
+Runtime Error: Division by zero!
+ $0 = 0
+ $1 = 0
+ $2 = 0
+pc = 7    @   param 1
+ $0 = 0
+ $1 = 0
+ $2 = 0
+pc = 8    @   call :exit
+ $0 = 0
+ $1 = 0
+ $2 = 0
+HALTED
+ $0 = 0
+ $1 = 0
+ $2 = 0

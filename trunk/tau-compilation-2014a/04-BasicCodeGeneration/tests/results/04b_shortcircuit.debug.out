@@ -1,0 +1,36 @@
+pc = 0    @   goto :_ic_main
+pc = 5    @   param :str2
+pc = 6    @   call :println
+short circuit
+pc = 7    @   = 1 $1
+ $0 = 0
+ $1 = 1
+pc = 8    @   = $1 $2
+ $0 = 0
+ $1 = 1
+ $2 = 1
+pc = 9    @   if $2 :shortcircit4
+ $0 = 0
+ $1 = 1
+ $2 = 1
+pc = 12    @   if! $2 :endif3
+ $0 = 0
+ $1 = 1
+ $2 = 1
+pc = 13    @   param :str5
+ $0 = 0
+ $1 = 1
+ $2 = 1
+pc = 14    @   call :println
+This is ok
+ $0 = 0
+ $1 = 1
+ $2 = 1
+pc = 15    @   ret 
+ $0 = 0
+ $1 = 1
+ $2 = 1
+HALTED
+ $0 = 0
+ $1 = 1
+ $2 = 1
