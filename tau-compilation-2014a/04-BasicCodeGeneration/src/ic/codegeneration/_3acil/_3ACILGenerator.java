@@ -7,14 +7,14 @@
 
 package ic.codegeneration._3acil;
 
-import ic.codegeneration._3acil.optimizers._3ACILOptimizer;
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
 
 public class _3ACILGenerator {
@@ -25,6 +25,7 @@ public class _3ACILGenerator {
 	private List<Instrucation> instrucations = new ArrayList<Instrucation>();
 	
 	private Stack<Integer> freeRegisterStack = new Stack<Integer>();
+	private Stack<Queue<Register>> registersPoolStack = new Stack<Queue<Register>>();
 	
 	public _3ACILGenerator() {
 	}
@@ -121,25 +122,32 @@ public class _3ACILGenerator {
 	}
 	
 	public Register getFreeRegister() {
-		Register reg = new Register(this.freeRegisterStack.peek());
-		this.freeRegisterStack.push(this.freeRegisterStack.pop() + 1);
+		
+		Register reg;
+		
+		if (!this.registersPoolStack.peek().isEmpty()) {
+			reg = this.registersPoolStack.peek().poll();
+		}
+		else {
+			reg = new Register(this.freeRegisterStack.peek());
+			this.freeRegisterStack.push(this.freeRegisterStack.pop() + 1);
+		}
+		
 		return (reg);
+	}
+	
+	public void leaveRegister(Register reg) {
+		this.registersPoolStack.peek().add(reg);
 	}
 	
 	public void startNewRegisterContext() {
 		this.freeRegisterStack.push(0);
+		this.registersPoolStack.push(new PriorityQueue<Register>());
 	}
 	
 	public void endRegisterContext() {
 		this.freeRegisterStack.pop();
-	}
-	
-	/**
-	 * Optimize the generated code so far
-	 * @param optimizer
-	 */
-	public void optimize(_3ACILOptimizer optimizer) {
-		optimizer.optimize(this);
+		this.registersPoolStack.pop();
 	}
 	
 	/**

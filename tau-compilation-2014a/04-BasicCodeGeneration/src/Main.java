@@ -9,6 +9,7 @@ import ic.IceCoffeException;
 import ic.ast.decl.Program;
 import ic.codegeneration.ASTTranslator;
 import ic.codegeneration._3acil._3ACILGenerator;
+import ic.codegeneration._3acil.optimizers.ReuseRegistersOptimizer;
 import ic.semantics.checks.SemanticChecker;
 import ic.semantics.scopes.ScopesBuilder;
 import ic.syntax.IceCoffeParser;
@@ -46,8 +47,14 @@ public class Main {
 			new SemanticChecker().runAllChecks(prog);
 
 			// Generate 3ACIL code
-			ASTTranslator translator = new ASTTranslator(new _3ACILGenerator());
+			_3ACILGenerator generator = new _3ACILGenerator();
+			ASTTranslator translator = new ASTTranslator(generator);
 			translator.translate(prog);
+			
+			// Optimize
+			new ReuseRegistersOptimizer().optimize(generator);
+			
+			// Out final code to screen
 			translator.write(System.out);
 			
 		} catch (IceCoffeException e) {
