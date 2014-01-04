@@ -1,0 +1,192 @@
+	goto :_ic_main
+:_ic_main
+	= 12 $1
+	= 8 $2
+	= :str1 $3
+	< $1 $2 $4
+	if! $4 :else3
+	+ $1 $2 $4
+	* $1 $2 $7
+	> $4 $7 $5
+	if! $5 :else5
+	if $2 :endCheck7
+	param :str8
+	call :println
+	param 1
+	call :exit
+:endCheck7
+	% $1 $2 $4
+	== $4 3 $7
+	if! $7 :else9
+	= :str10 $4
+	goto :endif6
+:else9
+	= :str11 $4
+:endif6
+	goto :endif4
+:else5
+	if $2 :endCheck13
+	param :str8
+	call :println
+	param 1
+	call :exit
+:endCheck13
+	% $1 $2 $7
+	== $7 3 $5
+	if! $5 :else14
+	= :str15 $4
+	goto :endif12
+:else14
+	= :str16 $4
+:endif12
+:endif4
+	goto :endif2
+:else3
+	+ $1 $2 $7
+	* $1 $2 $5
+	> $7 $5 $12
+	if! $12 :else18
+	if $2 :endCheck20
+	param :str8
+	call :println
+	param 1
+	call :exit
+:endCheck20
+	% $1 $2 $7
+	== $7 3 $5
+	if! $5 :else21
+	= :str22 $4
+	goto :endif19
+:else21
+	= :str23 $4
+:endif19
+	goto :endif17
+:else18
+	if $2 :endCheck25
+	param :str8
+	call :println
+	param 1
+	call :exit
+:endCheck25
+	% $1 $2 $7
+	== $7 3 $5
+	if! $5 :else26
+	= :str27 $4
+	goto :endif24
+:else26
+	= :str28 $4
+:endif24
+:endif17
+:endif2
+	param $4
+	call :println
+	= 3 $1
+	< $1 $2 $7
+	if! $7 :else30
+	+ $1 $2 $7
+	* $1 $2 $5
+	> $7 $5 $12
+	if! $12 :else32
+	if $2 :endCheck34
+	param :str8
+	call :println
+	param 1
+	call :exit
+:endCheck34
+	% $1 $2 $7
+	== $7 3 $5
+	if! $5 :else35
+	= :str10 $4
+	goto :endif33
+:else35
+	= :str11 $4
+:endif33
+	goto :endif31
+:else32
+	if $2 :endCheck37
+	param :str8
+	call :println
+	param 1
+	call :exit
+:endCheck37
+	% $1 $2 $7
+	== $7 3 $5
+	if! $5 :else38
+	= :str15 $4
+	goto :endif36
+:else38
+	= :str16 $4
+:endif36
+:endif31
+	goto :endif29
+:else30
+	+ $1 $2 $7
+	* $1 $2 $5
+	> $7 $5 $12
+	if! $12 :else40
+	if $2 :endCheck42
+	param :str8
+	call :println
+	param 1
+	call :exit
+:endCheck42
+	% $1 $2 $7
+	== $7 3 $5
+	if! $5 :else43
+	= :str22 $4
+	goto :endif41
+:else43
+	= :str23 $4
+:endif41
+	goto :endif39
+:else40
+	if $2 :endCheck45
+	param :str8
+	call :println
+	param 1
+	call :exit
+:endCheck45
+	% $1 $2 $7
+	== $7 3 $1
+	if! $1 :else46
+	= :str27 $4
+	goto :endif44
+:else46
+	= :str28 $4
+:endif44
+:endif39
+:endif29
+	param $4
+	call :println
+	ret
+.data
+:str1
+	0
+	""
+:str8
+	32
+	"Runtime Error: Division by zero!"
+:str10
+	3
+	"TTT"
+:str11
+	3
+	"TTF"
+:str15
+	3
+	"TFT"
+:str16
+	3
+	"TFF"
+:str22
+	3
+	"FTT"
+:str23
+	3
+	"FTF"
+:str27
+	3
+	"FFT"
+:str28
+	3
+	"FFF"

@@ -1,0 +1,41 @@
+	goto :_ic_main
+:A_calc_print_atzeret
+	<= $0 1 $1
+	if! $1 :else2
+	param $0
+	call :printi
+	param :str3
+	call :print
+	ret $0
+	goto :endif1
+:else2
+	- $0 1 $3
+	param $3
+	call :A_calc_print_atzeret $3
+	= $3 $2
+	* $2 $0 $3
+	= $3 $2
+	param $2
+	call :printi
+	param :str3
+	call :print
+	ret $2
+:endif1
+	ret
+:_ic_main
+	param 3
+	call :A_calc_print_atzeret $1
+	param :str4
+	call :println
+	param 5
+	call :A_calc_print_atzeret $2
+	param :str4
+	call :println
+	ret
+.data
+:str3
+	1
+	" "
+:str4
+	0
+	""

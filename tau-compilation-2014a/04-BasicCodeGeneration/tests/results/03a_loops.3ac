@@ -1,0 +1,49 @@
+	goto :_ic_main
+:_ic_main
+	= 1 $1
+	= 20 $2
+:while_start1
+	< $1 11 $4
+	if! $4 :while_end2
+	* $1 2 $4
+	param $4
+	call :printi
+	param :str3
+	call :print
+	+ $1 1 $4
+	= $4 $1
+	goto :while_start1
+:while_end2
+	param :str4
+	call :println
+	= 1 $1
+:while_start5
+	<= $1 5 $4
+	if! $4 :while_end6
+	= 1 $4
+:while_start7
+	<= $4 $1 $8
+	if! $8 :while_end8
+	param :str9
+	call :print
+	+ $4 1 $8
+	= $8 $4
+	goto :while_start7
+:while_end8
+	param :str4
+	call :println
+	+ $1 1 $4
+	= $4 $1
+	goto :while_start5
+:while_end6
+	ret
+.data
+:str3
+	1
+	" "
+:str4
+	0
+	""
+:str9
+	1
+	"*"

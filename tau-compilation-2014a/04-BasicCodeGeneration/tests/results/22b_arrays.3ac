@@ -1,0 +1,387 @@
+	goto :_ic_main
+:_ic_main
+	>= 5 0 $3
+	if $3 :endCheck1
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck1
+	+ 5 1 $3
+	param $3
+	call :alloc $3
+	[]= $3 5
+	= $3 $1
+	if $1 :endCheck3
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck3
+	[] $1 $3
+	>= 0 0 $6
+	if! $6 :error5
+	>= 0 $3 $6
+	if! $6 :endCheck6
+:error5
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck6
+	+ $1 0 $3
+	+ $3 1 $3
+	[]= $3 10
+	if $1 :endCheck8
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck8
+	[] $1 $3
+	>= 1 0 $6
+	if! $6 :error9
+	>= 1 $3 $6
+	if! $6 :endCheck10
+:error9
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck10
+	+ $1 1 $3
+	+ $3 1 $3
+	[]= $3 20
+	if $1 :endCheck11
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck11
+	[] $1 $3
+	>= 2 0 $6
+	if! $6 :error12
+	>= 2 $3 $6
+	if! $6 :endCheck13
+:error12
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck13
+	+ $1 2 $3
+	+ $3 1 $3
+	[]= $3 40
+	if $1 :endCheck14
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck14
+	[] $1 $3
+	>= 3 0 $6
+	if! $6 :error15
+	>= 3 $3 $6
+	if! $6 :endCheck16
+:error15
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck16
+	+ $1 3 $3
+	+ $3 1 $3
+	[]= $3 80
+	if $1 :endCheck17
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck17
+	[] $1 $3
+	>= 4 0 $6
+	if! $6 :error18
+	>= 4 $3 $6
+	if! $6 :endCheck19
+:error18
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck19
+	+ $1 4 $3
+	+ $3 1 $3
+	[]= $3 160
+	param $1
+	call :Arrays_printArr
+	if $1 :endCheck20
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck20
+	[] $1 $3
+	>= 15 0 $6
+	if! $6 :error21
+	>= 15 $3 $6
+	if! $6 :endCheck22
+:error21
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck22
+	+ $1 15 $3
+	+ $3 1 $3
+	[] $3 $1
+	param $1
+	call :printi
+	param :str23
+	call :println
+	param :str24
+	call :println
+	ret
+:Arrays_buildArr
+	>= $0 0 $4
+	if $4 :endCheck25
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck25
+	+ $0 1 $4
+	param $4
+	call :alloc $4
+	[]= $4 $0
+	= $4 $0
+	= 0 $4
+:while_start26
+	if $0 :endCheck28
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck28
+	[] $0 $8
+	< $4 $8 $7
+	if! $7 :while_end27
+	if $0 :endCheck29
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck29
+	[] $0 $8
+	>= $4 0 $7
+	if! $7 :error30
+	>= $4 $8 $7
+	if! $7 :endCheck31
+:error30
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck31
+	+ $0 $4 $8
+	+ $8 1 $8
+	[]= $8 $1
+	+ $4 1 $8
+	= $8 $4
+	goto :while_start26
+:while_end27
+	ret $0
+	ret
+:Arrays_sumArr
+	if $0 :endCheck32
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck32
+	[] $0 $3
+	= $3 $2
+	>= $2 0 $3
+	if $3 :endCheck33
+	param :str2
+	call :println
+	param 1
+	call :exit
+:endCheck33
+	+ $2 1 $3
+	param $3
+	call :alloc $3
+	[]= $3 $2
+	= $3 $2
+	= 0 $3
+:while_start34
+	if $0 :endCheck36
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck36
+	[] $0 $10
+	< $3 $10 $9
+	if! $9 :while_end35
+	if $0 :endCheck37
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck37
+	[] $0 $10
+	>= $3 0 $9
+	if! $9 :error38
+	>= $3 $10 $9
+	if! $9 :endCheck39
+:error38
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck39
+	+ $0 $3 $10
+	+ $10 1 $10
+	[] $10 $9
+	if $1 :endCheck40
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck40
+	[] $1 $10
+	>= $3 0 $18
+	if! $18 :error41
+	>= $3 $10 $18
+	if! $18 :endCheck42
+:error41
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck42
+	+ $1 $3 $10
+	+ $10 1 $10
+	[] $10 $18
+	+ $9 $18 $10
+	if $2 :endCheck43
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck43
+	[] $2 $9
+	>= $3 0 $18
+	if! $18 :error44
+	>= $3 $9 $18
+	if! $18 :endCheck45
+:error44
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck45
+	+ $2 $3 $9
+	+ $9 1 $9
+	[]= $9 $10
+	+ $3 1 $10
+	= $10 $3
+	goto :while_start34
+:while_end35
+	ret $2
+	ret
+:Arrays_printArr
+	param :str46
+	call :print
+	= 0 $1
+:while_start47
+	if $0 :endCheck49
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck49
+	[] $0 $4
+	- $4 1 $3
+	< $1 $3 $4
+	if! $4 :while_end48
+	if $0 :endCheck50
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck50
+	[] $0 $4
+	>= $1 0 $3
+	if! $3 :error51
+	>= $1 $4 $3
+	if! $3 :endCheck52
+:error51
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck52
+	+ $0 $1 $4
+	+ $4 1 $4
+	[] $4 $3
+	param $3
+	call :printi
+	param :str53
+	call :print
+	+ $1 1 $4
+	= $4 $1
+	goto :while_start47
+:while_end48
+	if $0 :endCheck54
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck54
+	[] $0 $4
+	>= $1 0 $3
+	if! $3 :error55
+	>= $1 $4 $3
+	if! $3 :endCheck56
+:error55
+	param :str7
+	call :println
+	param 1
+	call :exit
+:endCheck56
+	+ $0 $1 $4
+	+ $4 1 $4
+	[] $4 $0
+	param $0
+	call :printi
+	param :str57
+	call :print
+	param :str23
+	call :println
+	ret
+.data
+:str2
+	57
+	"Runtime Error: Array allocation with negative array size!"
+:str4
+	40
+	"Runtime Error: Null pointer dereference!"
+:str7
+	41
+	"Runtime Error: Array index out of bounds!"
+:str23
+	0
+	""
+:str24
+	34
+	"Should not print this or get here."
+:str46
+	2
+	"[ "
+:str53
+	2
+	", "
+:str57
+	2
+	" ]"
