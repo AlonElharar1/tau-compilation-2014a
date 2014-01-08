@@ -14,9 +14,11 @@ import ic.ast.builders.ASTBuilder;
 import ic.ast.builders.ASTNodeBuilder;
 import ic.ast.decl.DeclClass;
 import ic.ast.decl.DeclField;
+import ic.ast.decl.DeclFields;
 import ic.ast.decl.DeclMethod;
 import ic.lexer.Token;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeclClassBuilder implements ASTNodeBuilder {
@@ -30,10 +32,25 @@ public class DeclClassBuilder implements ASTNodeBuilder {
 				parseTree.subtrees.get(2).root.tag.equals("extends") ? 
 						((Token)parseTree.subtrees.get(3).root).text : null;
 		
-		List<DeclField> fields = buildHelper.depthBuild(parseTree, 
+		List<DeclField> fieldsOfFields = buildHelper.depthBuild(parseTree, 
 				new String[] { "CLASS", "CLASS_CONTENT" }, 
 				new String[] { "FIELD" }, 
 				DeclField.class);
+		
+		List<DeclField> fields = new ArrayList<DeclField>();
+		
+		for(DeclField field : fieldsOfFields)
+		{
+			if(field instanceof DeclFields)
+			{
+				fields.addAll(((DeclFields) field).seperate());
+			}
+			else
+			{
+				fields.add(field);
+			}
+		}
+		
 		List<DeclMethod> methods = buildHelper.depthBuild(parseTree, 
 				new String[] { "CLASS", "CLASS_CONTENT" }, 
 				new String[] { "METHOD" }, 
