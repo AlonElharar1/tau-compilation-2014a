@@ -6,6 +6,7 @@
  */
 
 import ic.IceCoffeException;
+import ic.ast.PrettyPrint;
 import ic.ast.decl.Program;
 import ic.codegeneration.ASTTranslator;
 import ic.codegeneration._3acil._3ACILGenerator;
@@ -42,7 +43,7 @@ public class Main {
 
 			// Parse the program
 			Program prog = new IceCoffeParser(programFile, libraryFile).parse();
-
+			
 			// Build the symbol tables
 			prog.accept(new ScopesBuilder());
 

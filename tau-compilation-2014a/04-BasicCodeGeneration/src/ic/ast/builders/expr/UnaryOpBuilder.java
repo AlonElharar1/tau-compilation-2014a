@@ -20,12 +20,19 @@ public class UnaryOpBuilder implements ASTNodeBuilder {
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
 		
-		Token operatorToken = (Token)parseTree.subtrees.get(0).subtrees.get(0).root;
-		Expression operand = 
-				buildHelper.build(parseTree.subtrees.get(1), Expression.class);
-
-		return (new UnaryOp(operatorToken.line,
-				UnaryOp.UnaryOps.find(operatorToken.text), operand));
+		if (parseTree.subtrees.size() == 1)
+		{
+			return buildHelper.build(parseTree.subtrees.get(0), Expression.class);
+		}
+		else
+		{
+			Token operatorToken = (Token)parseTree.subtrees.get(0).subtrees.get(0).root;
+			Expression operand = 
+					buildHelper.build(parseTree.subtrees.get(1), Expression.class);
+	
+			return (new UnaryOp(operatorToken.line,
+					UnaryOp.UnaryOps.find(operatorToken.text), operand));
+		}
 	}
 
 	@Override
