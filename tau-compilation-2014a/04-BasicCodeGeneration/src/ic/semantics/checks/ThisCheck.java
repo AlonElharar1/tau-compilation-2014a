@@ -78,8 +78,10 @@ public class ThisCheck extends SemanticCheck {
 
 	@Override
 	public Object visit(StmtReturn returnStatement) {
-		
-		returnStatement.getValue().accept(this);
+		if(returnStatement.getValue() != null)
+		{
+			returnStatement.getValue().accept(this);
+		}
 		
 		return null;
 	}
