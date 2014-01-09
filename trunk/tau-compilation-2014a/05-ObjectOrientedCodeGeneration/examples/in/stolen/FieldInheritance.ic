@@ -1,0 +1,32 @@
+/* 	This Program includes an class which try to access it's subclass field. 
+	This will yield a semantic error. */ 
+	
+class A { 
+	int someField ; 
+} 
+
+class B extends A {
+	int someOtherField ; 
+}
+
+class C extends B {}
+
+class Check {
+	static void main (string[] args) { 
+		A instanceA;
+		B instanceB;
+		C instanceC;
+	
+		/* all classes have someField */
+		instanceA.someField = 1;
+		instanceB.someField = 1;
+	 	instanceC.someField = 1;
+ 	
+ 		/* B and C have someOtherField */
+ 		instanceB.someOtherField = 1;
+ 		instanceC.someOtherField = 1;
+ 	
+ 		/* A does not have someOtherField */
+	 	instanceA.someOtherField = 1;
+ 	}
+}

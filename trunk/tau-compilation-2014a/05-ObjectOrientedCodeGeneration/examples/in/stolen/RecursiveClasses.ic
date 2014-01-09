@@ -1,0 +1,41 @@
+/* 	This Program includes a proper recursive and mutually recursive classes. */ 
+	
+// Tree
+class Tree { 
+	int value ; 
+	Tree left ; 
+	Tree right ; 
+} 
+
+// Linked List
+class List {
+	Node first ; 
+}
+
+class Node { 
+	int element ; 
+	Node next ; 
+}
+
+// Graph
+class Graph { 
+	Vertex[] vertices ; 
+}
+
+class Vertex { 
+	int vertexIndex ; 
+	Edge[] neighbors ; 
+}
+
+class Edge { 
+	Vertex u ; 
+	Vertex v ; 
+}
+
+class Check {
+	static void main (string[] args) {
+		Tree[] forest = new Tree[10] ;
+		List l = new List() ; 
+		Graph g = new Graph() ; 
+	}
+}

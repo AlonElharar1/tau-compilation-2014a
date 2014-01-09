@@ -1,0 +1,70 @@
+class ARR { 
+
+	static void init( int[] a ) { 
+		int i = 0 ; 
+		while ( i < a.length ) { 
+			a[i] = 0 ; 
+			i = i + 1 ;
+		}
+	}
+	static void initTo ( int[] a , int k ) { 
+		int i = 0 ; 
+		while ( i < a.length ) { 
+			a[i] = k ; 
+			i = i + 1 ;
+		}
+	}
+	static void printArr ( int[] a ) { 
+		Library.print("[ ") ;
+		int i = 0 ; 
+		while ( i < a.length-1 ) { 
+			Library.printi(a[i]) ; 
+			Library.print(", ") ; 
+			i = i + 1 ;
+		}
+		Library.printi(a[i]) ; 
+		Library.print(" ]") ; 
+	}	
+
+	static void printMat ( int[][] m ) { 
+		Library.print("[ ") ;
+		int i = 0 ; 
+		while ( i < m.length-1 ) { 
+			ARR.printArr(m[i]) ; 
+			Library.print(", ") ; 
+			i = i + 1 ;
+		}
+		ARR.printArr(m[i]) ; 
+		Library.print(" ]") ; 
+		Library.println("") ; 
+	}	
+	
+	static void main (string[] args) { 
+		int[][] mat1 = new int[][3] ; 
+		int i = 0 ; 
+		while ( i < mat1.length ) {
+			mat1[i] = new int[3] ;
+			i = A.inc(i) ; 
+		} 
+		ARR.printMat(mat1) ; 
+		i = 0 ; 
+		while ( i < mat1.length ) {
+			int j = 0 ; 
+			while ( j < mat1[i].length ) { 
+				mat1[A.inc(A.dec(i))][A.inc(A.dec(j))] = A.inc(i) * A.inc(j) ;  
+				j = A.inc(j) ; 
+			}
+			i = A.inc(i) ; 
+		}
+		ARR.printMat(mat1) ; 
+	}
+}
+
+class A { 
+	static int inc( int i ) { 
+		return i + 1 ; 
+	}
+	static int dec( int i ) { 
+		return i - 1 ; 
+	}
+}

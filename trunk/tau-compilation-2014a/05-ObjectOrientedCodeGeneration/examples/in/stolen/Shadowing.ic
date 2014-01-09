@@ -1,0 +1,39 @@
+/* 	This Program includes a proper shadowing of a field 
+	and a wrong shadowing of a local varialbe. 
+	The second will yield a semantic error. */ 
+	
+class A { 
+	int origField ; 
+	void someMethod() {}
+	void foo (int b) {} 
+	void goo (int x, string c) {
+		int y ; 
+		{
+			int z = 3 ; 
+			if ( z > x ) {
+				int origField ; // A proper shadowing of a field 
+				origField = z ; 
+			}
+		}
+	} 			
+	void hoo (int x, string c) { 
+		int y ; 
+		{
+			int z = 3;
+			if ( z > x ) {
+				int y ;	// A WRONG shadowing of a local variable!  
+				y = z ;
+			}
+		}
+	}
+} 
+
+class Check {
+
+	static void main (string[] args) {
+		A obj = new A() ;
+		obj.foo(0) ; 
+		obj.goo(1, "GOO");
+		obj.hoo(1, "HOO"); 		
+	}
+}
