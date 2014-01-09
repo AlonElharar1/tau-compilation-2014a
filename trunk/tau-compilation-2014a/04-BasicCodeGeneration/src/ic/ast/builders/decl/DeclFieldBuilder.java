@@ -27,19 +27,13 @@ public class DeclFieldBuilder implements ASTNodeBuilder {
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
 		
-		
-		
-		if(parseTree.subtrees.get(1).subtrees.size() > 1)
-		{
+		if(parseTree.subtrees.get(1).subtrees.size() > 1) {
 			this.getNames(parseTree.subtrees.get(1));
 			return(new DeclFields(
 					buildHelper.build(parseTree.subtrees.get(0), Type.class), 
 					this.names));
-			
-			
 		}
-		else
-		{
+		else {
 			return (new DeclField(
 					buildHelper.build(parseTree.subtrees.get(0), Type.class), 
 					((Token)parseTree.subtrees.get(1).subtrees.get(0).root).text));
@@ -50,8 +44,8 @@ public class DeclFieldBuilder implements ASTNodeBuilder {
 	private void getNames(Tree parseTree)
 	{	
 		this.names.add(((Token)parseTree.subtrees.get(0).root).text);
-		if(parseTree.subtrees.size() > 1)
-		{
+		
+		if(parseTree.subtrees.size() > 1) {
 			this.getNames(parseTree.subtrees.get(2));
 		}
 	}
@@ -60,7 +54,4 @@ public class DeclFieldBuilder implements ASTNodeBuilder {
 	public String getParseTreeTag() {
 		return ("FIELD");
 	}
-	
-	
-	
 }

@@ -18,7 +18,6 @@ public class NonIfStatementBuilder implements ASTNodeBuilder {
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
 		
 		return (buildHelper.build(parseTree.subtrees.get(0)));
-		
 	}
 
 	@Override

@@ -1,1 +1,256 @@
-11:34: syntax error; expected '(' or ')' or '.' or '[', but found '<'
+	goto :_ic_main
+:_ic_main
+	= 4 $1
+	= 23 $2
+	> $1 0 $13
+	= $13 $12
+	if $12 :shortcircit1
+	- $2 $13
+	- 5 3 $16
+	< $13 $16 $14
+	|| $12 $14 $12
+:shortcircit1
+	= $12 $13
+	if $13 :shortcircit2
+	if $1 :endCheck3
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck3
+	% $2 $1 $12
+	!= $12 $1 $16
+	|| $13 $16 $13
+:shortcircit2
+	= $13 $12
+	if! $12 :shortcircit5
+	if $1 :endCheck6
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck6
+	/ $2 $1 $13
+	> $13 3 $16
+	= $16 $13
+	if $13 :shortcircit7
+	- $1 $2 $16
+	- 5 3 $14
+	< $16 $14 $23
+	|| $13 $23 $13
+:shortcircit7
+	= $13 $16
+	if $16 :shortcircit8
+	if $1 :endCheck9
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck9
+	% $2 $1 $13
+	!= $13 $1 $14
+	|| $16 $14 $16
+:shortcircit8
+	&& $12 $16 $12
+:shortcircit5
+	= $12 $13
+	if! $13 :shortcircit10
+	* 2 $2 $12
+	+ $1 $12 $16
+	> $16 3 $12
+	= $12 $16
+	if $16 :shortcircit11
+	- $1 $2 $12
+	< $12 5 $14
+	|| $16 $14 $16
+:shortcircit11
+	= $16 $12
+	if $12 :shortcircit12
+	== $1 $2 $16
+	|| $12 $16 $12
+:shortcircit12
+	&& $13 $12 $13
+:shortcircit10
+	= $13 $12
+	if! $12 :shortcircit13
+	== $1 $1 $13
+	= $13 $16
+	if $16 :shortcircit14
+	- 1 $13
+	< $2 $13 $14
+	|| $16 $14 $16
+:shortcircit14
+	= $16 $13
+	if $13 :shortcircit15
+	!= $2 $2 $16
+	|| $13 $16 $13
+:shortcircit15
+	&& $12 $13 $12
+:shortcircit13
+	= $12 $13
+	if! $13 :shortcircit16
+	- 1 $1 $12
+	> $12 3 $16
+	= $16 $12
+	if $12 :shortcircit17
+	- 1 $2 $16
+	if 8 :endCheck18
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck18
+	/ 5 8 $14
+	< $16 $14 $23
+	|| $12 $23 $12
+:shortcircit17
+	= $12 $16
+	if $16 :shortcircit19
+	if $1 :endCheck20
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck20
+	% $1 $1 $12
+	- $2 $2 $14
+	== $12 $14 $23
+	|| $16 $23 $16
+:shortcircit19
+	&& $13 $16 $13
+:shortcircit16
+	= $13 $12
+	if! $12 :shortcircit21
+	* $1 $1 $13
+	> $13 25 $16
+	= $16 $13
+	if $13 :shortcircit22
+	- $2 $16
+	* $16 $2 $14
+	- $1 $16
+	* $16 $1 $23
+	< $14 $23 $16
+	|| $13 $16 $13
+:shortcircit22
+	= $13 $16
+	if $16 :shortcircit23
+	if $1 :endCheck24
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck24
+	/ $2 $1 $13
+	!= $13 1 $14
+	|| $16 $14 $16
+:shortcircit23
+	&& $12 $16 $12
+:shortcircit21
+	= $12 $13
+	if! $13 :shortcircit25
+	if $1 :endCheck26
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck26
+	/ $2 $1 $12
+	if $1 :endCheck27
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck27
+	/ $12 $1 $16
+	> $16 2 $12
+	= $12 $16
+	if $16 :shortcircit28
+	if $1 :endCheck29
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck29
+	/ $2 $1 $12
+	if $1 :endCheck30
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck30
+	/ $12 $1 $14
+	< $14 3 $12
+	|| $16 $12 $16
+:shortcircit28
+	= $16 $12
+	if $12 :shortcircit31
+	if $1 :endCheck32
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck32
+	/ $1 $1 $16
+	if $16 :endCheck33
+	param :str4
+	call :println
+	param 1
+	call :exit
+:endCheck33
+	/ $2 $16 $14
+	< $14 $1 $16
+	|| $12 $16 $12
+:shortcircit31
+	&& $13 $12 $13
+:shortcircit25
+	= $13 $12
+	if! $12 :shortcircit34
+	== $1 0 $13
+	= $13 $16
+	if $16 :shortcircit35
+	== $2 0 $13
+	|| $16 $13 $16
+:shortcircit35
+	= $16 $13
+	if $13 :shortcircit36
+	- $2 $1 $16
+	> $16 0 $14
+	|| $13 $14 $13
+:shortcircit36
+	&& $12 $13 $12
+:shortcircit34
+	= $12 $13
+	param $13
+	call :printb
+	param :str37
+	call :println
+	< $1 3 $12
+	= $12 $16
+	if $16 :shortcircit38
+	> $2 24 $12
+	|| $16 $12 $16
+:shortcircit38
+	= $16 $13
+	param $13
+	call :printb
+	param :str37
+	call :println
+	> $1 3 $12
+	= $12 $1
+	if $1 :shortcircit39
+	> $2 24 $12
+	|| $1 $12 $1
+:shortcircit39
+	= $1 $13
+	param $13
+	call :printb
+	param :str37
+	call :println
+	ret
+.data
+:str4
+	32
+	"Runtime Error: Division by zero!"
+:str37
+	0
+	""
