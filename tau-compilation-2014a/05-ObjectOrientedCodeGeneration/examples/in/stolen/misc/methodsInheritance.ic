@@ -1,0 +1,27 @@
+/* 	This program demonstrates inheritance of static and virtual methods,
+	and calling a static method in a non-static way */ 
+	
+class A { 
+	void someVirtualMethod(){} 
+	static void someStaticMethod() {}
+} 
+
+class B extends A {}
+
+class Check {
+	static void main (string[] args) { 
+		A instanceA;
+		B instanceB;
+	
+		/* both classes can call the virtual method */
+		instanceA.someVirtualMethod();
+		instanceB.someVirtualMethod();
+ 	
+ 		/* both classes can call the static method */
+		A.someStaticMethod();
+		B.someStaticMethod();
+				
+		/* error - calling the static method in a non-static way */
+		instanceA.someStaticMethod(); 	
+ 	}
+}

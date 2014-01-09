@@ -1,0 +1,18 @@
+call :readi $0
+* $0 $0 $0
+param $0
+call :printi
+param :emptystr
+call :println
+call :readln $1
+= $0 $2
+:1
+if! $2 -1
+param $1
+call :println
+- $2 1 $2
+goto :1
+
+.data
+:emptystr
+	0

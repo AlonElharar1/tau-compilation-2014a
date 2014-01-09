@@ -1,0 +1,10 @@
+class A { 
+
+	static void someMethod() { 
+	}
+
+	static void main (string[] args) { 
+		B.someMethod() ; 
+	}
+}
+

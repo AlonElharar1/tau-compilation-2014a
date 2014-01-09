@@ -1,0 +1,14 @@
+/* 	This program demonstrates calling a virtual method in a static way */
+	
+class A { 
+	void someVirtualMethod(){} 
+} 
+
+class Check {
+	static void main (string[] args) { 
+		A instanceA;
+		
+		instanceA.someVirtualMethod(); 	
+		A.someVirtualMethod(); 	
+ 	}
+}

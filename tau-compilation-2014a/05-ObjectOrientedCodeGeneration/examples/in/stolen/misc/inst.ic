@@ -1,0 +1,93 @@
+
+class A {
+	int field ;  
+	
+	int incField () { 
+		field = field + 1 ; 
+		return field ; 
+	}
+	int print() { 
+		Library.println("This line will not be printed") ; 
+		return 1 ; 
+	}
+	
+	static void bazbaz () { 
+
+		int x = 4 ; 
+		int y = 23 ; 
+
+		boolean p ; 
+		
+		p =    ( ( x > 0     ) || ( -y < 5-3    ) || ( y%x != x    ) ) 
+		    && ( ( y/x > 3   ) || ( x-y < 5-3   ) || ( y%x != x    ) ) 
+		    && ( ( x+2*y > 3 ) || ( x-y < 5     ) || ( x == y      ) ) 
+			&& ( ( x == x    ) || ( y < -1      ) || ( y != y      ) )
+			&& ( ( 1-x > 3   ) || ( 1-y < 5/8   ) || ( x%x == y-y  ) ) 
+			&& ( ( x*x > 25  ) || ( -y*y < -x*x ) || ( y/x != 1    ) ) 
+			&& ( ( y/x/x > 2 ) || ( (y/x)/x < 3 ) || ( y/(x/x) < x ) ) 
+			&& ( ( x == 0    ) || ( y == 0      ) || ( y-x > 0     ) ) ; 
+		
+		Library.printb(p) ; 
+		Library.println("");
+	}
+	
+	int return_and_zero_field( ) {
+		int tmp = field ;
+		field = 0;
+		return tmp ;
+	}
+	
+	static void main (string[] args) { 
+	
+		A obj = new A();
+		obj.field = 1 ;
+		int r = (obj.field * 3) * (4 + (8/2) + obj.return_and_zero_field() * 100 - (-17-5-3));
+		Library.printi(r);
+		Library.println("");
+		obj.field = 1 ;
+		//r = (obj.field * 3) * (4 + (8/2) + 1 * 100 - (-17-5-3));
+		r = (4 + (8/2) + obj.return_and_zero_field() * 100 - (-17-5-3)) * (obj.field * 3) ;
+		Library.printi(r);
+		Library.println("");
+		
+		A.bazbaz(); 
+		A kuku = null ;
+		if ( kuku == null ) 
+			Library.println("indeed null");
+		else
+			Library.println("not null");
+	
+		int q = (((7*2-5)+8)*2) + (((8*3*7-10)+19*3)/2)  ;
+		Library.printi(q);
+		Library.println("");
+		
+		Library.println("Hello " + "World !" + " where? " + " what ?" + " who ? ");
+		
+		int z = 7 ;
+		if ( z >= 8 ) 
+			Library.println(">=8");
+		else
+			Library.println("<8");
+			
+		A a = new A() ; 
+		a.field = 9 ; 
+		
+		int x = 4 ; 
+		int res = 0 ; 
+		
+		if ( (x > 3) || (x/0 > 0) ) 
+			res = res + 1 ; 
+		if ( (x < 3) && ( a.incField() > 10 ) ) 
+			res = res + 10 ; 
+		if ( (x == 4) || ( a.print() == 0 ) )
+			res = res + 100 ; 
+		
+		Library.print("res = ") ; 
+		Library.printi(res) ; 
+		Library.println("") ; 
+		Library.print("a.field = ") ; 
+		Library.printi(a.field) ; 
+		
+	}
+
+}

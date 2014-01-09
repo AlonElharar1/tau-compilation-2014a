@@ -1,0 +1,25 @@
+/* 	This Program includes a wrong inheritance of two simple 
+	classes, where the subclass tries to hide one of the 
+	superclass fields. This will yield a semantic error. */ 
+	
+class MySuperClass {
+	
+	void a () 			{						} 
+	int b ()  			{ return 0 ;			}
+	int someField ; 
+}
+
+class MyInheritedClass extends MySuperClass { 
+	void c() {} 
+	int someOtherField ; 
+	int someField ;  // Hide the superclass field someField! 
+}
+
+class Check {
+
+	static void main (string[] args) {
+		MySuperClass obj = new MyInheritedClass() ; 
+		obj.a() ; 
+		int x = obj.field ; 
+	}
+} 

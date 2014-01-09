@@ -1,0 +1,19 @@
+	= 0 $2
+:1
+	call :eof $0
+	if $0 :fin
+	call :readi $1
+	+ $1 $2 $2
+	goto :1
+	
+:fin
+	param $2
+	call :printi
+	param :emptystr
+	call :println
+	param 0
+	call :exit
+	
+.data
+:emptystr
+	0

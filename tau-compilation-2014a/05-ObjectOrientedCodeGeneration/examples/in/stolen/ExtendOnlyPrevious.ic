@@ -1,0 +1,42 @@
+/* 	This Program includes a wrong inheritance of two simple 
+	classes. The first class extends the second, in the order
+	appeared in the file. This will yield a semantic error */ 
+
+class Stam1 { 
+	int field1 ; 
+	int field2 ; 
+	void method1 () {}  
+}
+
+class MyInheritedClass extends MySuperClass { 
+	// MySuperClass is defined later - SEMANTIC ERROR
+}
+	
+class Stam2 { 
+	string field1 ; 
+	string field2 ; 
+	void method1 () {}  
+}
+
+class MySuperClass {
+
+	void a () 			{						} 
+
+	int b ()  			{ return 0 ;			}
+
+	// variable a hides method a
+	string c (int a) 	{ return "hello" ;		} 
+
+	int[] d (string s)  { return new int[3]; 	}
+}
+
+class Check {
+
+	static void main (string[] args) {
+		MySuperClass obj = new MyInheritedClass() ; 
+		obj.a() ; 
+		int x = obj.b() ; 
+		string str = obj.c(x) ; 
+		int[] arr = obj.d(str) ; 
+	}
+} 

@@ -1,0 +1,14 @@
+/* 	This Program includes an attempt to redefine a variable  */ 
+	
+class A {
+	
+	int func ( int a ) { 
+		int a = 3 ; 
+		return a + a ; 
+	}
+	
+	static void main (string[] args) { 
+		int b ; 
+		b = func(4) ;  
+	}
+}
