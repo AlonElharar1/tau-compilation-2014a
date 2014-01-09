@@ -20,12 +20,10 @@ public class UnaryOpBuilder implements ASTNodeBuilder {
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
 		
-		if (parseTree.subtrees.size() == 1)
-		{
+		if (parseTree.subtrees.size() == 1)	{
 			return buildHelper.build(parseTree.subtrees.get(0), Expression.class);
 		}
-		else
-		{
+		else {
 			Token operatorToken = (Token)parseTree.subtrees.get(0).subtrees.get(0).root;
 			Expression operand = 
 					buildHelper.build(parseTree.subtrees.get(1), Expression.class);

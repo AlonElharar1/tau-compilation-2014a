@@ -14,8 +14,8 @@ public class StmtMatchedIfBuilder implements ASTNodeBuilder {
 
 	@Override
 	public Node Build(Tree parseTree, ASTBuilder buildHelper) throws SyntaxException {
-		if (parseTree.subtrees.size() == 1)
-		{
+		
+		if (parseTree.subtrees.size() == 1)	{
 			return (buildHelper.build(parseTree.subtrees.get(0)));
 		}
 		

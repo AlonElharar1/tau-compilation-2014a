@@ -13,10 +13,7 @@ import ic.ast.decl.Type;
  */
 public class DeclFields extends DeclField {
 
-
 	private List<String> names;
-	
-	
 	
 	public Object accept(Visitor visitor) {
 		return visitor.visit(this);
@@ -30,24 +27,22 @@ public class DeclFields extends DeclField {
 	 * @param names
 	 *            List of names of different fields.
 	 */
-	public DeclFields(Type type, List<String> names)
-	{
+	public DeclFields(Type type, List<String> names) {
 		super(type, null);
 		this.names = names;
 	}
 	
-
 	public List<String> getNames() {
 		return this.names;
 	}
 	
-	public List<DeclField> seperate()
-	{
+	public List<DeclField> seperate() {
 		List<DeclField> fields = new ArrayList<DeclField>();
-		for(String name : this.names)
-		{
+		
+		for(String name : this.names) {
 			fields.add(new DeclField(this.getType(), name));
 		}
+		
 		return fields;
 	}
 

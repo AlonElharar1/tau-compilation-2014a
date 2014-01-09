@@ -6,7 +6,6 @@
  */
 
 import ic.IceCoffeException;
-import ic.ast.PrettyPrint;
 import ic.ast.decl.Program;
 import ic.codegeneration.ASTTranslator;
 import ic.codegeneration._3acil._3ACILGenerator;

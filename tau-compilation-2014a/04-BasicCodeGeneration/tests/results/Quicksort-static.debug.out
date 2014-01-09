@@ -1,8 +1,0 @@
-pc = 0    @   goto :_ic_main
-pc = 239    @   if $0 :endCheck49
-pc = 240    @   param :str2
-pc = 241    @   call :println
-Runtime Error: Null pointer dereference!
-pc = 242    @   param 1
-pc = 243    @   call :exit
-HALTED
