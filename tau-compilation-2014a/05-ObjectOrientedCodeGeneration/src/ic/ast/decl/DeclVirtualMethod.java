@@ -32,4 +32,19 @@ public class DeclVirtualMethod extends DeclMethod {
 		super(type, name, formals, statements);
 	}
 
+	public boolean isOverriding() {
+		return (this.getOverridenMethod() != null);
+	}
+	
+	public DeclVirtualMethod getOverridenMethod() {
+		DeclClass superClass = this.getScope().currentClass().getSuperClass();
+		
+		if (superClass == null)
+			return (null);
+		
+		DeclMethod method = superClass.getScope().findMethod(this.getName());
+		
+		return (((method != null) && (method instanceof DeclVirtualMethod)) ? 
+				(DeclVirtualMethod)method : null);
+	}
 }

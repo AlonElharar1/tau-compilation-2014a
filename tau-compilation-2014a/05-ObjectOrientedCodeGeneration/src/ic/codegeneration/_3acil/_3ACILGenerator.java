@@ -50,6 +50,18 @@ public class _3ACILGenerator {
 	}
 	
 	/**
+	 * Adds a dispatch vector to the data section
+	 * @param methodsLabels
+	 */
+	public Label addDispachVector(String className, List<Label> methodsLabels) {
+		
+		Label label = new Label(String.format("_%s_@DV", className));
+		this.data.put(methodsLabels.toArray(new Label[0]), label);
+		
+		return (label);
+	}
+	
+	/**
 	 * Creates a new unique label
 	 * @return
 	 */
@@ -173,6 +185,12 @@ public class _3ACILGenerator {
 			
 			if (data instanceof Integer) {
 				stream.println("\t" + data.toString());
+			}
+			else if (data instanceof Label[]) {
+				
+				for (Label label : (Label[])data) {
+					stream.println(String.format("\t(%s)", label.getOperandString()));
+				}
 			}
 			else {
 				String dataStr = data.toString();

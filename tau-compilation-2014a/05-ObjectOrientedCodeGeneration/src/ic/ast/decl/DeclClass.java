@@ -83,4 +83,8 @@ public class DeclClass extends Node {
 		return methods;
 	}
 
+	public DeclClass getSuperClass() {
+		return (this.hasSuperClass() ? 
+				this.getScope().findClass(this.getSuperClassName()) : null);
+	}
 }
