@@ -63,8 +63,10 @@ public class IceCoffeParser {
 
 	public Program parse() throws IceCoffeException, IOException {
 		
-		Program prog = this.internalParse(this.programTokens, IceCoffeGrammers.IC_CFG);
-		Program lib = this.internalParse(this.libraryTokens, IceCoffeGrammers.IC_LIB_CFG);
+		Program prog = this.internalParse(this.programTokens, 
+				IceCoffeGrammers.getIceCoffeGrammer(false));
+		Program lib = this.internalParse(this.libraryTokens, 
+				IceCoffeGrammers.getIceCoffeGrammer(true));
 		
 		// If library exist combine it into the program
 		if (lib != null)

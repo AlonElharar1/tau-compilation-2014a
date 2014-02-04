@@ -64,9 +64,9 @@ public class VirtualAnalyzer extends RunThroughVisitor {
 				Label methodLabel = new Label(currMethod.getId());
 				
 				if (currMethod.isOverriding()) {
-					dispachVector.set(
-							this.getOffset(currMethod.getOverridenMethod()),
-							methodLabel);
+					Integer methodOffset = this.getOffset(currMethod.getOverridenMethod());
+					dispachVector.set(methodOffset, methodLabel);
+					this.methodsOffsets.put(currMethod, methodOffset);
 				}
 				else {
 					dispachVector.add(methodLabel);
