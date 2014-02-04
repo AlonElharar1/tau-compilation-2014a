@@ -9,22 +9,26 @@ package ic.codegeneration;
 import ic.ast.Node;
 import ic.ast.RunThroughVisitor;
 import ic.ast.decl.DeclClass;
+import ic.ast.decl.DeclField;
 import ic.ast.decl.DeclLibraryMethod;
 import ic.ast.decl.DeclMethod;
 import ic.ast.decl.DeclStaticMethod;
+import ic.ast.decl.DeclVirtualMethod;
 import ic.ast.decl.Parameter;
 import ic.ast.decl.Program;
 import ic.ast.expr.BinaryOp;
+import ic.ast.expr.BinaryOp.BinaryOps;
 import ic.ast.expr.Expression;
 import ic.ast.expr.Length;
 import ic.ast.expr.Literal;
 import ic.ast.expr.NewArray;
+import ic.ast.expr.NewInstance;
 import ic.ast.expr.RefArrayElement;
+import ic.ast.expr.RefField;
 import ic.ast.expr.RefVariable;
 import ic.ast.expr.StaticCall;
 import ic.ast.expr.UnaryOp;
 import ic.ast.expr.VirtualCall;
-import ic.ast.expr.BinaryOp.BinaryOps;
 import ic.ast.stmt.LocalVariable;
 import ic.ast.stmt.StmtAssignment;
 import ic.ast.stmt.StmtBreak;
@@ -60,6 +64,11 @@ public class ASTTranslator extends RunThroughVisitor {
 	private Label currWhileStartLabel = null;
 	private Label currWhileEndLabel = null;
 	
+	private final Register THIS_REG = new Register(0);
+	
+	private VirtualAnalyzer virtualAnalyzer = new VirtualAnalyzer();
+	private HashMap<DeclClass, Label> dispatchVectorLabels = new HashMap<DeclClass, Label>();
+	
 	public ASTTranslator(_3ACILGenerator generator) {
 		this.generator = generator;
 		this.checksGenerator = new RunTimeChecksGenerator(this.generator);
@@ -83,6 +92,17 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		this.findLibaryLabels(program);
 		
+		this.virtualAnalyzer.visit(program);
+		
+		// Add all dispatch vectors into the data
+		for (DeclClass icClass : program.getClasses()) {
+			if (!icClass.getName().equals("Library")) {
+				this.dispatchVectorLabels.put(icClass, 
+						this.generator.addDispachVector(icClass.getName(), 
+								this.virtualAnalyzer.getDispachVector(icClass)));
+			}
+		}
+		
 		program.accept(this);
 	}
 	
@@ -98,7 +118,7 @@ public class ASTTranslator extends RunThroughVisitor {
 		
 		return (super.visit(program));
 	}
-	
+
 	@Override
 	public Object visit(DeclMethod method) {
 		
@@ -416,6 +436,27 @@ public class ASTTranslator extends RunThroughVisitor {
 	}
 	
 	@Override
+	public Object visit(NewInstance newClass) {
+		
+		// Get a register for the instance pointer
+		Register instancePtrReg = this.generator.getFreeRegister();
+		
+		// Get the instance allocation size
+		DeclClass instnaceClass = newClass.getScope().findClass(newClass.getName());
+		Operand sizeOpernad = new Immediate(this.virtualAnalyzer.sizeOf(instnaceClass));
+		
+		// Allocate the instance in memory
+		this.generator.addOpcode(OpCodes.PARAM, sizeOpernad);
+		this.generator.addOpcode(OpCodes.CALLINTO, new Label("alloc"), instancePtrReg);
+		
+		// Put the dispatch vector in the first cell
+		this.generator.addOpcode(OpCodes.WRITE, instancePtrReg, 
+				this.dispatchVectorLabels.get(instnaceClass));
+		
+		return (instancePtrReg);
+	}
+	
+	@Override
 	public Object visit(RefArrayElement location) {
 		
 		// Get the array pointer and index into registers
@@ -440,10 +481,34 @@ public class ASTTranslator extends RunThroughVisitor {
 	@Override
 	public Object visit(RefVariable location) {
 		
-		Register varReg =  this.variablesRegisters.get(
-				location.getScope().findLocalVariable(location.getName()));
+		Node varNode = location.getScope().findLocalVariable(location.getName());
+		
+		if (varNode instanceof DeclField) {
+			RefField fieldLocation = 
+					new RefField(location.getLine(), null, location.getName());
+			fieldLocation.setScope(location.getScope());
+			return (this.visit(fieldLocation));
+		}
+		
+		Register varReg = this.variablesRegisters.get(varNode);
 		
 		return (varReg);
+	}
+	
+	@Override
+	public Object visit(RefField location) {
+
+		// Get the object location
+		Operand obj = (location.getObject() == null) ? 
+				THIS_REG : (Operand)location.getObject().accept(this);
+		
+		// Add the field offset
+		Register fieldReg = this.generator.getFreeRegister();
+		DeclField field = location.getScope().findField(location.getField());
+		this.generator.addOpcode(OpCodes.ADD, obj, 
+				new Immediate(this.virtualAnalyzer.getOffset(field)), fieldReg);
+				
+		return (new MemoryLocation(fieldReg));
 	}
 	
 	@Override
@@ -526,7 +591,56 @@ public class ASTTranslator extends RunThroughVisitor {
 					
 			return (staticCall.accept(this));
 		}
+		// Virtual method
+		else {
 		
-		return (null);
+			// Get the object location
+			Operand obj = (call.getObject() == null) ? 
+					THIS_REG : (Operand)call.getObject().accept(this);
+			
+			// Get the dispatch vector location
+			Register methodLocation = this.generator.getFreeRegister();
+			this.generator.addOpcode(OpCodes.READ, obj, methodLocation);
+			
+			// Add the method offset and read it's address
+			String className = (call.getObject() == null) ?
+					call.getScope().currentClass().getName() : 
+					new TypeAnalyzer().getExpressionType(call.getObject()).getDisplayName();
+			DeclVirtualMethod method = call.getScope().findVirtualMethod(
+					className, call.getMethod());
+					
+			this.generator.addOpcode(OpCodes.ADD, methodLocation, 
+					new Immediate(this.virtualAnalyzer.getOffset(method)), methodLocation);
+			this.generator.addOpcode(OpCodes.READ, methodLocation, methodLocation);
+			
+			// Get the arguments
+			List<Operand> arguments = 
+					new ArrayList<Operand>(call.getArguments().size());
+			
+			for (Expression expr : call.getArguments()) {
+				arguments.add(this.generator.addGetInstruction(expr.accept(this)));
+			}
+
+			// Set the this parameter
+			this.generator.addOpcode(OpCodes.PARAM, obj);
+			
+			// Set the arguments as parameters
+			for (Operand register : arguments) {
+				this.generator.addOpcode(OpCodes.PARAM, register);
+			}
+			
+			// Call the method
+			Register retVal = null;
+			
+			if (method.getType().getDisplayName().equals("void")) {
+				this.generator.addOpcode(OpCodes.CALL, methodLocation);
+			}
+			else {
+				retVal = this.generator.getFreeRegister();
+				this.generator.addOpcode(OpCodes.CALLINTO, methodLocation, retVal);
+			}
+		
+			return (retVal);
+		}
 	}
 }
