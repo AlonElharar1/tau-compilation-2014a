@@ -27,6 +27,7 @@ import ic.ast.expr.RefArrayElement;
 import ic.ast.expr.RefField;
 import ic.ast.expr.RefVariable;
 import ic.ast.expr.StaticCall;
+import ic.ast.expr.This;
 import ic.ast.expr.UnaryOp;
 import ic.ast.expr.VirtualCall;
 import ic.ast.stmt.LocalVariable;
@@ -130,6 +131,9 @@ public class ASTTranslator extends RunThroughVisitor {
 		this.generator.startNewRegisterContext();
 		
 		// Assign parameters with registers
+		if (method instanceof DeclVirtualMethod) 
+			this.generator.getFreeRegister();
+		
 		for (Parameter param : method.getFormals()) {
 			this.variablesRegisters.put(param, this.generator.getFreeRegister());
 		}
@@ -502,13 +506,25 @@ public class ASTTranslator extends RunThroughVisitor {
 		Operand obj = (location.getObject() == null) ? 
 				THIS_REG : (Operand)location.getObject().accept(this);
 		
+		// Emit null check on object
+		this.checksGenerator.emitNullCheck(obj);
+		
 		// Add the field offset
 		Register fieldReg = this.generator.getFreeRegister();
-		DeclField field = location.getScope().findField(location.getField());
+		DeclField field = (location.getObject() == null) ?
+				location.getScope().findField(location.getField()) :
+				location.getScope().findField(
+						new TypeAnalyzer().getExpressionType(location.getObject()).getDisplayName(), 
+						location.getField());
 		this.generator.addOpcode(OpCodes.ADD, obj, 
 				new Immediate(this.virtualAnalyzer.getOffset(field)), fieldReg);
 				
 		return (new MemoryLocation(fieldReg));
+	}
+	
+	@Override
+	public Object visit(This thisExpression) {
+		return (THIS_REG);
 	}
 	
 	@Override
@@ -597,6 +613,9 @@ public class ASTTranslator extends RunThroughVisitor {
 			// Get the object location
 			Operand obj = (call.getObject() == null) ? 
 					THIS_REG : (Operand)call.getObject().accept(this);
+			
+			// Emit null check on object
+			this.checksGenerator.emitNullCheck(obj);
 			
 			// Get the dispatch vector location
 			Register methodLocation = this.generator.getFreeRegister();
