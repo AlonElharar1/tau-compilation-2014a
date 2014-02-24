@@ -370,7 +370,7 @@ public class ASTTranslator extends RunThroughVisitor {
 	public Object visit(Length length) {
 		
 		// Get the array pointer
-		Register arrayLocation = (Register)length.getArray().accept(this);
+		Operand arrayLocation = (Operand)length.getArray().accept(this);
 		
 		// Emit null check
 		this.checksGenerator.emitNullCheck(arrayLocation);
@@ -464,7 +464,7 @@ public class ASTTranslator extends RunThroughVisitor {
 	public Object visit(RefArrayElement location) {
 		
 		// Get the array pointer and index into registers
-		Register arrayLocation = (Register)location.getArray().accept(this);
+		Operand arrayLocation = (Operand)location.getArray().accept(this);
 		
 		// Emit check for the array pointer
 		this.checksGenerator.emitNullCheck(arrayLocation);
