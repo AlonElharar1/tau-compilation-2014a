@@ -100,8 +100,10 @@ public class _3ACILGenerator {
 		
 		if (data instanceof MemoryLocation) {
 			
+			Operand address = this.addGetInstruction(((MemoryLocation)data).getAddress());
+			
 			Register dest = this.getFreeRegister();
-			this.addOpcode(OpCodes.READ, ((MemoryLocation)data).getAddress(), dest);
+			this.addOpcode(OpCodes.READ, address, dest);
 			
 			return (dest);
 		}
